@@ -73,16 +73,15 @@ S\"onmez and Yenmez \cite{SoYe20a,SoYe22a} take reserve capacities as given and 
 \item We modify student-proposing deferred acceptance for score-elevated categories (SPSE). SPSE is feasible, non-wasteful, strategy-proof and free of justified envy, but using DA this way does not guarantee score-feasibility (Section~\ref{sec:spse}).
 \item We prove that fixed reserve capacities cannot always be preserved while maintaining score-feasibility, even when each reserve category is individually fulfillable under the cutoff rule (Proposition~\ref{prop:impossibility}).
 \item We propose PA-ODR, a deliberate de-reservation mechanism that enforces score-feasibility and retains non-wastefulness relative to final capacities and within-category fairness, but gives up strategy-proofness and no justified envy (Section~\ref{sec:paodr}).
-\item We implement the reserve-side choice as maximum-weight bipartite matching, formulate minimum de-reservation, and include a small prototype check (Remark~\ref{rem:computation}, Proposition~\ref{prop:minderes}, Table~\ref{tab:prototype-time}).
+\item We implement the reserve-side choice as maximum-weight bipartite matching, formulate minimum de-reservation, and include a small prototype check (Remark~\ref{rem:computation}, Proposition~\ref{prop:minderes}).
 \end{enumerate}
 
-\begin{table*}[t]
-\caption{Comparison of the two mechanisms. Above the rule both mechanisms satisfy the property, although PA-ODR does so only relative to the effective capacities it produces; below the rule they differ outright.}
-\label{tab:comparison}
-\centering
+\begin{center}
+\textbf{Table 1:} Comparison of the two mechanisms. Above the rule both mechanisms satisfy the property, although PA-ODR does so only relative to the effective capacities it produces; below the rule they differ outright.
+
 \renewcommand{\arraystretch}{1.15}
-\small
-\begin{tabular}{|L{0.25\textwidth}|L{0.28\textwidth}|L{0.35\textwidth}|}
+\scriptsize
+\begin{tabular}{|L{0.20\textwidth}|L{0.19\textwidth}|L{0.22\textwidth}|}
 \hline
 \textbf{Property} & \textbf{SPSE} & \textbf{PA-ODR} \\
 \hline
@@ -97,7 +96,7 @@ Reserve capacity & Fixed at $q$ & Deliberate de-reservation, not minimal \\
 % Uses category preferences & Through proposals & Through lexicographic tie-breaking \\
 \hline
 \end{tabular}
-\end{table*}
+\end{center}
 
 \section{\uppercase{Model}}
 \label{sec:model}
@@ -484,16 +483,16 @@ This is the manipulation any egalitarian tie-breaker invites: reporting a catego
 
 \section{\uppercase{Conclusion}}
 
-Overlapping reserve categories create a genuine allocation problem because admitted students count toward exactly one category. Score constraints make feasibility depend on endogenous cutoffs, so non-wastefulness must be score-relative, and full capacity utilization can fail even when every quota is individually honorable. SPSE keeps capacities fixed and inherits the incentive and no-envy properties of DA but need not be score-feasible. PA-ODR enforces score-feasibility by de-reserving unfulfillable reserve capacity, retaining within-category fairness but losing strategy-proofness and envy-freeness (Table~\ref{tab:comparison}).
+Overlapping reserve categories create a genuine allocation problem because admitted students count toward exactly one category. Score constraints make feasibility depend on endogenous cutoffs, so non-wastefulness must be score-relative, and full capacity utilization can fail even when every quota is individually honorable. SPSE keeps capacities fixed and inherits the incentive and no-envy properties of DA but need not be score-feasible. PA-ODR enforces score-feasibility by de-reserving unfulfillable reserve capacity, retaining within-category fairness but losing strategy-proofness and envy-freeness, as summarized in Table 1.
 
 As a sanity check we coded both mechanisms in Python and ran them on two families of $100$ randomized instances, seed $100$. Raw scores are uniform on $[0,100]$, the common bonus uniform on $[0,15]$, $\delta=8$, preferences over $V_i$ uniformly random, and each category enters $\T(i)$ independently with probability $0.45$ (a student drawing none is given one at random). Capacities are uniform on $q^o\le q^o_{\max}$ and $q^t\le q^t_{\max}$, with $(|I|,|T|,q^o_{\max},q^t_{\max})$ equal to $(200,6,30,15)$ and $(500,8,70,35)$, offering on average $47.99$ and $149.82$ reserve seats. PA-ODR follows Remark~\ref{rem:computation} rather than enumerating matchings: the admitted set by matroid greedy, then one min-cost assignment for criteria 3--4.
 
-\begin{table*}[t]
-\centering
-\caption{Prototype outcomes and running times, 100 randomized instances per family}
-\label{tab:prototype-time}
-\small
-\begin{tabular}{|L{0.22\textwidth}|L{0.18\textwidth}|r|r|r|L{0.18\textwidth}|}
+\begin{center}
+\textbf{Table 2:} Prototype outcomes and running times, 100 randomized instances per family.
+
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{|L{0.16\textwidth}|L{0.12\textwidth}|r|r|r|L{0.12\textwidth}|}
 \hline
 Family & Mechanism & Med.\ (ms) & Score-feasible & Matched & De-reserved categories \\
 \hline
@@ -504,7 +503,7 @@ $|I|=500$, $|T|=8$ & SPSE & 5.92 & 52/100 & 187.33 & 0.00 \\
  & PA-ODR & 692.51 & 100/100 & 187.33 & 73.24 (49\%) \\
 \hline
 \end{tabular}
-\end{table*}
+\end{center}
 
 The check is not an evidence of average-case performance; it records what the trade-off costs. SPSE breaches the cutoff rule in $46$ and $48$ of the $100$ instances, so Proposition~\ref{prop:spse-not-sf} is neither an artifact of three-student examples nor something scale washes out. PA-ODR never breaches it, at a price growing with the instance: $39\%$ and $49\%$ of the reserve seats. Two readings should be resisted. Both mechanisms match the same number of students at both sizes, so de-reservation buys score-feasibility and nothing else here, and the coverage gain Remark~\ref{sec:trigger} offers in defence of the reserve-completeness stopping rule is a feature of that example. And the price tracks $\delta$ rather than an indiscriminate appetite for de-reserving: on the smaller family, $\delta=2$ retires $30.3$ of the $47.99$ reserve seats and $\delta=25$ only $0.6$.
 
