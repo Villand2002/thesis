@@ -1,0 +1,207 @@
+\documentclass[10pt]{article}
+
+\usepackage[a4paper,margin=0.68in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[square,numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\setlist{leftmargin=1.2em,itemsep=1pt,topsep=2pt}
+\setlength{\parskip}{1pt}
+\setlength{\parindent}{1em}
+\setlength{\textfloatsep}{8pt plus 1pt minus 2pt}
+\setlength{\floatsep}{8pt plus 1pt minus 2pt}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\R}{\mathbb{R}}
+
+\title{Preference-Aware Overlapping De-Reservation under Score Constraints}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\vspace{-2em}
+
+\begin{abstract}
+We study admissions with one open category and multiple reserve categories when students may qualify for several reserve categories but, under one-to-one counting, can be assigned to only one. We impose a score constraint requiring each active reserve cutoff to stay within a fixed gap of the open cutoff. We present a short formulation of \emph{Preference-Aware Overlapping De-Reservation} (PA-ODR), related to de-reservation methods in reserve-based admissions \citep{AyTu20a,AyTu23a}: it fills the open category by raw scores, matches reserves only through score-feasible student-category pairs, and de-reserves seats that cannot be filled feasibly. Within the feasible region, category preferences are used only after maximizing match size and score performance. We also record a simple impossibility: score-feasibility, non-wastefulness, and a stronger open-merit requirement may fail to coexist even in the smallest instance.
+\end{abstract}
+
+\section{Model}
+
+Let $I$ be a finite set of students, $T$ a finite set of reserve categories, $o$ the open category, and $V=T\cup\{o\}$. Each category $c\in V$ has capacity $q^c\in\mathbb{N}$. Each student $i\in I$ has raw score $\sigma(i)\in\R_+$, reserve-eligibility set $\T(i)\subseteq T$, and a strict preference ordering $\succ_i$ over $V_i:=\{o\}\cup\T(i)$. This combines overlapping types familiar from controlled school choice and multidimensional affirmative action \citep{KHIY17a,AyBo21a} with a cutoff-based reserve restriction.
+
+An assignment is a tuple $\mu=(\mu_c)_{c\in V}$, where $\mu_c\subseteq I$ is the set of students assigned to category $c$.
+
+\begin{definition}[Feasibility]
+\label{def:paodr-feasibility}
+An assignment $\mu$ is feasible if:
+\begin{enumerate}
+\item $|\mu_c|\le q^c$ for every category $c\in V$; and
+\item $\mu_c\cap\mu_{c'}=\emptyset$ for every distinct pair $c,c'\in V$.
+\end{enumerate}
+\end{definition}
+
+The second condition is one-to-one counting.
+
+For each reserve category $t\in T$, let $k_t\ge 0$ be its score bonus. The open category uses raw scores, while reserve category $t$ evaluates student $i$ by the adjusted score $\sigma_t(i)=\sigma(i)+k_t$ whenever $t\in\T(i)$.
+
+For a feasible assignment $\mu$, define the open cutoff by $e_o(\mu):=\min_{i\in\mu_o}\sigma(i)$ when $\mu_o\neq\emptyset$, and the adjusted reserve cutoff by $e_t^+(\mu):=\min_{i\in\mu_t}\sigma_t(i)$ when $\mu_t\neq\emptyset$. Let $\delta\ge 0$ be the maximum allowed score gap. The use of adjusted scores in reserve cutoffs matches the category-specific ranking rule used inside reserve categories.
+
+\begin{definition}[Score-feasibility]
+\label{def:paodr-score-feasibility}
+A feasible assignment $\mu$ is score-feasible if for every reserve category $t\in T$ with $\mu_o\neq\emptyset$ and $\mu_t\neq\emptyset$,
+\[
+e_o(\mu)-e_t^+(\mu)\le \delta.
+\]
+\end{definition}
+
+This is an outcome restriction on the final cutoffs: once reserve bonuses are treated as institutionally relevant, reserve admissions should not fall too far below open admissions. It is therefore separate from the SPSE ranking rule itself.
+
+\section{PA-ODR}
+
+The mechanism treats score-feasibility as a hard constraint. It preserves total capacity while allowing infeasible reserve seats to be transferred to the open category.
+
+For a fixed open cutoff $e$, define a bipartite graph $G(e)$ between students not assigned to the open category and reserve categories. An edge $(i,t)$ is present exactly when
+\[
+t\in\T(i)\quad\text{and}\quad \sigma(i)+k_t\ge e-\delta.
+\]
+Thus a student may be feasible for one reserve category but not for another.
+
+Among all capacitated matchings on $G(e)$, PA-ODR uses the following lexicographic rule:
+\begin{enumerate}
+\item maximize the number of matched reserve pairs;
+\item among those, lexicographically maximize the vector of matched adjusted scores;
+\item among those, lexicographically minimize the vector of students' category-preference ranks.
+\end{enumerate}
+
+\begin{algorithm}[H]
+\caption{Preference-Aware Overlapping De-Reservation (PA-ODR)}
+\label{alg:paodr-short}
+\small
+\begin{algorithmic}[1]
+\Require Student set $I$, scores $\sigma$, eligibility sets $\T(\cdot)$, category preferences $(\succ_i)_{i\in I}$, capacities $q^o,(q^t)_{t\in T}$, bonuses $(k_t)_{t\in T}$, score-gap parameter $\delta$
+\Ensure Assignment $\mu=(\mu_o,(\mu_t)_{t\in T})$
+\State Initialize effective capacities $\hat q^o\gets q^o$ and $\hat q^t\gets q^t$ for all $t\in T$
+\Loop
+    \State Assign the top $\min\{\hat q^o,|I|\}$ raw-score students to the open category; call this set $\mu_o$
+    \State Let $e=\min_{i\in\mu_o}\sigma(i)$ if $\mu_o\neq\emptyset$, and $e=-\infty$ otherwise
+    \State Build the graph $G(e)$ with edge $(i,t)$ iff $t\in\T(i)$ and $\sigma(i)+k_t\ge e-\delta$
+    \State Compute the reserve assignment $(\mu_t)_{t\in T}$ by the lexicographic rule above, with capacities $\hat q^t$
+    \If{there exists $t$ with $|\mu_t|<\hat q^t$}
+        \State Choose one such category $t^\ast$
+        \State Update $\hat q^{t^\ast}\gets \hat q^{t^\ast}-1$ and $\hat q^o\gets \hat q^o+1$
+    \Else
+        \State \Return $\mu=(\mu_o,(\mu_t)_{t\in T})$
+    \EndIf
+\EndLoop
+\end{algorithmic}
+\end{algorithm}
+
+The mechanism preserves the open-first merit order and uses de-reservation only when a reserve seat cannot be filled without violating the score constraint.
+
+\section{Properties}
+
+\begin{proposition}[Termination]
+\label{prop:paodr-termination-short}
+PA-ODR terminates after finitely many iterations.
+\end{proposition}
+
+\begin{proof}
+Whenever the mechanism does not stop, it reduces the effective capacity of some reserve category by one. Hence the total effective reserve capacity $\sum_{t\in T}\hat q^t$ strictly decreases at every non-terminating iteration and cannot decrease forever.
+\end{proof}
+
+\begin{proposition}[Score-feasibility]
+\label{prop:paodr-score-short}
+The output of PA-ODR is score-feasible.
+\end{proposition}
+
+\begin{proof}
+Fix the final iteration and let $e$ be its open cutoff. Every reserve assignee $i\in\mu_t$ was selected along an edge of $G(e)$, so $\sigma(i)+k_t\ge e-\delta$. Therefore $e_t^+(\mu)\ge e-\delta=e_o(\mu)-\delta$, which implies $e_o(\mu)-e_t^+(\mu)\le \delta$ for each nonempty reserve category.
+\end{proof}
+
+\begin{proposition}[Non-wastefulness with respect to the final capacity vector]
+\label{prop:paodr-nonwaste-short}
+The output of PA-ODR is non-wasteful relative to the final effective capacity vector $\hat q$.
+\end{proposition}
+
+\begin{proof}
+At termination, every reserve category with positive effective capacity is full; otherwise the mechanism would de-reserve another unit and continue. The open category is also filled up to $\hat q^o$ unless there are fewer students than total capacity. Hence no unmatched student can be added while preserving the final capacities and score-feasibility.
+\end{proof}
+
+\begin{proposition}[Within-category fairness]
+\label{prop:paodr-within-short}
+The output of PA-ODR is fair within categories.
+\end{proposition}
+
+\begin{proof}
+Fix the final iteration and its open cutoff $e$. Suppose an unmatched student $i$ could feasibly replace some $j\in\mu_t$ in a reserve category $t$ with a strictly higher adjusted score, i.e., $\sigma(i)+k_t>\sigma(j)+k_t$. Then $(i,t)$ is an edge of the final graph $G(e)$, and replacing $j$ with $i$ keeps the reserve match size unchanged while lexicographically improving the vector of matched adjusted scores. This contradicts the score-maximality of the chosen reserve matching.
+\end{proof}
+
+\section{SPSE in Brief}
+
+The student-proposing score-elevated mechanism (SPSE) is the deferred-acceptance benchmark in the longer draft.
+
+\begin{algorithm}[H]
+\caption{Student-Proposing Score-Elevated Mechanism (SPSE)}
+\label{alg:spse-short}
+\small
+\begin{algorithmic}[1]
+\Require Student set $I$, scores $\sigma$, eligibility sets $\T(\cdot)$, category preferences $(\succ_i)_{i\in I}$, capacities $q^o,(q^t)_{t\in T}$, bonuses $(k_t)_{t\in T}$
+\Ensure Assignment $\mu=(\mu_o,(\mu_t)_{t\in T})$
+\State Set $\mu_c\gets\emptyset$ for every category $c\in V$ and mark every student unmatched
+\State Compute category-adjusted scores $\sigma_c(i)$ for each student-category pair
+\State For each student $i$, let $V_i\gets\{o\}\cup\T(i)$
+\While{there exists an unmatched student $i$ who has not yet applied to every category in $V_i$}
+    \State Let $i$ apply to her most preferred category $c\in V_i$ not yet tried
+    \State Category $c$ considers $\mu_c\cup\{i\}$ and keeps at most $q^c$ students with the highest $\sigma_c$
+    \State Students not kept by $c$ become unmatched
+\EndWhile
+\State \Return $\mu$
+\end{algorithmic}
+\end{algorithm}
+
+SPSE keeps the initial capacity vector $q$ fixed and does not directly enforce the score-gap rule in \cref{def:paodr-score-feasibility}.
+
+\begin{proposition}[A simple impossibility under stronger fairness]
+\label{prop:simple-impossibility-short}
+There need not exist any matching that simultaneously satisfies feasibility, non-wastefulness, score-feasibility, within-category fairness, and open-merit, where open-merit means that no unmatched student has a higher raw score than an open-category assignee.
+\end{proposition}
+
+\begin{proof}
+Consider one open category $o$ and one reserve category $t$, each with capacity $1$. Let $\delta=10$ and $k_t=0$. Let student $A$ have score $100$ and no reserve eligibility, and let student $B$ have score $80$ and eligibility $\{t\}$. The matching $(\{A\},\{B\})$ violates score-feasibility because $100-80=20>10$. The matching $(\{B\},\emptyset)$ violates open-merit because $A$ is unmatched and has a higher raw score than the open assignee $B$. The matching $(\{A\},\emptyset)$ violates non-wastefulness because $B$ can be added feasibly to category $t$. The matching $(\emptyset,\{B\})$ also violates non-wastefulness because $A$ can be added feasibly to category $o$. The empty matching violates non-wastefulness as well. Hence no feasible matching satisfies all five requirements simultaneously.
+\end{proof}
+
+\section{Comparison with SPSE}
+
+SPSE keeps the initial reserve capacities and delivers deferred-acceptance-style fairness properties, but it need not enforce the score-gap rule. PA-ODR instead enforces score-feasibility by construction while allowing the effective reserve capacities to change through de-reservation.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{SPSE} & \textbf{PA-ODR} \\
+\midrule
+One-to-one counting & Yes & Yes \\
+Feasibility & Yes & Yes \\
+Non-wastefulness & Yes & Yes, w.r.t.\ final $\hat q$ \\
+Score-feasibility & Not guaranteed & Guaranteed \\
+Capacity reallocation & Fixed at $q$ & Endogenous \\
+Preferences over categories & Via proposals & Final tie-breaker \\
+\bottomrule
+\end{tabular}
+\end{center}
+PA-ODR therefore isolates a central modeling choice: enforcing the score-gap rule can naturally be combined with endogenous capacity reallocation, especially once the stronger open-merit requirement of Proposition~\ref{prop:simple-impossibility-short} is taken seriously.
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

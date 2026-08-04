@@ -1,0 +1,884 @@
+\documentclass[dvipdfmx,11pt]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+
+\title{重複カテゴリと点数制約の下での admissions}
+\subtitle{SPSE と PA-ODR の比較}
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{問題設定}
+  一つの学校における admissions を考える。
+  \begin{itemize}
+    \item 一般カテゴリ $o$ と複数の留保カテゴリ $T$
+    \item 学生 $i$ は複数の留保カテゴリに同時に属しうる
+    \item 各カテゴリには容量制約 $q^c$
+    \item One-to-one counting:
+    一人の合格者は最終的に一つのカテゴリにだけ数えられる
+    \item 点数制約:
+    一般カテゴリ cutoff と留保カテゴリ cutoff の差を抑えたい
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{モデル 1: 基本記号}
+  学生集合 $I$，留保カテゴリ集合 $T$，一般カテゴリ $o$ を用いて
+  \[
+    V := T\cup\{o\}
+  \]
+  とする。
+
+  各学生 $i\in I$ は
+  \begin{itemize}
+    \item 加点前スコア $\sigma(i)\in\R_+$
+    \item 資格カテゴリ集合 $\T(i)\subseteq T$
+    \item カテゴリ選好 $\succ_i$
+  \end{itemize}
+  を持つ。
+
+  応募可能カテゴリ集合は
+  \[
+    V_i := \{o\}\cup \T(i).
+  \]
+\end{frame}
+
+\begin{frame}{モデル 1.5: カテゴリ選好}
+  各学生 $i$ は応募可能カテゴリ集合 $V_i$ 上に選好順序
+  \[
+    \succ_i
+  \]
+  を持つ。
+
+  例えば
+  \[
+    t_2 \succ_i t_1 \succ_i o
+  \]
+  なら，
+  学生 $i$ は一般カテゴリより留保カテゴリを好み，
+  留保カテゴリの中では $t_2$ を $t_1$ より好む。
+
+  PA-ODR ではこの選好を反映するため，
+  後で preference rank
+  \[
+    r_i(c)
+  \]
+  を用いる。
+
+  SPSE では $\succ_i$ に沿って応募先を順に選び，
+  PA-ODR では複数の feasible な留保割当の間で
+  $r_i(c)$ を使ってカテゴリ選好を比較する。
+\end{frame}
+
+\begin{frame}{モデル 2: 共通加点}
+  全ての留保カテゴリに共通の bonus $k\ge 0$ を与える。
+
+  カテゴリ $c$ における学生 $i$ の 加点後スコア を
+  \[
+    \sigma_c(i)=
+    \begin{cases}
+      \sigma(i) & c=o,\\[3pt]
+      \sigma(i)+k\ & c=t\in T
+    \end{cases}
+  \]
+  と定義する。
+
+  \vspace{0.5em}
+  解釈:
+  \begin{itemize}
+    \item 一般カテゴリでは 加点前スコア で比較
+    \item 留保カテゴリでは共通加点後スコアで比較
+    \item カテゴリごとに加点を変えることはしない
+  \end{itemize}
+
+  \vspace{0.5em}
+  {\small 留保資格はスコア補正を与えるが，one-to-one counting の下ではカテゴリ割当が別途必要になる。}
+\end{frame}
+
+\begin{frame}{モデル 3: マッチング}
+  マッチングを
+  \[
+    \mu=(\mu_c)_{c\in V}
+  \]
+  と書く。
+
+  feasible とは
+  \[
+    |\mu_c|\le q^c \quad (\forall c\in V)
+  \]
+  かつ
+  \[
+    \mu_c\cap \mu_{c'}=\emptyset \quad (\forall c\neq c')
+  \]
+  を満たすこと。
+
+  これは
+  \begin{itemize}
+    \item 容量制約
+    \item one-to-one counting
+  \end{itemize}
+  を同時に表す。
+\end{frame}
+
+\begin{frame}{モデル 3.5: 容量ベクトル}
+  元の制度で与えられる容量を
+  \[
+    q=(q^o,(q^t)_{t\in T})
+  \]
+  と書く。
+
+  \begin{itemize}
+    \item $q^o$: 一般カテゴリの容量
+    \item $q^t$: 留保カテゴリ $t$ の容量
+  \end{itemize}
+
+  PA-ODR では de-reservation により容量を更新するので，
+  反復中および最終的な有効容量を
+  \[
+    \hat q=(\hat q^o,(\hat q^t)_{t\in T})
+  \]
+  と書き，元の容量ベクトル $q$ と区別する。
+\end{frame}
+
+\begin{frame}{モデル 4: Score-feasibility}
+  一般カテゴリ cutoff:
+  \[
+    e_o(\mu):=\min_{i\in\mu_o}\sigma(i)
+  \]
+
+  留保カテゴリ $t$ の adjusted cutoff:
+  \[
+    e_t^+(\mu):=\min_{i\in\mu_t}\sigma_t(i)
+  \]
+
+  許容ギャップ $\delta\ge 0$ の下で
+  \[
+    e_o(\mu)-e_t^+(\mu)\le \delta
+  \]
+  が全ての空ではない留保カテゴリで成立するとき，
+  $\mu$ は score-feasible.
+
+  \vspace{0.5em}
+  {\small [Ayg\"un and Turhan, 2020; Ayg\"un and Turhan, 2023]}
+\end{frame}
+
+\begin{frame}{性質 1: Feasibility}
+  マッチング $\mu$ が feasible であるとは，
+  任意のカテゴリ $c\in V$ について
+  \[
+    |\mu_c|\le q^c
+  \]
+  を満たし，さらに任意の異なる $c,c'\in V$ について
+  \[
+    \mu_c\cap\mu_{c'}=\emptyset
+  \]
+  を満たすことをいう。
+
+  \vspace{0.5em}
+  すなわち，容量制約と one-to-one counting を同時に要求する。
+\end{frame}
+
+\begin{frame}{性質 2: Non-wastefulness}
+  マッチング $\mu$ が non-wasteful であるとは，
+  未マッチ学生 $i\in I\setminus M(\mu)$ とカテゴリ $c\in V_i$ について，
+  $i$ をカテゴリ $c$ に追加したマッチング $\mu'$ が
+  \[
+    \text{feasible}
+    \qquad\text{and}\qquad
+    \text{score-feasible}
+  \]
+  になるような空き $c$ が存在しないことをいう。
+
+  \vspace{0.5em}
+  ここで
+  \[
+    \mu'_c=\mu_c\cup\{i\},
+    \qquad
+    \mu'_{c'}=\mu_{c'}\ \ (c'\neq c)
+  \]
+  とする。
+
+  \vspace{0.5em}
+  空きがあっても，追加により score-feasibility が満たされなくなるなら，
+  その空きは浪費とはみなさない。
+
+  {\small [Ehlers et al., 2014; Goto et al., 2017; Kurata et al., 2017]}
+\end{frame}
+
+\begin{frame}{性質 3: Within-Category Fairness}
+  同じカテゴリの中では，
+  \textbf{未割り当ての高得点者を残して低得点者を取らない}ことを要求する。
+
+  \begin{definition}[Within-category fairness]
+    $\mu$ が \textbf{within-category fair} であるとは，
+    あるカテゴリ $c\in V$ と学生 $i,j$ について
+    \[
+      i\notin M(\mu),\qquad j\in\mu_c,\qquad c\in V_i,\qquad \sigma_c(i)>\sigma_c(j)
+    \]
+    を同時に満たす組が存在しないことをいう。
+  \end{definition}
+
+  \vspace{0.5em}
+  つまり，各カテゴリで実際に割り当てられている最低得点者より高い学生が
+  未割り当てのまま残ることを禁止する。
+\end{frame}
+
+
+% \begin{frame}{性質 4: Across-Category Fairness}
+%   資格を共有しない $i,j$ の間で，$i$ を入れる再配置が
+%   \textbf{割り当てられている学生のスコアベクトルを改善する}のに $i$ が落ちている状況を禁止する。
+
+%   \begin{block}{悪い状況（unfair）：次を\textbf{すべて}満たす対 $(i,j)$ が存在}
+%     \begin{itemize}
+%       \item[(1)] $c=\mu(j)\notin V_i$（$i$ は $j$ のカテゴリに割り当てられない。必ず $t\notin\T(i)$）
+%       \item[(2)] $j$ を外し $i$ を収容する score-feasible な再配置 $\mu'$
+%                  （他の全員は維持，$\bigl(M(\mu)\setminus\{j\}\bigr)\cup\{i\}\subseteq M(\mu')$）で，
+%                  \textbf{加点済みのスコアベクトル が $\mu$ より辞書式に大きい}ものが存在
+%     \end{itemize}
+%   \end{block}
+
+%   \begin{definition}[Across-category fairness]
+%     $\mu$ が \textbf{fair across categories} であるとは，
+%     $(1)$--$(2)$ を満たす対 $(i,j)$ がひとつも存在しないことをいう。
+%   \end{definition}
+
+%   {\footnotesize 比較は生スコアでなく加点後スコアで行う。
+%   PA-ODR の選択基準（人数最大 $\to$ elevated 辞書式最大）と整合する。}
+% \end{frame}
+
+% \begin{frame}{スコアベクトルとは}
+%   あるマッチング $\mu$ に対して，
+%   割り当てられている全学生の \textbf{加点後スコア} を大きい順に並べた列を
+%   スコアベクトルと呼ぶ。
+
+%   \[
+%     s(\mu)=\bigl(s_1(\mu),s_2(\mu),\dots,s_{|M(\mu)|}(\mu)\bigr),
+%     \qquad
+%     s_1(\mu)\ge s_2(\mu)\ge \cdots
+%   \]
+
+%   ここで各学生 $i\in M(\mu)$ の値は，
+%   実際に割り当てられたカテゴリ $\mu(i)$ における 加点後
+%   \[
+%     \sigma_{\mu(i)}(i)
+%   \]
+%   である。
+
+%   \vspace{0.5em}
+%   例：
+%   \[
+%     \mu=(A\to o,\ B\to t_1,\ C\to t_2),\quad
+%     \bigl(\sigma_o(A),\sigma_{t_1}(B),\sigma_{t_2}(C)\bigr)=(100,95,90)
+%   \]
+%   なら
+%   \[
+%     s(\mu)=(100,95,90).
+%   \]
+
+%   PA-ODR では同じ人数の候補の中で，このベクトルを\textbf{辞書式}に最大化する。
+% \end{frame}
+
+
+% \begin{frame}{性質 5: Score-feasibility}
+%   マッチング $\mu$ が score-feasible であるとは，
+%   全ての $t\in T$ について，
+%   $\mu_o\neq\emptyset$ かつ $\mu_t\neq\emptyset$ なら
+%   \[
+%     e_o(\mu)-e_t^+(\mu)\le \delta
+%   \]
+%   を満たすことをいう。
+
+%   \vspace{0.5em}
+%   ここで
+%   \[
+%     e_o(\mu)=\min_{i\in\mu_o}\sigma(i),
+%     \qquad
+%     e_t^+(\mu)=\min_{i\in\mu_t}\sigma_t(i)
+%   \]
+%   である。
+
+%   {\small [Ayg\"un and Turhan, 2020; Ayg\"un and Turhan, 2023]}
+% \end{frame}
+
+\begin{frame}{Student-Proposing Score-Elevated Mechanism}
+  deferred acceptance を 加点後スコア で実行する。
+  \begin{enumerate}
+    \item 各学生 $i$ は $V_i=\{o\}\cup\T(i)$ を持つ
+    \item 未割り当て学生は最も好む未応募カテゴリに応募
+    \item カテゴリ $c$ は $\sigma_c$ 上位を最大 $q^c$ 人だけ保留
+    \item 拒否された学生は次順位へ進む
+  \end{enumerate}
+
+  {\small [Gale and Shapley, 1962; Roth, 2008]}
+\end{frame}
+
+\begin{frame}{SPSE の性質}
+  \begin{center}
+  \begin{tabular}{lll}
+    \toprule
+    性質 & 結果 &  \\
+    \midrule
+    Feasibility & 成立  \\
+    Non-wastefulness & 成立 \\
+    Within-category fairness & 成立 \\
+    % Across-category fairness & \textbf{不成立（反例あり）} \\
+    Score-feasibility & 成立しない場合がある  \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{SPSE の証明 1}
+  \textbf{Feasibility}
+  \begin{itemize}
+    \item 各カテゴリは各段階で高々 $q^c$ 人しか保留しない
+    \item 各学生は同時に高々1つのカテゴリでしか保留されない
+    \item よって最終結果も容量制約と one-to-one counting を満たす
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Within-category fairness}
+  \begin{itemize}
+    \item もし未割当の $i$ と在籍者 $j\in\mu_c$ がいて $\sigma_c(i)>\sigma_c(j)$ なら，
+    $i$ が $c$ に応募した時点で $j$ より優先される
+    \item DA の保留集合は各時点でそのカテゴリの上位者だけを残すので，
+    $j$ が最終的に残って $i$ が未割当になることはない
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{SPSE の証明 2}
+  \textbf{Non-wastefulness}
+  \begin{itemize}
+    \item 最終的に未割当の学生 $i$ は，応募可能な全カテゴリに応募済みである
+    \item もし $c\in V_i$ に空きがあれば，$i$ が $c$ に応募した時点で $c$ は $i$ を保留し続けるので，
+    $i$ が未割当で終わることと矛盾
+    \item よって未割当学生を単純追加して feasible かつ score-feasible にできる空席は存在しない
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Score-feasibility が満たされない理由}
+  \begin{itemize}
+    \item SPSE は各カテゴリで 加点後スコア 順に受け入れるだけで，
+    open cutoff と reserved cutoff の差 $\,\delta\,$ を直接管理しない
+    \item したがって最終的に $e_o(\mu)-e_t^+(\mu)>\delta$ となることがある
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{PA-ODR アルゴリズム}
+score-feasibleを満たすために,以下のような動作のPA-ODRアルゴリズムを考える
+
+  \begin{enumerate}
+    \item 初期有効容量を $\hat q^o=q^o$, $\hat q^t=q^t$ で置く
+    \item 一般カテゴリに 加点前スコア 上位 $\hat q^o$ 人を割り当てる
+    \item open cutoff $e$ を計算する
+    \item $E(e)$ を使って留保割当を構成する
+    \item もし $|\mu_t|<\hat q^t$ の留保カテゴリがあれば
+    \[
+      \hat q^t\leftarrow \hat q^t-1,\qquad
+      \hat q^o\leftarrow \hat q^o+1
+    \]
+    として反復する
+    \item 全ての正の留保容量が埋まったら停止
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{PA-ODR におけるカテゴリ選好の反映}
+  人数もスコアも同じ留保割当が複数残ったとき，
+  学生の希望にできるだけ近い方を選ぶ。
+
+  \begin{block}{希望順位 $r_i(c)$：$i$ にとって $c$ が何番目の希望か（小さいほど良い）}
+    第1希望なら $1$，第2希望なら $2$，\dots。\quad
+    例）$t_2\succ_i t_1\succ_i o$ なら $r_i(t_2)=1,\ r_i(t_1)=2$。
+  \end{block}
+
+  留保割当の選び方：
+  \begin{enumerate}
+    \item まず，埋まる人数を最大にする
+    \item その中で，加点後スコアをできるだけ高くする
+    \item それでも並んだら，学生をできるだけ上の希望のカテゴリに入れる方を選ぶ
+          （点数の高い学生の希望から優先して見る）
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{なぜスコアが最大になるのか}
+  留保割当は，同じ人数で埋められる候補の中から，
+  「割り当てられた学生の加点後スコアを大きい順に並べた列」が
+  いちばん大きいものを選んでいる（選び方の2段階目）。
+
+  \vspace{0.5em}
+  \begin{block}{カギ：高得点の学生に入れ替えると，列は必ず大きくなる}
+    あるカテゴリ $c$ の在籍者 $j$ を，そのカテゴリにわりあてられてより高得点の $i$
+    （$\sigma_c(i)>\sigma_c(j)$）に入れ替える。人数は変わらず，並びだけ上がる：
+    \vspace{-0.4em}
+    \[
+      (\,\dots,\ \sigma_c(j),\ \dots\,)
+      \ \longrightarrow\
+      (\,\dots,\ \sigma_c(i),\ \dots\,).
+    \]
+  \end{block}
+
+  \vspace{0.3em}
+  例：$t_2$ に $92$ の学生が割り当てられているが，$t_2$ にわりあてられる $96$ の学生が余っている。
+  \vspace{-0.3em}
+  \[
+    (\,96,\ \dots\,)\ >\ (\,92,\ \dots\,)\quad(\text{大きい順に比較})
+  \]
+  入れ替えた方が大きいので，最初からそちらが選ばれている。
+\end{frame}
+
+\begin{frame}{PA-ODR で評価する性質}
+  PA-ODR でも基本的な性質の考え方は SPSE と同じである。
+
+  \begin{itemize}
+    \item feasibility
+    \item non-wastefulness
+    \item within-category fairness
+    \item de-reservation-adjusted within-category fairness
+    \item score-feasibility
+  \end{itemize}
+
+  ただし de-reservation により最終容量が決まるので，
+  \begin{itemize}
+    \item feasibility と non-wastefulness は最終容量 $\hat q$ に関して読む
+    % \item PA-ODR は人数最大 $\to$ スコアベクトル辞書式最大の基準で，この fairness notion と整合的に選ぶ
+    % \item score-feasibility は hard constraint として別に保証する
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{PA-ODR の性質 2: Non-wastefulness}
+  PA-ODR では non-wastefulness 自体は SPSE と同じ考え方でよい。
+
+  未割り当て学生 $i\in I\setminus M(\mu)$ と応募可能カテゴリ $c\in V_i$ に対し，
+  $i$ を追加できる空き $c$ が存在しないことをいう。
+
+  ただし，ここでの feasibility は元の $q$ ではなく
+  de-reservation 後の最終容量 $\hat q$ に関するもの：
+  \[
+    |\mu_c|\le \hat q^c
+  \]
+  かつ任意の異なる $c,c'\in V$ について
+  \[
+    \mu_c\cap\mu_{c'}=\emptyset
+  \]
+  を満たす。
+\end{frame}
+
+
+\begin{frame}{PA-ODR の結果}
+  \begin{center}
+  \begin{tabular}{ll}
+    \toprule
+    性質 & 結果 \\
+    \midrule
+    Score-feasibility & 成立 \\
+    Non-wastefulness $(\hat q)$ & 成立 \\
+    De-reservation-adjusted within-category fairness & 成立 \\
+    % 制約付き across-category fairness & 成立 \\
+    % 強い stability & \textbf{一般には不成立} \\
+    カテゴリ選好の反映 & 成立 \\
+    % 容量再配分 & 成立 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{PA-ODR の証明 1}
+  \textbf{Feasibility}
+  \begin{itemize}
+    \item open では 加点前スコア 上位 $\hat q^o$ 人だけを取る
+    \item reserved では各 $t$ に高々 $\hat q^t$ 人だけを割り当てる
+    \item 一人は open か reserved のどちらか一方で数えるので，最終結果は $\hat q$ に関して feasible
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Score-feasibility}
+  \begin{itemize}
+    \item open cutoff を $e$ とすると，reserved の候補辺は
+    \[
+      \sigma(i)+k\ge e-\delta
+    \]
+    を満たすときだけ張られる
+    \item したがって割り当てられた全ての $i\in\mu_t$ について $\sigma_t(i)\ge e-\delta$
+    \item ゆえに $e_t^+(\mu)\ge e-\delta$，すなわち $e_o(\mu)-e_t^+(\mu)\le\delta$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{PA-ODR の証明 2}
+  \textbf{Non-wastefulness}
+  \begin{itemize}
+    \item アルゴリズムは，全ての正の reserved 容量が埋まるまで de-reservation を続ける
+    \item 停止時には，正の容量を持つ reserved カテゴリはすべて満席であり，
+    open も定義上ちょうど $\hat q^o$ 人を取っている
+    \item よって最終容量 $\hat q$ に関して空席はなく，未割当学生を単純追加できない
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{De-reservation-adjusted within-category fairness}
+  \begin{itemize}
+    \item de-reservation 後の最終グラフ $G(e)$ 上で比較する
+    \item reserved で未割当の $i$ と在籍者 $j\in\mu_t$ がいて，$(i,t),(j,t)\in G(e)$ かつ $\sigma_t(i)>\sigma_t(j)$ なら，
+    $j$ を $i$ に置き換えても人数は同じで score-feasibility は満たされ，
+    スコアベクトルは厳密に改善する
+    \item これは辞書式最大性に反するので，そのような組は存在しない
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}{PA-ODR の証明 3}
+%   \textbf{制約付き across-category fairness}
+%   \begin{itemize}
+%     \item 反対に，PA-ODR の結果 $\mu$ が unfair だと仮定する
+%     \item すると定義より，ある $(i,j)$ について，
+%     $j$ を外して $i$ を入れる score-feasible な再配置 $\mu'$ が存在し，
+%     \[
+%       s(\mu')>_{\mathrm{lex}} s(\mu)
+%     \]
+%     が成り立つ
+%     \item しかも $\mu'$ は $|M(\mu')|=|M(\mu)|$ を満たすので，
+%     PA-ODR が比較している「同じ人数の score-feasible 候補」のひとつである
+%     \item しかし PA-ODR はその集合の中で辞書式最大のスコアベクトルを選ぶので矛盾
+%   \end{itemize}
+
+%   \vspace{0.4em}
+%   よって PA-ODR は，この制約付きの意味では across-category fairness を満たす。
+
+%   \vspace{0.4em}
+%   ただし，割り当て済み学生がより好むカテゴリの在籍者を羨む
+%   \textbf{stability} まで要求すると，一般には成立しない。
+% \end{frame}
+
+
+
+% \begin{frame}{反例：SPSE も PA-ODR も across-category fairness を破る}
+%   \small
+%   設定：$A$(open, $\sigma=200$)，$k\in\{t_1,t_2\}$($\sigma=100$, 選好 $t_1\succ t_2$)，
+%   $i\in\{t_1\}$($\sigma=90$)，$j\in\{t_2\}$($\sigma=80$)，
+%   $k_{t_1}=30,\ k_{t_2}=0$，$\delta$ 大。$A\to o$ で $e$ は十分高い。
+
+%   \begin{center}
+%   \begin{tabular}{lcc}
+%     \toprule
+%     留保割当 & elevated vector & 人数 \\
+%     \midrule
+%     $\mu=(k\to t_1,\ j\to t_2)$ & $\{130,\,80\}$ & 2 \\
+%     $\mu'=(i\to t_1,\ k\to t_2)$ & $\{120,\,100\}$ & 2 \\
+%     \bottomrule
+%   \end{tabular}
+%   \end{center}
+
+%   \begin{itemize}
+%     \item SPSE：$t_1$ で $k$(130)$>$$i$(120) が保留され，$i$ は $o$ で $A$ に負け未マッチ
+%     \item PA-ODR：elevated vector 辞書式最大で $130>120$ より $\mu$ を採用
+%     \item どちらも出力は $\mu$。だが $\mu'$ は score-feasible で人数も同じ
+%           $\Rightarrow$ raw 上位の $i$（90）が $j$（80）を跨いで落ちており unfair
+%   \end{itemize}
+
+%   \begin{block}{結論}
+%     raw-merit の across-category fairness は，elevated score で優先する
+%     score-elevated メカニズム（SPSE・PA-ODR）では一般に達成できない。
+%   \end{block}
+% \end{frame}
+
+% \begin{frame}{動作例 1}
+%   設定:
+%   \[
+%     q^o=q^{t_1}=q^{t_2}=1,\quad
+%     \delta=10,\quad
+%     k_{t_1}=5,\ k_{t_2}=5
+%   \]
+
+%   \begin{center}
+%   \begin{tabular}{c|c|c|c}
+%     \toprule
+%     学生 & 加点前スコア & 資格カテゴリ & カテゴリ選好 \\
+%     \midrule
+%     $A$ & 100 & $\emptyset$ & $o$ \\
+%     $B$ & 85 & $\{t_1,t_2\}$ & $t_2\succ_B t_1\succ_B o$ \\
+%     $C$ & 85 & $\{t_1\}$ & $t_1\succ_C o$ \\
+%     $D$ & 85 & $\{t_2\}$ & $t_2\succ_D o$ \\
+%     \bottomrule
+%   \end{tabular}
+%   \end{center}
+% \end{frame}
+
+% \begin{frame}{動作例 1: 辺の構成}
+%   open は 加点前スコア 最大の $A$ を選ぶので
+%   \[
+%     \mu_o=\{A\},\qquad e=100.
+%   \]
+
+%   留保辺は
+%   \[
+%     \sigma(i)+k_t\ge 100-10=90
+%   \]
+%   を満たすときに張られる。
+
+%   \begin{itemize}
+%     \item $B$: $85+5=90$ なので $t_1,t_2$ の両方に届く
+%     \item $C$: $85+5=90$ なので $t_1$ に届く
+%     \item $D$: $85+5=90$ なので $t_2$ に届く
+%   \end{itemize}
+
+%   人数最大・スコアも最大の割当は
+%   \[
+%     (B,t_1),(D,t_2)
+%     \qquad\text{または}\qquad
+%     (C,t_1),(B,t_2)
+%   \]
+%   の 2 つある（スコアはどちらも同じ）。
+
+%   それぞれで，割り当てられた学生が\textbf{何番目の希望}に入るかを見る：
+%   \begin{itemize}
+%     \item $(B,t_1),(D,t_2)$：$B$ は第2希望，$D$ は第1希望
+%     \item $(C,t_1),(B,t_2)$：$C$ も $B$ も第1希望
+%   \end{itemize}
+%   後者の方が希望に近いので，PA-ODR は $(C,t_1),(B,t_2)$ を選ぶ。
+% \end{frame}
+
+% \begin{frame}{動作例 1: 性質確認}
+%   最終割当:
+%   \[
+%     \mu_o=\{A\},\qquad \mu_{t_1}=\{C\},\qquad \mu_{t_2}=\{B\}.
+%   \]
+
+%   cutoff は
+%   \[
+%     e_o=100,\qquad e_{t_1}^+=90,\qquad e_{t_2}^+=90.
+%   \]
+%   したがって
+%   \[
+%     100-90=10\le 10,\qquad 100-90=10\le 10.
+%   \]
+
+%   \begin{itemize}
+%     \item score-feasibility はちょうど境界で成立する
+%     \item $B$ は $t_1,t_2$ のどちらでも feasible だが，選好により $t_2$ に入る
+%     \item つまりこの例ではカテゴリ選好が実際に tie-break として働く
+%   \end{itemize}
+%   よって score-feasibility を満たす範囲でカテゴリ選好が反映される。
+% \end{frame}
+
+\begin{frame}{動作例}
+  設定:
+  \[
+    q^o=q^{t_1}=q^{t_2}=1,\quad
+    \delta=10,\quad
+    k=5
+  \]
+
+  \begin{center}
+  \begin{tabular}{c|c|c|c}
+    \toprule
+    学生 & 加点前スコア & 資格カテゴリ & カテゴリ選好 \\
+    \midrule
+    $A$ & 100 & $\emptyset$ & $o$ \\
+    $B$ & 92 & $\{t_1\}$ & $t_1\succ_B o$ \\
+    $C$ & 80 & $\{t_2\}$ & $t_2\succ_C o$ \\
+    $D$ & 78 & $\{t_1,t_2\}$ & $t_2\succ_D t_1\succ_D o$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{動作例: 1回目}
+  初回は
+  \[
+    \mu_o=\{A\},\qquad e=100.
+  \]
+  留保辺条件は
+  \[
+    \sigma(i)+k\ge 90.
+  \]
+
+  \begin{itemize}
+    \item $B$: $92+5=97$ なので $t_1$ に届く
+    \item $C$: $80+5=85<90$ なので $t_2$ に届かない
+    \item $D$: $78+5=83<90$ なのでどちらにも届かない
+  \end{itemize}
+
+  したがって $t_2$ は埋まらず，
+  \[
+    \hat q^{t_2}\gets 0,\qquad \hat q^o\gets 2
+  \]
+  と de-reserve される。
+
+  \vspace{0.3em}
+  この時点で $D$ は $t_2\succ_D t_1$ だが，
+  そもそも feasible な辺を持たない。
+\end{frame}
+
+\begin{frame}{動作例: 2回目}
+  2回目は
+  \[
+    \hat q^o=2,\qquad \hat q^{t_1}=1,\qquad \hat q^{t_2}=0.
+  \]
+  open は $A,B$ を選ぶので
+  \[
+    \mu_o=\{A,B\},\qquad e=92.
+  \]
+
+
+  今度は
+  \[
+    \sigma(D)+k=78+5=83\ge 82
+  \]
+  なので $D$ が $t_1$ に届く。
+
+  一方で $t_2$ はすでに de-reserve されているので，
+  $D$ の第一希望 $t_2$ は選べない。
+
+  最終的に
+  \[
+    \mu_o=\{A,B\},\qquad \mu_{t_1}=\{D\},\qquad \mu_{t_2}=\emptyset.
+  \]
+
+  \begin{itemize}
+    \item $t_2$ は score 制約の下で埋められないので open に戻る
+    \item つまりカテゴリ選好は，de-reservation と score-feasibility を満たす範囲でだけ反映される
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{性質}
+  最終容量は
+  \[
+    \hat q^o=2,\qquad \hat q^{t_1}=1,\qquad \hat q^{t_2}=0
+  \]
+  であり，最終割当は
+  \[
+    \mu_o=\{A,B\},\qquad \mu_{t_1}=\{D\},\qquad \mu_{t_2}=\emptyset.
+  \]
+
+  \begin{itemize}
+    \item Score-feasibility:
+    \[
+      e_o=92,\qquad e_{t_1}^+=83,\qquad 92-83=9\le 10
+    \]
+    \item Non-wastefulness w.r.t.\ $\hat q$:
+    $\hat q^{t_2}=0$ なので $t_2$ の空きカテゴリはもう存在しない。$o,t_1$ も満員なので，未割り当て学生を追加できない
+  \end{itemize}
+  
+\end{frame}
+
+% \begin{frame}{新しい論点: 強い stability との衝突}
+%   PA-ODR は人数最大化を優先するため，
+%   割り当て済み学生のカテゴリ選好まで含めた stability とトレードオフの関係にある
+
+%   \vspace{0.5em}
+%   \begin{block}{強い stability の考え方}
+%     学生 $i$ が現在のカテゴリより $c$ を好み，
+%     $c$ の在籍者 $j$ より $c$ で高い 加点後スコア を持つなら，
+%     $(i,j)$ は blocking pair になりうる。
+%   \end{block}
+
+%   \vspace{0.5em}
+%   これは，未割当学生だけを見る fairness より強い要求である。
+%   この強い要求を入れると，
+%   \[
+%     \text{人数最大化}
+%     \quad+\quad
+%     \text{score-feasibility}
+%     \quad+\quad
+%     \text{stability}
+%   \]
+%   を同時に保証することは一般に難しい。
+% \end{frame}
+
+% \begin{frame}{非両立の小例}
+%   \small
+%   \[
+%     q^o=q^{t_1}=q^{t_2}=1,\quad
+%     k_{t_1}=5,\quad k_{t_2}=10,\quad \delta=10
+%   \]
+
+%   \begin{center}
+%   \begin{tabular}{c|c|c|c}
+%     \toprule
+%     学生 & 加点前スコア & 資格カテゴリ & 選好 \\
+%     \midrule
+%     $A$ & 100 & $\emptyset$ & $o$ \\
+%     $B$ & 86 & $\{t_1,t_2\}$ & $t_2\succ_B t_1\succ_B o$ \\
+%     $C$ & 84 & $\{t_1\}$ & $t_1\succ_C o$ \\
+%     $D$ & 82 & $\{t_2\}$ & $t_2\succ_D o$ \\
+%     \bottomrule
+%   \end{tabular}
+%   \end{center}
+
+%   関係する 加点後スコア は
+%   \[
+%     \sigma_{t_1}(B)=91,\quad
+%     \sigma_{t_2}(B)=96,\quad
+%     \sigma_{t_1}(C)=89,\quad
+%     \sigma_{t_2}(D)=92.
+%   \]
+
+%   score-feasible で人数最大の割当は
+%   \[
+%     \mu^\ast=(A\to o,\ B\to t_1,\ D\to t_2)
+%   \]
+%   で，人数は $3$。
+% \end{frame}
+
+% \begin{frame}{非両立の直観}
+%   $\mu^\ast=(A\to o,\ B\to t_1,\ D\to t_2)$ では
+%   \[
+%     e_o=100,\quad e_{t_1}^+=91,\quad e_{t_2}^+=92
+%   \]
+%   なので score-feasible である。
+
+%   \vspace{0.5em}
+%   しかし $B$ は
+%   \[
+%     t_2\succ_B t_1
+%     \qquad\text{かつ}\qquad
+%     \sigma_{t_2}(B)=96>92=\sigma_{t_2}(D)
+%   \]
+%   を満たす。
+
+%   \vspace{0.5em}
+%   つまり，人数を $3$ に保つためには $B$ を $t_1$ に置く必要があるが，
+%   その結果 $B$ は $t_2$ の $D$ を羨む。
+
+%   \begin{block}{含意}
+%     PA-ODR は人数最大化と score-feasibility を取る代わりに，
+%     強い stability を犠牲にする場合がある。
+%   \end{block}
+% \end{frame}
+
+\begin{frame}{まとめ}
+  \begin{itemize}
+    \item overlapping reserves と one-to-one counting の下では，カテゴリ割当自体が制度設計の対象になる
+    \item SPSE は自然な DA 拡張だが，score-feasibility を保証しない
+    \item PA-ODR は score-feasibility を保証するが，de-reservation により元の容量を変えうる
+    \item 固定容量・score-feasibility・公平性の間に構造的なトレードオフがある
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+  \footnotesize
+  \begin{itemize}
+    \item Gale and Shapley (1962), College admissions and the stability of marriage.
+    \item Roth (2008), Deferred acceptance algorithms: History, theory, practice, and open questions.
+    \item Ehlers, Hafalir, Yenmez, and Yildirim (2014), School choice with controlled choice constraints: Hard bounds versus soft bounds.
+    \item Goto, Kojima, Kurata, Tamura, and Yokoo (2017), Designing Matching Mechanisms under General Distributional Constraints.
+    \item Kurata, Hamada, Iwasaki, and Yokoo (2017), Controlled school choice with soft bounds and overlapping types.
+    \item Ayg\"un and Turhan (2020), Dynamic reserves in matching markets: Theory and applications.
+    \item Ayg\"un and Turhan (2023), How to De-Reserve Reserves: Admissions to Technical Colleges in India.
+    \item Ayg\"un and B\'o (2021), College admission with multidimensional privileges: The Brazilian affirmative action case.
+  \end{itemize}
+\end{frame}
+
+\end{document}

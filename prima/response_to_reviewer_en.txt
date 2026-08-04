@@ -1,0 +1,43 @@
+Subject: Response to Reviewer Comments -- Fair Admissions with Overlapping Reserve Categories under Score Constraints
+
+Dear Prof. Sun,
+
+Preferences are a primitive (exogenous input) of the model: each student i holds a strict total order >_i over her admissible category set V_i = {o} u T(i), and the mechanisms take this order as given. A key point is that students rank categories (admission routes), not schools: because there is a single school, >_i expresses which route -- the open category, or one of the reserve categories the student is eligible for -- she would prefer to be admitted through. Strategic aspects of preference reporting are outside the scope of this paper and are noted as an open problem.
+
+I added a sentence making this explicit at the definition of preferences in the Model section:
+
+  "These preferences are exogenous data taken as given by the mechanisms below; as there is a single school, students rank categories rather than schools, so >_i records which admission route -- the open category or an eligible reserve category -- the student prefers."
+
+
+Comment 2. Since delta already lets a reserve student be admitted up to delta points below the open cutoff, why also use the adjusted (bonus) score for the reserve cutoff? This looks like the advantage is counted twice.
+
+You are right that, in raw-score terms, the two relaxations do compound: a student admitted to reserve category t may have a raw score as much as (delta + k_t) below the open cutoff, because score-feasibility requires only sigma(i) + k_t >= e_o(mu) - delta. However, this is by design, not a double count, because the bonus and the gap act on different objects:
+
+  - The bonus k_t is a within-category ranking device: it only decides which eligible students a reserve category prioritizes, and by itself it never relaxes how far a reserve cutoff may fall.
+  - The gap delta is an ex post constraint on the realized cutoffs, measured on the adjusted scale sigma_t.
+
+The model treats k_t as the institutionally sanctioned adjustment to the merit scale inside category t, and lets delta bound only the residual gap that remains after that adjustment. A stricter policy that wished to cap the raw-score gap directly could measure delta against sigma(i) rather than sigma_t(i); I adopt the adjusted-scale version precisely because it treats the bonus as a legitimate component of reserve merit.
+
+I added the following passage immediately after the discussion of score-feasibility:
+
+  "One might worry that this grants the reserve advantage twice. It does not: k_t only ranks students within a category, while delta constrains the realized cutoffs on the adjusted scale. In raw scores the two compound -- a reserve admit may fall (delta + k_t) below the open cutoff, since score-feasibility requires only sigma(i) + k_t >= e_o(mu) - delta -- but this is deliberate, since delta is meant to bound only the gap left after the sanctioned adjustment k_t."
+
+
+Comment 3. In PA-ODR's capacity-reduction step, when several reserve categories cannot meet their effective capacity the algorithm picks an arbitrary t*. Does this choice change the final result? Is it shown that different choices of t* give the same result, or that optimality is preserved?
+
+In short: I (i) removed the arbitrariness by making the choice deterministic, (ii) show that the choice can change the final result, and (iii) show that PA-ODR is not optimal (it does not minimize de-reservation).
+
+  1. Determinism. The earlier phrasing "choose one such category t*" was non-deterministic, so the mechanism was not well defined. In the revision I add a fixed linear order < on categories to the input and take t* to be the <-first eligible category, which makes the output unique.
+
+  2. Order dependence. In the new subsection "Order Dependence and Non-Minimality" (with an explicit example) I show that, on the same input, the direction of < changes the number of de-reserved seats between one and two, so that under one order a reserve quota survives while under the other both reserve quotas are destroyed. Hence the choice of t* does change the final outcome in a substantive way.
+
+  3. Optimality. This counterexample shows that PA-ODR does not minimize the total amount of de-reservation. Whether the total de-reservation can be minimized in polynomial time, and whether a mechanism that is simultaneously score-feasible and minimally de-reserving exists, is stated explicitly as an open problem.
+
+In other words, the claim that "different t* yield the same result / preserve optimality" does not hold; the paper instead establishes the opposite (order dependence and non-minimality) with an explicit counterexample.
+
+--------------------------------------------------------------------
+
+I have incorporated all three points into the manuscript, and I thank you again for the helpful comments.
+
+Best regards,
+The Author

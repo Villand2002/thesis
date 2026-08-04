@@ -1,0 +1,314 @@
+\documentclass[10pt]{article}
+
+\usepackage[a4paper,margin=0.78in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage[square,numbers,sort&compress]{natbib}
+\setlist{leftmargin=1.2em,itemsep=1pt,topsep=2pt}
+\setlength{\parskip}{2pt}
+\setlength{\parindent}{1em}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+
+\title{Admissions for overlapping Categories with Score Constraints}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\vspace{-2em}
+
+\begin{abstract}
+This paper studies admissions with overlapping reserve categories under score constraints. In many reserve-based admission systems, a student may be eligible for multiple reserved categories, while each admitted student is counted toward only one category. Such overlapping eligibility introduces a nontrivial assignment problem, since the category to which a student is assigned affects both the utilization of reserved seats and the fairness of the final allocation.
+
+We consider a score-elevated admission model in which each student has a raw score, a set of eligible reserved categories, and preferences over seat categories. The open category ranks students by their raw scores, while each reserved category ranks eligible students according to category-specific adjusted scores obtained by adding predetermined score bonuses. In addition, admissions are subject to score constraints requiring the cutoff scores of reserved categories to be no lower than that of the open category.
+
+Within this framework, we study admissions with overlapping reserve categories under score constraints. We consider several natural admission algorithms, including student-proposing and category-proposing deferred acceptance variants, and analyze their theoretical properties. In particular, we investigate whether these algorithms satisfy desirable axioms such as capacity feasibility, score feasibility, non-wastefulness, fairness, and stability. Our results characterize the trade-offs among these properties and identify which guarantees can and cannot be achieved by different algorithmic approaches.
+\end{abstract}
+
+\section{Introduction}
+
+
+Admissions systems often use reserved categories to promote diversity or to provide affirmative action for disadvantaged groups \citep{Abdu05a,AyTu20a,AyBo21a}. A standard reserve system divides seats into an open category and several reserved categories. Students eligible for a reserved category may compete for the corresponding seats, while all students may compete for open seats \citep{Abdu05a,AyTu23a}.
+
+This paper studies a setting in which reserved categories may overlap. A student may be eligible for more than one reserved category. For example, a student may belong to multiple target groups simultaneously. When one-to-one counting is used, an admitted student can be counted toward only one category even if she is eligible for several categories \citep{AyBo21a,KHIY17a}. Therefore, the assignment of an overlapping student to a particular category is itself part of the allocation problem.
+
+Overlapping reserve categories raise two difficulties. First, the mechanism must decide which category should count an overlapping student. Second, the fairness comparison between students may depend on the category under consideration. A student who has high priority in one reserved category may not have the same priority in another category. Hence, a single common priority ordering may be insufficient to describe the relevant fairness requirements \citep{KHIY17a,GKK+17a}.
+
+We study this problem through a score-elevated approach. Each reserved category has a bonus parameter. A student eligible for that category receives the corresponding bonus when she is evaluated in that category. The open category uses raw scores, while reserved categories use category-adjusted scores. This approach captures policies in which reserve eligibility gives an advantage within a particular category. It is related to affirmative-action settings with multidimensional privileges \citep{AyBo21a}, although there such privileges are implemented through category-specific reserved seats rather than through score bonuses.
+
+We propose a student-proposing score-elevated mechanism. Students apply to eligible categories according to their preferences over categories. Each category tentatively keeps applicants with the highest adjusted scores up to its capacity. Since each student can be held by at most one category, the mechanism implements one-to-one counting. Its proposal-rejection structure follows the deferred-acceptance tradition of \citet{GaSh62a} and \citet{Roth08a}.
+
+Our analysis shows that the mechanism satisfies capacity feasibility, non-wastefulness, and within-category fairness. However, the mechanism does not generally satisfy score-feasibility when score-feasibility requires the gap between the open-category cutoff and reserved-category cutoffs to be bounded. This negative result is important because it clarifies that category-specific score elevation alone does not guarantee cutoff-gap constraints. Additional design features are needed if such constraints are institutionally required.
+
+\section{Model}
+
+We consider admissions to a single school. Let $I$ be a finite set of students. Let $T$ be a finite set of reserved categories, and let $o$ denote the open category. The set of all categories is
+\[
+V := T \cup \{o\}.
+\]
+Each student $i\in I$ has a raw score $\sigma(i)\in\R_+$. Each student is eligible for a subset of reserved categories $\T(i)\subseteq T$. The set of categories to which student $i$ may apply is
+\[
+V_i := \{o\}\cup \T(i).
+\]
+Thus, every student may apply to the open category, but student $i$ may apply to a reserved category $t$ only if $t\in\T(i)$.
+
+Each category $c\in V$ has capacity $q^c\in\mathbb{N}$. A matching is a tuple $\mu=(\mu_c)_{c\in V}$, where $\mu_c\subseteq I$ is the set of students assigned to category $c$.
+
+\begin{definition}[Feasibility]
+A matching $\mu$ is feasible if the following two conditions hold:
+\begin{enumerate}
+\item For every category $c\in V$, $|\mu_c|\le q^c$.
+\item No student is assigned to more than one category. That is, $\mu_c\cap \mu_{c'}=\emptyset$ for all distinct $c,c'\in V$.
+\end{enumerate}
+\end{definition}
+
+The second condition captures one-to-one counting. Even if a student is eligible for several reserved categories, she can be counted toward at most one category.
+
+\subsection{Category-adjusted scores}
+
+For each reserved category $t\in T$, let $k_t\ge 0$ be the bonus parameter for category $t$. For each category $c\in V$, define the category-adjusted score of student $i$ by
+\[
+\sigma_c(i)
+:=
+\begin{cases}
+\sigma(i), & \text{if } c=o,\\[3pt]
+\sigma(i)+k_t\{t\in\T(i)\}, & \text{if } c=t\in T.
+\end{cases}
+\]
+Since students can apply to $t$ only when $t\in\T(i)$, eligible students in reserved category $t$ receive the bonus $k_t$ when evaluated by category $t$.
+
+Each category ranks students according to its category-adjusted score. We write $i\succ_c^S j$ if student $i$ has higher priority than student $j$ in category $c$. In this paper,
+\[
+i\succ_c^S j
+\quad \Longleftrightarrow \quad
+\sigma_c(i)>\sigma_c(j).
+\]
+For simplicity, ties are assumed not to occur. Ties can instead be broken by a fixed exogenous rule.
+
+\subsection{Score-feasibility}
+
+In Indian technical-college admissions, the open-category cutoff is required to be higher than the reserved-category cutoffs \citep{AyTu23a}. Motivated by such cutoff-ordering requirements, we impose a cutoff-gap constraint between the open category and reserved categories, formulated using the open cutoff and the reserved adjusted cutoff.
+
+For a matching $M(\mu)$, define the open cutoff by
+\[
+e_o(\mu):=\min_{i:(i,o)\in M(\mu)}\sigma(i),
+\]
+with the convention that $e_o(\mu)=+\infty$ if $\mu_o=\emptyset$. For each reserved category $t\in T$, define the adjusted reserved cutoff by
+\[
+e_t^+(\mu):=\min_{i:(i,t)\in M(\mu)}\sigma_t(i).
+\]
+with the convention that $e_t^+(\mu)=+\infty$ if $\mu_t=\emptyset$. Let $\delta\ge 0$ be the maximum allowable cutoff gap.
+
+\begin{definition}[Score-Feasibility]
+A matching $M(\mu)$ is score-feasible if, for every reserved category $t\in T$ such that $\mu_o\ne\emptyset$ and $\mu_t\ne\emptyset$,
+\[
+e_o(\mu)-e_t^+(\mu)\le \delta.
+\]
+\end{definition}
+
+This condition requires that the adjusted cutoff in each nonempty reserved category not fall too far below the open cutoff. The point of the condition is to limit how far reserve admissions may drift below open admissions once category-specific bonuses are treated as legitimate parts of the institutional priority rule. It is therefore an outcome requirement on final cutoffs, not a ranking rule by itself. This is why a deferred-acceptance mechanism based on adjusted scores can still fail to satisfy score-feasibility ex post.
+
+
+\begin{definition}[Set of Matched Pairs]
+For a matching $M(\mu)$, define
+\[
+M(\mu) := \{(i,c)\in I\times V \mid i\in \mu_c\}.
+\]
+That is, $M(\mu)$ is the set of student–category pairs assigned under $\mu$. By feasibility, each student $i$ appears in at most one pair of $M(\mu)$; we write $\mu(i)=c$ if $(i,c)\in M(\mu)$, and say $i$ is \emph{matched} (otherwise $i$ is \emph{unmatched}).
+\end{definition}
+\section{The Score-Elevated Mechanism}
+
+We now define the mechanism. It is a deferred-acceptance-style algorithm in which students propose to eligible categories and categories hold their most preferred applicants according to category-adjusted scores \citep{GaSh62a,Roth08a}.
+
+\paragraph{Student-Proposing Score-Elevated Mechanism.}
+The mechanism proceeds as follows.
+
+\begin{enumerate}
+\item Set $\mu_c=\emptyset$ for every category $c\in V$.
+\item Mark every student as unmatched, and compute $\sigma_c(i)$ for every student $i$ and every category $c$.
+\item For every student $i$, define the set of categories to which she can apply as $V_i=\{o\}\cup\T(i)$.
+\item While there exists an unmatched student $i$ who has not yet applied to every category in $V_i$, let $i$ apply to the most preferred category $c\in V_i$ to which she has not yet applied.
+\item Category $c$ considers the set $\mu_c\cup\{i\}$ and keeps at most $q^c$ students with the highest values of $\sigma_c$.
+\item Students not kept by category $c$ become unmatched.
+\item When no such student remains, return $M(\mu)$.
+\end{enumerate}
+
+The mechanism implements one-to-one counting because each student can be held by at most one category at any time. If an overlapping student is eligible for two reserved categories, the category to which she is finally assigned is determined endogenously by her proposals and the categories' adjusted-score priorities.
+
+\section{Properties}
+
+\subsection{Capacity feasibility}
+
+\begin{proposition}[Feasibility]
+\label{prop:feasibility}
+The output of the Student-Proposing Score-Elevated Mechanism is feasible.
+\end{proposition}
+
+\begin{proof}
+At every step, each category $c$ keeps at most $q^c$ students. Hence $|\mu_c|\le q^c$ for every $c\in V$ in the final matching. Moreover, a student can be held by at most one category at any time. If she is rejected, she becomes unmatched and may apply to another category later. Thus no student is assigned to two different categories in the final matching.
+\end{proof}
+
+\subsection{Non-wastefulness}
+
+\begin{definition}[Non-Wastefulness]
+A feasible matching $M(\mu)$ is non-wasteful if there do not exist a student $i$ with $(i,c)\notin M(\mu)$ for all $c\in V$, and a category $c\in V_i$, such that $|\mu_c|<q^c$.
+\end{definition}
+
+Thus, a matching is wasteful if some unmatched student could be added to an eligible category with an empty seat. This adapts the standard non-wastefulness idea from matching and controlled-choice models to our one-to-one-counting, category-based setting \citep{EHYY14a,GKK+17a,KHIY17a}.
+
+\begin{proposition}[Non-Wastefulness]
+\label{prop:nonwastefulness}
+The output of the Student-Proposing Score-Elevated Mechanism is non-wasteful.
+\end{proposition}
+
+\begin{proof}
+Suppose, toward a contradiction, that an unmatched student $i$ and a category $c\in V_i$ satisfy $|\mu_c|<q^c$ in the final matching. Since $i$ is unmatched, she must have applied to every category in $V_i$, including $c$. When $i$ was rejected by $c$, the category held $q^c$ students with priority at least as high as $i$ according to $\succ_c^S$. Thereafter, category $c$ only replaces held students with higher-priority applicants and never voluntarily creates an empty seat. Hence $c$ must be full in the final matching, contradicting $|\mu_c|<q^c$.
+\end{proof}
+
+\subsection{Within-category fairness}
+
+\begin{definition}[Within-Category Fairness]
+A feasible matching $M(\mu)$ is fair within categories if there do not exist a student $i$ with $i\notin\bigcup_{c\in V}\mu_c$, a student $j$, and a category $c\in V$ such that
+\[
+(j,c)\in M(\mu),\qquad c\in V_i,\qquad i\succ_c^S j.
+\]
+\end{definition}
+
+This notion is the category-specific analogue of no-justified-envy fairness under distributional constraints \citep{GKK+17a,KHIY17a}, specialized to overlapping reserve categories with category-adjusted priorities. The additional requirement that comparisons respect category-adjusted scores is specific to our score-elevated setting.
+
+\begin{proposition}[Within-Category Fairness]
+\label{prop:within-category-fairness}
+The output of the Student-Proposing Score-Elevated Mechanism is fair within categories.
+\end{proposition}
+
+\begin{proof}
+Suppose, toward a contradiction, that there exist an unmatched student $i$, a matched student $j$, and a category $c$ such that $j\in\mu_c$, $c\in V_i$, and $i\succ_c^S j$. Since $i$ is unmatched, she must have applied to $c$ and been rejected. At the time of rejection, category $c$ held $q^c$ students with priority at least as high as $i$. Since categories only replace held students with higher-priority students, every student held by $c$ at the end must have priority at least as high as $i$. This contradicts $i\succ_c^S j$ for some $j\in\mu_c$.
+\end{proof}
+
+\subsection{Score-feasibility is not guaranteed}
+
+The previous results show that the mechanism satisfies feasibility, non-wastefulness, and within-category fairness. However, these properties do not imply score-feasibility.
+
+\begin{proposition}[Failure of Score-Feasibility]
+\label{prop:score-feasibility-not-guaranteed}
+The output of the Student-Proposing Score-Elevated Mechanism is not necessarily score-feasible.
+\end{proposition}
+
+\begin{proof}
+Consider an instance with one open category $o$ and one reserved category $t$. Let $q^o=q^t=1$, $\delta=10$, and $k_t=0$. There are two students $A$ and $B$ with
+\[
+\sigma(A)=100,\quad \T(A)=\emptyset,
+\qquad
+\sigma(B)=80,\quad \T(B)=\{t\}.
+\]
+Thus $V_A=\{o\}$ and $V_B=\{o,t\}$. Suppose $B$ prefers $t$ to $o$.
+
+The mechanism assigns $A$ to the open category and $B$ to the reserved category:
+\[
+\mu_o=\{A\},\qquad \mu_t=\{B\}.
+\]
+The open cutoff is $e_o(\mu)=100$, and the adjusted reserved cutoff is
+\[
+e_t^+(\mu)=\sigma_t(B)=80+0=80.
+\]
+Therefore,
+\[
+e_o(\mu)-e_t^+(\mu)=100-80=20>10=\delta.
+\]
+Hence the output is not score-feasible.
+\end{proof}
+
+\section{Illustrative Example}
+
+\begin{example}
+Let $T=\{t_1,t_2\}$ and $V=\{o,t_1,t_2\}$. Capacities are $q^o=q^{t_1}=q^{t_2}=1$. Let $k_{t_1}=k_{t_2}=10$ and $\delta=10$. The students are given by
+\[
+\begin{array}{c|c|c|c}
+\toprule
+\text{Student} & \sigma(i) & \T(i) & \text{Preference} \\
+\midrule
+A & 100 & \emptyset & o \\
+B & 96 & \{t_1\} & t_1\succ_B o \\
+C & 90 & \{t_1\} & t_1\succ_C o \\
+D & 88 & \{t_2\} & t_2\succ_D o \\
+E & 85 & \{t_1,t_2\} & t_2\succ_E t_1\succ_E o \\
+\bottomrule
+\end{array}
+\]
+The relevant adjusted scores are
+\[
+\sigma_{t_1}(B)=106,\quad
+\sigma_{t_1}(C)=100,\quad
+\sigma_{t_1}(E)=95,
+\]
+and
+\[
+\sigma_{t_2}(D)=98,\quad
+\sigma_{t_2}(E)=95.
+\]
+
+The mechanism assigns
+\[
+M(\mu)=\{(A,o),(B,t_1),(D,t_2)\}
+\]
+Students $C$ and $E$ are unmatched. The matching is feasible and non-wasteful because all seats are filled. It is also fair within categories: in $t_1$, neither $C$ nor $E$ has a higher adjusted score than $B$; in $t_2$, $E$ does not have a higher adjusted score than $D$.
+
+Moreover,
+\[
+e_o(\mu)=100,
+\qquad
+e_{t_1}^+(\mu)=106,
+\qquad
+e_{t_2}^+(\mu)=98.
+\]
+Hence $e_o(\mu)-e_{t_1}^+(\mu)=-6\le 10$ and $e_o(\mu)-e_{t_2}^+(\mu)=2\le 10$, so this particular matching is score-feasible.
+\end{example}
+
+\section{Summary of Properties}
+
+The following table summarizes the properties of the Student-Proposing Score-Elevated Mechanism established in the preceding section.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{Result} & \textbf{Key argument} \\
+\midrule
+Feasibility & Always holds & Each category retains at most $q^c$ students \\
+Non-wastefulness & Always holds & Unmatched students have applied to all categories \\
+Within-category fairness & Always holds & Rejected students are dominated by all final holders \\
+Score-feasibility & Not guaranteed & Mechanism does not enforce cutoff-gap constraints \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Discussion and Conclusion}
+
+The score-elevated mechanism provides a simple way to handle overlapping reserve categories. Each category uses its own adjusted score, and overlapping students can apply to multiple eligible categories according to their preferences. The mechanism also preserves one-to-one counting because each admitted student is ultimately assigned to at most one category.
+
+The positive results show that the mechanism satisfies several basic desiderata. It is feasible, non-wasteful, and fair within categories. These properties follow from the deferred-acceptance structure of the mechanism and from the fact that each category always keeps the highest-priority applicants according to its own priority rule.
+
+However, score-feasibility is different because it compares cutoffs across categories. Since reserved categories evaluate students using adjusted scores, the reserved cutoff generated by the mechanism may be too low relative to the open cutoff. Proposition~\ref{prop:score-feasibility-not-guaranteed} shows that cutoff-gap constraints require additional design beyond the basic score-elevated mechanism.
+
+This paper therefore identifies a central design issue in overlapping reserve systems: category-specific score elevation can deliver a natural within-category fairness notion, but it does not by itself guarantee cutoff-based feasibility. A natural next step is to design variants that enforce score-feasibility either with fixed capacities or with endogenous capacity reallocation, and to characterize when non-wastefulness, within-category fairness, and score-feasibility can be satisfied simultaneously.
+
+
+\section{Related Work}
+Deferred-acceptance mechanisms are the canonical starting point for school-choice and admissions design \citep{GaSh62a,Roth08a,AbSo03b}. Reserve-based affirmative-action mechanisms have been studied in settings without overlapping categories by \citet{Abdu05a}. Dynamic reserves, in which unfilled reserved seats are transferred across categories, are analyzed by \citet{AyTu20a}, and reservation together with de-reservation in Indian technical-college admissions is studied by \citet{AyTu23a}. Overlapping or multidimensional protected categories arise in controlled school choice and affirmative action with overlapping types; see \citet{KHIY17a}, \citet{GKK+17a}, and \citet{AyBo21a}. Our setting combines these two strands by studying overlapping reserve categories together with cutoff-style score constraints.
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}  
+
+
+\end{document}

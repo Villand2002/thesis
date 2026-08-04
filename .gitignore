@@ -1,0 +1,8 @@
+*.pdf
+
+__pycache__/
+
+latexmkrc
+*.bbl
+*.bib
+.DS_Store

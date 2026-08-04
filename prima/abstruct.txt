@@ -1,0 +1,116 @@
+\documentclass[
+  12pt,
+  a4paper,
+  oneside,
+  onecolumn,
+  titlepage,
+  final
+]{jsarticle}
+
+% Encoding and fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{fancyhdr} % added by Kei
+\usepackage[normalem]{ulem}
+
+% Math
+\usepackage{amsmath, amssymb, amsfonts, bm}
+\usepackage{amsthm}
+\usepackage{nicefrac}
+
+    \newtheorem{theorem}{Theorem}
+    \newtheorem{proposition}{Proposition}
+    \newtheorem{corollary}{Corollary}
+    \newtheorem{remark}{Remark}
+
+\usepackage{amsthm}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+
+% Tables and figures
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{tabularx}
+\usepackage{diagbox}
+\usepackage{colortbl}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{lscape}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shadows, intersections, calc, patterns}
+\usepackage{tikz-cd}
+
+% Algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% Lists/layout
+\usepackage{enumitem}
+\setlist{nolistsep}
+\usepackage{multicol}
+\columnseprule=0.5pt
+
+% Code listing
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Symbols for check/x
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}} % check
+\newcommand{\xmark}{\ding{55}} % x
+
+% Bibliography
+\usepackage{natbib}
+\bibliographystyle{unsrt}
+
+% Cross referencing and URLs
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% Headers/footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+
+% color helper and small macros
+\usepackage{xcolor}
+\newcommand{\zh}[1]{\textcolor{cyan}{Zhaohong says:#1}}
+\newcommand{\zhnew}[1]{\textcolor{cyan}{#1}}
+\newcommand{\ta}[1]{\textcolor{blue}{Taiki says: #1}}
+\newcommand{\tanew}[1]{\textcolor{blue}{#1}}
+\newcommand{\kk}[1]{\textcolor{green}{Kei says: #1}}
+\newcommand{\kknew}[1]{\textcolor{green}{#1}}
+\newtheorem{example}{Example}
+% document start
+\begin{document}
+
+\title{}
+
+\pagenumbering{roman}
+% \begin{abstract}
+% \end{abstract}
+
+\rhead{} % added by Kei
+
+
+\section{abstruct}
+This paper studies student admissions with overlapping reserve categories. In many affirmative action and diversity-based admissions systems, students may be eligible for more than one reserved category, while each admitted student can ultimately be counted toward only one seat category. This creates a nontrivial allocation problem: the category to which an overlapping student is assigned affects both the use of reserved seats and the fairness of the final outcome.
+
+We propose a score-elevated overlapping reserve mechanism. Each student has an original score, a set of eligible reserved categories, and preferences over seat categories. The open category is processed according to the original scores, while each reserved category is processed according to a category-specific adjusted score. For a reserved category (t), a student’s adjusted score is defined as the original score plus a category-specific bonus (k_t) if the student is eligible for category (t). Thus, eligibility for a reserved category is incorporated as a score advantage within that category, rather than as a hard exclusion rule. The mechanism sequentially assigns open seats first and then reserved categories according to a fixed processing order. Once a student is assigned to a category, the student is removed from later consideration, implementing one-to-one counting.
+
+The paper also discusses the appropriate feasibility and fairness notions for this environment. In particular, standard score-feasibility based only on original-score cutoffs is not directly suitable when reserved categories use score elevation. We therefore formulate feasibility in terms of score displacement: a lower original-score student may displace a higher original-score student only when the displacement is justified by the category-specific score elevation and the original-score gap remains bounded. We also define fairness within a category using the adjusted score relevant to that category. Under this view, a matching is unfair if an unmatched student has a higher adjusted score than a student assigned to the same reserved category.
+
+This approach shifts the design of reserve policies from hard category-based eligibility rules to category-specific priority design. It is especially useful in overlapping-category environments because it avoids the need to decide ex ante which single reserved identity should determine a student’s priority. Instead, different categories can recognize different forms of eligibility through their own score adjustments, while the final assignment still counts each admitted student only once. The proposed framework clarifies how score-based affirmative action policies can be extended to overlapping reserve categories and provides a basis for analyzing their fairness and feasibility properties.
+
+ 
+ 
+
+\end{document}
+

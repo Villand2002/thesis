@@ -1,0 +1,4436 @@
+\documentclass[
+  12pt,
+  a4paper,
+  oneside,
+  onecolumn,
+  titlepage,
+  final
+]{jsarticle}
+
+% Encoding and fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr} % added by Kei
+\usepackage[normalem]{ulem}
+
+% Math
+\usepackage{amsmath, amssymb, amsfonts, bm}
+\usepackage{amsthm}
+\usepackage{nicefrac}
+
+    \newtheorem{theorem}{Theorem}
+    \newtheorem{proposition}{Proposition}
+    \newtheorem{corollary}{Corollary}
+    \newtheorem{remark}{Remark}
+
+\usepackage{amsthm}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+
+% Tables and figures
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{tabularx}
+\usepackage{diagbox}
+\usepackage{colortbl}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{lscape}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shadows, intersections, calc, patterns}
+\usepackage{tikz-cd}
+
+% Algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% Lists/layout
+\usepackage{enumitem}
+\setlist{nolistsep}
+\usepackage{multicol}
+\columnseprule=0.5pt
+
+% Code listing
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Symbols for check/x
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}} % check
+\newcommand{\xmark}{\ding{55}} % x
+
+% Bibliography
+\usepackage[square,numbers,sort&compress]{natbib}
+\bibliographystyle{unsrtnat}
+
+% Cross referencing and URLs
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% Headers/footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+
+% color helper and small macros
+\usepackage{xcolor}
+\newcommand{\zh}[1]{\textcolor{cyan}{Zhaohong says:#1}}
+\newcommand{\zhnew}[1]{\textcolor{cyan}{#1}}
+\newcommand{\ta}[1]{\textcolor{blue}{Taiki says: #1}}
+\newcommand{\tanew}[1]{\textcolor{blue}{#1}}
+\newcommand{\kk}[1]{\textcolor{green}{Kei says: #1}}
+\newcommand{\kknew}[1]{\textcolor{green}{#1}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\newtheorem{example}{Example}
+% document start
+\begin{document}
+
+\title{}
+
+\pagenumbering{roman}
+% \begin{abstract}
+% \end{abstract}
+
+\rhead{} % added by Kei
+
+
+
+
+\section{モデル}
+
+一つの学校が学生を選抜する問題を考える。留保付き選抜や controlled school choice は，学校選択や affirmative action の文献で繰り返し扱われてきた \citep{Abdu05a,EHYY14a,AyTu20a,AyTu23a}。特に，重複タイプ（overlapping types）や多次元特権を伴う設定は \citet{KHIY17a} や \citet{AyBo21a} で研究されている。
+
+\begin{itemize}
+    \item 1つの一般カテゴリ（open category for all students）と複数の留保カテゴリ（reserved categories for a subset of students）が存在する。
+    
+    \item 各学生は複数の留保カテゴリに属する可能性がある。
+    
+    \item 各カテゴリには上限制約（quota）が課されている。
+    
+    \item すべてのカテゴリは，学生に対して共通の優先順位を共有する。
+    
+    \item \textbf{点数制約：} 一般カテゴリと各留保カテゴリのカットオフスコアの差が，ある定数以下となるよう制約される。
+\end{itemize}
+
+
+\subsection{カウント方式}
+
+\begin{itemize}
+    \item \textbf{One-to-one counting:} 学生がマッチした際，その学生は，自身が資格を有するカテゴリのうち，アルゴリズムによって決定されるただ一つのカテゴリに対してのみカウントされる。
+    \item \textbf{One-to-all counting:} 学生がマッチした際，その学生は，自身が資格を有するすべてのカテゴリに対してカウントされる。
+\end{itemize}
+
+本研究では，One-to-one counting を対象とする。重複資格の下で one-to-one counting をどう実装するかは，ブラジルの affirmative action や overlapping types を伴う controlled school choice でも中心的な論点である \citep{AyBo21a,KHIY17a}。
+
+
+\section{性質}
+
+以下の性質は，分配制約付き matching や controlled school choice の文献で用いられる公平性・非浪費性の概念を，ここでの重複カテゴリと点数制約の設定に合わせて言い換えたものである \citep{EHYY14a,GKK+17a,KHIY17a}。
+
+\begin{itemize}
+    \item \textbf{非浪費性（non-wastefulness）:}  
+    空席が残されない。
+    
+    \item \textbf{同一カテゴリ内の公平性（fairness within the same type）:}  
+    あるカテゴリ $t$ に属する任意の2人の学生 $i, j$ を考える。もし $i$ が $j$ より高い優先順位を持ち，$j$ がカテゴリ $t$ に割り当てられているならば，$i$ も必ずマッチしていなければならない。
+    
+    \item \textbf{カテゴリ間の公平性（fairness across types）:}  
+    共通するカテゴリを持たない任意の2人の学生 $i, j$ を考える。$i$ が $j$ より高い優先順位を持ち，$j$ があるカテゴリ $t$ にマッチしている一方で，$i$ が未マッチであるとする。このとき，$j$ を $i$ に置き換えることは，何らかのダイバーシティ目標に違反しなければならない。
+    
+
+\end{itemize}
+
+% \section{アルゴリズム}
+
+% 入力は問題インスタンスであり，出力は，どの学生が選抜されるかだけでなく，各学生がどのカテゴリに割り当てられるかを定める割当である。
+
+% \subsection{前のアルゴリズム}
+
+% まず，高得点の学生から順に一般カテゴリ（open category）の対象範囲を徐々に拡大する。各段階において，その時点での open cutoff を基準として，留保カテゴリ（reserved category）の合格者を決定する。留保カテゴリに属する学生は，自身の得点が open cutoff を最大許容点差以上下回らない場合に限り，留保カテゴリに応募することができる。
+
+% もし留保カテゴリの候補者数が不足し，留保を埋められない場合には，open cutoff をさらに引き下げる。これに伴い，一部の留保カテゴリは徐々に一般枠へ転換される（de-reservation）。最終的には，全候補者の中から得点上位の学生が選抜される。
+
+% このアルゴリズムは，学生が複数のカテゴリに同時に属するような重複カテゴリの設定には直接適用できない。
+
+% \section{やること}
+
+% 本研究では，点数制約の下で，公平性や非浪費性などの望ましい性質を満たすアルゴリズムの設計を目指す。
+
+% \begin{itemize}
+%     \item 公平性や非浪費性の定義を修正が必要です。
+% \end{itemize}
+% % \section{疑問}
+% % overlapping category $r_1$,$r_2$にoverlapしているとして、エージェントは$r_1$,$r_2$に割り当てられることに違いはあるのか。重複しているカテゴリは順位をもつのか
+% % answer:順番は同じ
+
+% % 0526 島村
+% % ============================================================
+% % 以下，0526 以降の追記
+% % ============================================================
+ 
+% \section{新しい定義の整備（0526〜）}
+ 
+% 本セクションでは，
+% \textbf{重複カテゴリ（overlapping categories）}と
+% \textbf{動的点数制約（dynamic score constraint）}の両方が存在し，
+% \textbf{One-to-one counting} を採用する場合における，
+% 非浪費性および公平性の定義を改めて与える。
+% 論文 \cite{ChineseHS} の定義は，
+% 各学生がただ一つの留保タイプしか持たない（$\tau(i) \in T \cup \{\emptyset\}$）
+% ことを暗黙の前提としているため，
+% 重複カテゴリ設定にそのままでは適用できない。
+% よって以下では，まず必要な記号を導入したうえで，
+% 論文の各定義をどう自然に拡張すべきかを議論する。
+ 
+% \subsection{記号の整理}
+ 
+% 論文の記号を踏襲したうえで，重複カテゴリ設定に必要な新記号を以下に列挙する。
+% \textbf{斜体太字}で示したものが本研究で新たに導入する記号である。
+ 
+% \begin{itemize}
+%     \item $I$：学生の有限集合。$H$：学校の有限集合（本節では1校に注目するため，添字 $h$ は省略することもある）。
+%     \item $\sigma : I \to \mathbb{R}_+$：学生のスコア関数。
+%     全ての学生のスコアは相異なると仮定する。
+%     \item $T$：留保カテゴリの有限集合。$o$：一般カテゴリのラベル。
+%     \item $S_h^t$：学校 $h$ におけるカテゴリ $t \in T$ の留保席集合。
+%     $S_h^o$：一般席集合。$q_h^t = |S_h^t|$，$q_h^o = |S_h^o|$，$q_h = |S_h|$。\zh{Sはいらない？}
+%     \item $\delta_h \in \mathbb{R}_+$：学校 $h$ における最大許容点差（maximal reserve score reduction）。
+% \end{itemize}
+ 
+% \noindent\textbf{新記号（重複カテゴリ設定のために導入）：}
+ 
+% \begin{itemize}
+%     \item $\bm{\mathcal{T}(i) \subseteq T}$：学生 $i$ が資格を持つ留保カテゴリの集合。
+%     \begin{itemize}
+%         \item 論文では $\tau(i) \in T \cup \{\emptyset\}$ と1要素であったが，
+%         重複カテゴリ設定では $|\mathcal{T}(i)| \geq 1$ もありうる。
+%         \item $\mathcal{T}(i) = \emptyset$ のとき，$i$ を\textbf{一般学生（general student）}と呼ぶ。
+%     \end{itemize}
+    
+%     \item $\bm{I_t} = \{i \in I : t \in \mathcal{T}(i)\}$：カテゴリ $t$ に資格を持つ学生の集合。
+%     \begin{itemize}
+%         \item 論文での $I_t = \{i : \tau(i) = t\}$ と異なり，
+%         $i \in I_{t_1} \cap I_{t_2}$（$t_1 \neq t_2$）となる学生が存在しうる。
+%     \end{itemize}
+    
+%     \item マッチング $\mu : I \to S \cup \{\emptyset\}$ と
+%     \textbf{割当カテゴリ関数} $\bm{\gamma(\mu(i)) \in T \cup \{o, \emptyset\}}$：
+%     \begin{itemize}
+%         \item One-to-one counting の下で，マッチした学生 $i$ がどのカテゴリの席に
+%         座っているかを示す。$\mu(i) = \emptyset$ のときは $\gamma(\mu(i)) = \emptyset$。
+%         \item 重要：$\mathcal{T}(i) \ni t_1, t_2$ で $i$ が学校 $h$ にマッチする場合，
+%         $\gamma(\mu(i))$ は $t_1, t_2, o$ のいずれかになりうる。
+%         この選択はアルゴリズムが決定する。
+%     \end{itemize}
+    
+%     \item $\bm{e_h(\mu)} = \min\{\sigma(j) : j \in \mu^H(h),\ \gamma(\mu(j)) = o\}$：
+%     マッチング $\mu$ の下での学校 $h$ の\textbf{一般席カットオフスコア}。
+%     一般席に誰も割り当てられていない場合は $e_h(\mu) = +\infty$ とする
+%     （つまり点数制約は誰も縛らない）。
+    
+%     \item $\bm{\text{point-feasible}(i, h, \mu)}$：
+%     学生 $i$ が学校 $h$ で留保席に座る資格を点数面で満たすという述語。
+%     形式的には
+%     \[
+%         \sigma(i) \;\geq\; e_h(\mu) - \delta_h.
+%     \]
+%     \zh{正しい？「学生 $i$ が学校 $h$ で留保席に座る資格」の部分はどこですか？}
+% \end{itemize}
+ 
+% \noindent\textbf{注意：}
+% 本研究では One-to-one counting を採用するため，
+% 各 $j \in \mu^H(h)$ について $\gamma(\mu(j))$ は唯一に定まる。
+% したがって「カテゴリ $t$ の席に座っている学生の集合」は
+% $\mu^H(h) \cap \{j : \gamma(\mu(j)) = t\}$ と曖昧さなく書ける。
+ 
+ 
+% \subsection{新しい非浪費性}
+ 
+% 論文 Definition~8 では，
+% 学生がより好む学校に空席があれば違反，とされている。
+% 重複カテゴリ＋点数制約の設定でこれを素直に拡張する場合，
+% 「空席があるが点数制約により誰もそこに入れない」
+% という状況をどう扱うかが問題となる。
+% ここでは，
+% \textbf{席のカテゴリ別に空きがあり，かつそこに座る資格を持つ学生が存在する}
+% 場合のみ「浪費」と見なす形で定義する。
+ 
+% \begin{definition}[新・非浪費性]
+% \label{def:new-nonwaste}
+% マッチング $\mu$ が\textbf{非浪費的（non-wasteful）}であるとは，
+% 任意の学生・学校ペア $(i, h)$ について，$h \succ_i \mu^H(i)$ ならば，
+% 以下の \textbf{(W1) かつ (W2)} のいずれもが\textbf{成立しない}ことをいう：
+% \begin{itemize}
+%     \item[\textbf{(W1)}] 学校 $h$ の一般席に空きがある，すなわち
+%     \[
+%         \bigl|\{j \in \mu^H(h) : \gamma(\mu(j)) = o\}\bigr| \;<\; q_h^o.
+%     \]
+%     \item[\textbf{(W2)}] ある $t \in \mathcal{T}(i)$ について以下がすべて成立する：
+%     \begin{enumerate}
+%         \item カテゴリ $t$ の留保席に空きがある，すなわち
+%         $\bigl|\{j \in \mu^H(h) : \gamma(\mu(j)) = t\}\bigr| < q_h^t$，
+%         \item $i$ は点数制約を満たす，すなわち
+%         $\text{point-feasible}(i, h, \mu)$，\zh{いらない？}
+%         \item $i$ が新たに $h$ に加わったときの一般席カットオフ $e_h(\mu')$
+%         の下でも依然として点数制約を満たす．\footnote{
+%             一般席は $i$ が加わっても変化しないため，$e_h(\mu') = e_h(\mu)$
+%             であり，この第3条件は実質第2条件と同値。ただし
+%             「$i$ を一般席に入れる場合」を考えるときには
+%             カットオフが変動するため，明示しておく。} \zh{２と３の違い？$\mu'$は何}
+%     \end{enumerate}
+% \end{itemize}
+% \end{definition}
+ 
+% \noindent\textbf{論文の Definition~8 との違い：}
+% \begin{enumerate}
+%     \item 論文では席のカテゴリを区別せず単に $|\mu^H(h)| < q_h$ を浪費の条件としていた。
+%     しかし本設定では，留保席に空きがあっても，
+%     その留保カテゴリに資格を持ち点数制約を満たす学生が
+%     存在しなければ「浪費」とは呼べない（実際にそこを埋める手段がない）。
+%     \item 重複カテゴリのため，$i$ にとって \textbf{(W2)} を満たす $t$ は
+%     複数あり得る。\textbf{ある一つでも}存在すれば浪費と判定する点が論文と異なる。
+% \end{enumerate}
+ 
+ 
+% \subsection{新・同一カテゴリ内公平性}
+ 
+% 論文 Definition~5（respecting scores）の前半部分に対応する性質を，
+% 重複カテゴリ設定に拡張する。直感的には，
+% 「あるカテゴリ $t$ の留保席に座っている下位スコアの学生 $j$ がいるならば，
+% 同じカテゴリ $t$ に資格を持ち $j$ より上位の学生は，
+% （点数制約を満たす限り）マッチしていなければならない」
+% というものである。
+ 
+% \begin{definition}[同一カテゴリ内公平性]
+% \label{def:within-cat-fair}
+% \zh{$\mu$は点数制約を満たすか？}
+% マッチング $\mu$ が\textbf{同一カテゴリ内で公平（fair within categories）}
+% であるとは，任意の学校 $h$，任意のカテゴリ $t \in T$，
+% および任意の2人の学生 $i, j$ について，
+% 以下を同時に満たす状況が存在しないことをいう：
+% \begin{enumerate}
+%     \item $t \in \mathcal{T}(i) \cap \mathcal{T}(j)$（両者がカテゴリ $t$ に資格を持つ），
+%     \item $\sigma(i) > \sigma(j)$，
+%     \item $\mu^H(j) = h$ かつ $\gamma(\mu(j)) = t$（$j$ がカテゴリ $t$ の留保席に座っている），
+%     \item $\mu^H(i) \neq h$ かつ $h \succeq_i \mu^H(i)$（$i$ は $h$ を弱く好み，マッチしていない），
+%     \item $\text{point-feasible}(i, h, \mu)$（$i$ が点数制約を満たす）．\zh{$\mu'$？もし条件２が満たせば、条件５がいらないでしょう。}
+% \end{enumerate}
+% \end{definition}
+ 
+% \noindent\textbf{ユーザー定義との対応：}
+% 当初の定義では「$i, j$ がカテゴリ $t$ に属する」とのみあったが，
+% 重複カテゴリでは「両者が同一カテゴリに資格を共有する」と読み替える必要がある。
+% また，$j$ が実際にカテゴリ $t$ の席に\textbf{座っている}ことを条件に含めるのが
+% 重要である（One-to-one counting の下で，
+% $j$ が $t$ に資格があっても別カテゴリの席に座っている場合は，
+% $j$ を $i$ に置き換えても $t$ の枠は埋まらないため）。
+ 
+ 
+% \subsection{新・カテゴリ間公平性}
+ 
+% 論文 Definition~5 の後半部分（respecting scores）と
+% Definition~4（respecting reserves）を，
+% 重複カテゴリ設定に拡張する。
+% ここでは「カテゴリ間公平性」を，
+% \emph{下位スコアの学生 $j$ がマッチしているのに，
+% 上位スコアの $i$ がマッチしていない・または劣る学校にいる}
+% という状況が許容されるのは，
+% $j$ の留保カテゴリ枠が $i$ にとって\textbf{利用不可能}な場合のみ，
+% と定式化する。
+ 
+% \begin{definition}[カテゴリ間公平性]
+% \label{def:across-cat-fair}
+% \zh{$\mu$は点数制約を満たすか？}
+% マッチング $\mu$ が\textbf{カテゴリ間で公平（fair across categories）}
+% であるとは，任意の学校 $h$，任意の2人の学生 $i, j$ について，
+% $\sigma(i) > \sigma(j)$，$\mu^H(j) = h$，$h \succ_i \mu^H(i)$
+% であるとき，以下の \textbf{(F1)〜(F3) がすべて}成立することをいう：
+% \begin{itemize}
+%     \item[\textbf{(F1)}] $\mu(j) = t \in T$ である
+%     （$j$ は一般席ではなく，留保席に座っている）．
+%     \item[\textbf{(F2)}] $t \notin \mathcal{T}(i)$ である，つまり、$j$のいるカテゴリに割り当てられる権利がない、重複がない。
+%     \textbf{または} $i$ は$i$は点数制約を満たさない
+%     （すなわち $\sigma(i) < e_h(\mu) - \delta_h$）．
+%     つまり $i$ には $j$ の座っている枠 $t$ に座る手段がない．\zh{ for any $t' \in T(i)$, i) any student who is matched to $t'$ must have higher priority than $i$ ii) there is no vacant seat of $t'$
+%     }
+%     \item[\textbf{(F3)}] $j$ はカテゴリ $t$ の上位 $q_h^t$ 名以内である．
+%     形式的には，$j \in \mathrm{Top}_{q_h^t}\bigl(I_t \cap (\mu^H(h) \setminus O_h)\bigr)$．
+%     ただし $O_h = \{k \in \mu^H(h) : \mu(k) = o\}$ は
+%     $h$ で一般席に座っている学生の集合，
+%     $\mathrm{Top}_{q}(X)$ は集合 $X$ のうちスコア上位 $q$ 名の集合．
+% \end{itemize}
+% 直感的に、点数が高かったら他の枠に座っててもそこまで羨まないかなという話
+
+% \end{definition}
+
+
+%  \section{May 27 To Do}
+
+%  \begin{itemize}
+%      \item Notation: $S$ を削除？
+%      \item Definition: 修正
+%      \item 両立性を調べる
+%  \end{itemize}
+
+
+
+
+
+
+% % 0528追記
+% \begin{definition}[カテゴリ間公平性（弱F3版）]
+% \label{def:across-cat-fair-weak}
+% score-feasible なマッチング $\mu$ が
+% \textbf{カテゴリ間で公平（fair across categories）}であるとは，
+% 以下の \textbf{(A)} と \textbf{(B)} がともに成立することをいう：
+% \begin{itemize}
+%     \item[\textbf{(A) weakF3：}] 任意の留保カテゴリ $t \in T$ と任意の
+%     $j \in \mu_t$ について，
+%     \[
+%         \nexists\, k \in I \setminus \mu \ \text{s.t.}\
+%         t \in \mathcal{T}(k)\ \text{かつ}\ \sigma(k) > \sigma(j).
+%     \]
+%     （カテゴリ $t$ の席に座る $j$ より高得点で $t$ に資格を持つ
+%     \textbf{未マッチ}学生は存在しない。）
+
+%     \item[\textbf{(B)：}] $\sigma(i) > \sigma(j)$，$j \in \mu$，
+%     $i \notin \mu$ なる任意の $i,j$ について，
+%     任意の $t \in \mathcal{T}(i)$ で
+%     $|\mu_t| = q^t$ かつ $\forall k\in\mu_t:\sigma(k)>\sigma(i)$，
+%     かつ $|\mu_o| = q^o$ かつ $\forall k\in\mu_o:\sigma(k)>\sigma(i)$。
+
+%     つまり、高得点でマッチしていない学生$i$がいるなら，
+
+% $i$の行ける reserved 枠は全部満席
+% しかもそこにいる全員が$i$より高得点
+% open も満席open の全員も$i$より高得点
+
+% を要求しています。
+% \end{itemize}
+% \end{definition}
+
+% \begin{definition}[同一カテゴリ内公平性]
+% \label{def:within-cat-final}
+% score-feasible なマッチング $\mu$ が
+% \textbf{同一カテゴリ内で公平（fair within categories）}であるとは，
+% 任意のカテゴリ $t \in T$ と任意の2人の学生 $i, j$ について，
+% 以下を同時に満たす状況が存在しないことをいう：
+% \begin{enumerate}
+%     \item $t \in \mathcal{T}(i) \cap \mathcal{T}(j)$（両者が $t$ に資格を持つ），
+%     \item $\sigma(i) > \sigma(j)$，
+%     \item $j \in \mu_t$（$j$ が $t$ の留保席に座っている），
+%     \item $i \notin \mu$（$i$ は未マッチ）。
+% \end{enumerate}
+% \end{definition}
+
+% \begin{definition}[非浪費性]
+% \label{def:nonwasteful-final}
+% score-feasible なマッチング $\mu$ が\textbf{非浪費的（non-wasteful）}
+% であるとは，任意の未マッチ学生 $i \in I \setminus \mu$ について，
+% 以下の \textbf{(W1)} と \textbf{(W2)} のいずれも成立しないことをいう：
+% \begin{itemize}
+%     \item[\textbf{(W1)}] 一般席に空きがあり，$i$ を一般席に加えても
+%     score-feasibility が保たれる。すなわち $|\mu_o| < q^o$ かつ，
+%     $\mu'_o = \mu_o\cup\{i\}$, $\mu'_t=\mu_t$ としたとき $\mu'$ が score-feasible。
+%     \item[\textbf{(W2)}] ある $t \in \mathcal{T}(i)$ について留保席に空きがあり，
+%     $i$ を入れても score-feasibility が保たれる。すなわち
+%     $|\mu_t| < q^t$ かつ $\sigma(i) \geq e(\mu) - \delta$。
+% \end{itemize}
+% \end{definition}
+
+% \section{0601追記、(孫先生のFB後)}
+
+% \begin{definition}[カテゴリ間公平性(非浪費性との重複をなくしました)]
+% \label{def:across-cat-B}
+% score-feasible なマッチング $\mu$ が\textbf{カテゴリ間で公平}であるとは，
+% 未マッチ学生 $i \in I \setminus \mu$ と既マッチ学生 $j \in \mu$ で
+% $\sigma(i) > \sigma(j)$ なる任意の学生について，
+% 以下の \textbf{(F-open)} と \textbf{(F-res)} のいずれも成立しないことをいう：
+% \begin{itemize}
+%     \item[\textbf{(F-open)}] $j \in \mu_o$（$j$ が一般席に座っている）であり，かつ
+%     $\mu'_o := (\mu_o \setminus \{j\}) \cup \{i\}$（他は不変）とした $\mu'$ が
+%     score-feasible。
+%     \item[\textbf{(F-res)}] ある $t \in \mathcal{T}(i)$ について $j \in \mu_t$
+%     （$j$ が $i$ の資格カテゴリの留保席に座っている）。
+% \end{itemize}
+% \end{definition}
+
+% 高得点なのに溢れた $i$がいるとき、その$i$が座れたはずの席(=資格カテゴリの留保席、または点差を壊さない範囲の一般席)を、$i$より低得点の者が占めていてはならない。資格外の留保枠を下位者が占めるのは許す。
+
+
+% \clearpage
+% \section{NEW CONCEPTS 06.01}
+
+
+% Create an eligible graph $G$ between students $S$ and categories $T$. For a ranked reservation graph, a matching $M'$ provides \textbf{strictly better diversity} than $M''$ if $|M'| > |M''|$; and a matching $M'$ provides \textbf{weakly better diversity} than $M''$ if $M' \geq M''$. A matching in graph $G$ is \emph{maximally diverse} if it provides weakly better diversity than all other matchings of $G$. 
+
+
+% \begin{definition}
+% \label{def:fair_across}
+% We say that student $i$ envies student $j$ under matching $\mu$ if:
+% \begin{itemize}
+%     \item $j$ is matched in $\mu$ but $i$ is not;
+%     \item $i$ has a higher score than $j$;
+%     \item $i$ and $j$ do not share any eligible category (\zhnew{excluding open category}); and
+% \item there exists another matching $\mu'$ such that
+
+%     \begin{itemize}
+
+%         \item $i$ is matched in $\mu'$ and $j$ is unmatched in $\mu'$;
+
+%         \item every student matched in $\mu$ other than $j$ remains matched in $\mu'$ (possibly to a different category); and
+
+%         \item $\mu'$ provides weakly better diversity than $\mu$.
+
+%     \end{itemize}
+% \end{itemize}
+% \end{definition}
+
+% \begin{example}
+%     \label{def:fair}
+%     $i,j,k$ where $i$ belongs to $t_1$, $k$ belongs to $t_1$ and $t_2$, and $j$ belongs to $t_2$.
+
+%     score: $k> i >j$.
+
+%     current matching: $k$ is matched to $t_1$ and $j$ is matched to $t_2$.
+
+%     We say $i$ has justified envy toward $j$ across types. This is because there is another matching where $i$ is matched to $t_1$ and $k$ is matched to $t_2$
+
+% \end{example}
+
+
+% \section{両立アルゴリズム：Cutoff-Indexed Maximum Matching (CIMM)}
+ 
+% \subsection{目標と方針}
+ 
+% 本節では，非浪費性・同一カテゴリ内公平性・
+% カテゴリ間公平性を両立する $\mu^*$ を
+% 多項式時間で構成するアルゴリズムを与える。
+ 
+% % \begin{enumerate}
+% %     \item \textbf{最大マッチング}（$|\mu|$ の最大化）$\Longrightarrow$ 非浪費性を保証する。
+% %     \item 同規模のもとで\textbf{スコア降順ベクトルの辞書式最大化}（高得点者を優先して
+% %     マッチさせる）$\Longrightarrow$ 同一／カテゴリ間公平性を保証する。
+% % \end{enumerate}
+ 
+% % 唯一の困難は\textbf{動的点数制約}である。一般席カットオフ
+% % $e(\mu)=\min\{\sigma(j):\gamma(\mu(j))=o\}$ が留保資格
+% % $\sigma(i)\ge e(\mu)-\delta$ を左右し，それがマッチング自体に依存するため
+% % 循環が生じる。これを\textbf{カットオフの列挙}（候補はたかだか $|I|+1$ 通り）
+% % によって切る。
+
+
+% \subsection{静的グラフ $G_\theta^{c}$（ピン留め版）}
+
+% カットオフ候補を「open の最小得点者」$c\in I$ で表し $\theta=\sigma(c)$ とする。
+% 二部グラフ $G_\theta^{c}=(I,T\cup\{o\},E_\theta^{c})$ を次で定める。
+% $\theta=\textsc{None}$ は一般席が満席でない場合。
+% \[
+% E_\theta^{c}=
+% \begin{cases}
+% \{(i,t):t\in\mathcal{T}(i)\}\cup\{(i,o):i\in I\}
+% & (\theta=\textsc{None})\\[4pt]
+% \{(i,t):t\in\mathcal{T}(i),\ \sigma(i)\ge\theta-\delta\}\ \cup\
+% \{(i,o):\sigma(i)\ge\theta\}
+% & (\theta\in\mathbb{R})
+% \end{cases}
+% \]
+% ただし $\theta\in\mathbb{R}$ のときは追加で
+% \textbf{(i) $c$ を $o$ にあらかじめ割り当てて固定}し，
+% \textbf{(ii) $\sigma(i)<\theta$ の学生は $o$ に入れない}ものとする
+% （前者で open-min $\le\theta$，後者で open-min $\ge\theta$，
+% ゆえに実現カットオフはちょうど $\theta$ に固定される）。
+
+
+ 
+% 各カテゴリ $t$ の容量は $q^t$，一般席 $o$ の容量は $q^o$ とする
+% （容量つき二部マッチング）。
+ 
+% \subsection{内側ルーチン：規模最大かつ辞書式最大なマッチング}
+ 
+% 固定した $G_\theta$ 上で，学生をスコア降順に走査し，
+% \emph{既にマッチさせた学生を一人も外さずに}新しい学生を入れられる
+% \textbf{増加道（augmenting path）}が存在する場合に限り，その学生を取り込む。
+% これはトランスバーサル・マトロイド上の貪欲法であり，
+% 「規模最大の中でスコア辞書式最大」なマッチングを正しく返す。
+ 
+% \begin{algorithm}[H]
+% \caption{\textsc{LexMaxMatching}$(G_\theta)$：規模最大かつ辞書式最大}
+% \label{alg:lexmax}
+% \begin{algorithmic}[1]
+% \Require 容量つき二部グラフ $G_\theta=(I,T\cup\{o\},E_\theta)$，スコア $\sigma$
+% \Ensure 規模最大かつスコア辞書式最大なマッチング $M$
+% \State $M \gets \emptyset$
+% \For{$s \in I$ をスコア $\sigma$ の降順に}
+%     \If{$G_\theta$ 上で $s$ から空き席へ至る増加道が存在する
+%          （$M$ の既マッチ学生は外さない）}
+%         \State その増加道に沿って $M$ を更新（$s$ を新規にマッチ）
+%     \EndIf
+% \EndFor
+% \State \Return $M$
+% \end{algorithmic}
+% \end{algorithm}
+ 
+% \subsection{外側ルーチン：カットoffの整合化}
+ 
+% 仮定した $\theta$ と，得られた $M$ が実際に実現するカットオフが整合する解だけを
+% 採用する。整合した候補の中から (規模, 辞書式) で最良のものを選ぶ。
+ 
+% \begin{algorithm}[H]
+% \caption{\textsc{CIMM}}
+% \label{alg:cimm-fixed}
+% \begin{algorithmic}[1]
+% \Require 学生集合 $I$，スコア $\sigma$，資格 $\mathcal{T}(\cdot)$，
+%          容量 $q^o,\{q^t\}_{t\in T}$，最大許容点差 $\delta$
+% \Ensure 非浪費的・同一カテゴリ内公平・カテゴリ間公平なマッチング $\mu^*$
+% \State $\textit{best} \gets \emptyset$
+% \ForAll{$c \in I \cup \{\textsc{None}\}$}
+%     \State $\theta \gets \sigma(c)$（$c=\textsc{None}$ なら $\theta\gets\textsc{None}$）
+%     \State $G_\theta^{c}$ を構成する
+%            \Comment{$c$ を $o$ に固定，$\sigma<\theta$ は $o$ 不可}
+%     \State $M \gets \textsc{LexMaxMatching}(G_\theta^{c})$
+%            \Comment{$c{\to}o$ の固定を保ったまま増加道を探す}
+%     \State \Comment{$M$ は構成上つねに score-feasible（検証不要）}
+%     \If{$|M|>|\textit{best}|$ \textbf{または}
+%         $(|M|=|\textit{best}|$ かつ $M$ のスコア降順列が
+%          $\textit{best}$ より辞書式に上$)$}
+%         \State $\textit{best} \gets M$
+%     \EndIf
+% \EndFor
+% \State \Return $\textit{best}$
+% \end{algorithmic}
+% \end{algorithm}
+ 
+% % \subsection{正当性}
+ 
+% % \begin{lemma}[規模最大 $\Rightarrow$ 非浪費]
+% % \label{lem:max-nonwaste}
+% % 規模最大な score-feasible マッチング $M$ は非浪費的である。
+% % \end{lemma}
+ 
+% % \begin{proof}
+% % 未マッチ学生 $i$ に対し (W1),(W2) が起きないことを示す。
+% % \textbf{(W1)}：一般席に空きがあり $i$ を加えられるとする。一般席には点数制約がなく，
+% % 低得点者を加えてもカットオフ $e$ は下がるのみで留保資格は緩むため，
+% % $i$ を加えた $M'$ も score-feasible で $|M'|=|M|+1$。これは規模最大性に矛盾。
+% % \textbf{(W2)}：ある $t\in\mathcal{T}(i)$ に空きがあり $\sigma(i)\ge e(M)-\delta$ とする。
+% % $i$ を留保席 $t$ に入れても一般席は不変なので $e$ は変わらず，
+% % $i$ も他者も feasible のまま $|M'|=|M|+1$。やはり矛盾。\qed
+% % \end{proof}
+ 
+% % \begin{lemma}[辞書式最大 $\Rightarrow$ カテゴリ間・同一カテゴリ内公平]
+% % \label{lem:lex-fair}
+% % 規模最大かつスコア辞書式最大な score-feasible マッチング $M$ では，
+% % いかなる学生も他者を envy しない（カテゴリ間公平）。同様に同一カテゴリ内公平でもある。
+% % \end{lemma}
+ 
+% % \begin{proof}
+% % $M$ で $i$ が $j$ を envy したと仮定する。envy の定義より，$i$ がマッチ・$j$ が
+% % 非マッチで，$j$ 以外の既マッチ学生を全員保持し，weakly better diversity を持つ
+% % score-feasible な $\mu'$ が存在する。$M$ は規模最大なので $|\mu'|\le|M|$，
+% % 一方 $\mu'$ は $M$ の $j$ 以外を保持し $i$ を加えるので $|\mu'|\ge|M|$。
+% % よって $|\mu'|=|M|$ であり，$\mu'$ のマッチ集合は
+% % $(\,M\text{のマッチ集合}\setminus\{j\})\cup\{i\}$。
+% % $\sigma(i)>\sigma(j)$ より，$\mu'$ のスコア降順列は $M$ のそれより
+% % 辞書式に真に大きい。これは $M$ の辞書式最大性に矛盾する。
+% % 同一カテゴリ内公平性も，同一カテゴリ内での $i$--$j$ 入れ替えが
+% % feasible な $\mu'$ を与えるため，同じ論法で従う。\qed
+% % \end{proof}
+ 
+% % \begin{lemma}[CIMM の正しさ]
+% % \label{lem:cimm-correct}
+% % \textsc{CIMM} は規模最大かつ辞書式最大な score-feasible マッチング $\mu^*$ を返す。
+% % \end{lemma}
+ 
+% % \begin{proof}
+% % $\mu^*$ の実現カットオフを $\theta^*$ とする（一般席満席なら
+% % $\theta^*=\min_{open}\sigma$，非満席なら $\textsc{None}$）。
+% % 外側ループが $\theta=\theta^*$ を処理するとき，$\mu^*$ の留保学生は
+% % 全員 $\sigma\ge\theta^*-\delta$，一般席学生は全員 $\sigma\ge\theta^*$ を満たすので
+% % $\mu^*\subseteq E_{\theta^*}$，すなわち $\mu^*$ は $G_{\theta^*}$ の合法マッチング。
+% % よって \textsc{LexMaxMatching} の返す $M$ は (規模, 辞書式) で $\mu^*$ 以上であり，
+% % かつ $M$ の実現カットオフは $\theta^*$ と整合し検証を通る。逆に検証を通った
+% % 任意の $M$ は真に score-feasible なので $\mu^*$ を超えない。ゆえに
+% % $\textit{best}=\mu^*$。\qed
+% % \end{proof}
+ 
+% % \begin{lemma}[計算量]
+% % \label{lem:cimm-time}
+% % $n=|I|$，$m=|E|$ とすると \textsc{CIMM} は多項式時間
+% % （$O(n)$ 個のカットオフ $\times$ マッチング構成）で動作する。
+% % \end{lemma}
+ 
+% % \medskip
+% % \noindent\textbf{系．}
+% % 補題~\ref{lem:max-nonwaste}, \ref{lem:lex-fair}, \ref{lem:cimm-correct} より，
+% % \textsc{CIMM} の出力は\textbf{非浪費的・同一カテゴリ内公平・カテゴリ間公平}を
+% % 同時に満たす。したがってこれら三性質は両立する。
+ 
+% \subsection{動作例（ピン留め版 CIMM・点数つき）}
+
+% \begin{example}
+% \label{ex:cimm-pinned}
+% カテゴリ集合を $T=\{t_1,t_2\}$，容量を
+% \[
+% q^o=1,\qquad q^{t_1}=1,\qquad q^{t_2}=1
+% \]
+% とし，最大許容点差を $\delta=10$ とする。
+% 学生のスコアと資格カテゴリは以下の通りである。
+
+% \begin{center}
+% \begin{tabular}{c|c|c}
+% 学生 & スコア $\sigma$ & 資格カテゴリ $\mathcal{T}(i)$ \\
+% \hline
+% $A$ & $100$ & $\emptyset$ \\
+% $B$ & $95$  & $\{t_1\}$ \\
+% $C$ & $88$  & $\{t_1,t_2\}$ \\
+% $D$ & $82$  & $\{t_2\}$ \\
+% \end{tabular}
+% \end{center}
+
+% 席は全部で $3$ つ，学生は $4$ 人であるから，
+% 達成可能な最大サイズは $3$ である。
+% 以下，外側ループの各ピン候補
+% $c\in\{A,B,C,D\}$ について $\theta=\sigma(c)$ とし，
+% \textbf{(i)} $c$ を一般席 $o$ に固定，
+% \textbf{(ii)} $\sigma(i)<\theta$ の学生は $o$ 不可，
+% \textbf{(iii)} 留保席は $\sigma(i)\ge\theta-\delta$ の学生のみ，
+% として \textsc{LexMaxMatching} を実行する。
+
+% \paragraph{$c=A$（$\theta=100$）.}
+% $A$ を $o$ に固定。留保は $\sigma\ge90$ ゆえ $B$ のみ
+% （$C,D$ は脱落）。降順処理で $B\to t_1$，$C,D$ は未マッチ。
+% \[
+% M=\{A\to o,\ B\to t_1\},\qquad |M|=2.
+% \]
+
+% \paragraph{$c=B$（$\theta=95$）.}
+% $B$ を $o$ に固定。留保は $\sigma\ge85$ ゆえ $C$ のみ。
+% $A$ は $o$ が $B$ で埋まり資格 $\emptyset$ ゆえ未マッチ。$C\to t_1$，
+% $D\,(82<85)$ は未マッチ。
+% \[
+% M=\{B\to o,\ C\to t_1\},\qquad |M|=2.
+% \]
+
+% \paragraph{$c=C$（$\theta=88$）.}
+% $C$ を $o$ に固定。留保は $\sigma\ge78$ ゆえ $B,D$。
+% 降順処理：$A$ は未マッチ，$B\to t_1$，$D\to t_2$。
+% \[
+% M=\{C\to o,\ B\to t_1,\ D\to t_2\},\qquad |M|=3.\quad\bigstar
+% \]
+
+% \paragraph{$c=D$（$\theta=82$）.}
+% $D$ を $o$ に固定。留保は $\sigma\ge72$ ゆえ $B,C$。
+% 降順処理：$A$ 未マッチ，$B\to t_1$，
+% 次に $C$ は $t_1$ が満席のため増加道
+% $C\to t_1\to(\text{占有者 }B)\,?$ ではなく
+% $C$ の重複資格を用いて $C\to t_2$。
+% \[
+% M=\{D\to o,\ B\to t_1,\ C\to t_2\},\qquad |M|=3.
+% \]
+
+% \medskip
+% \noindent
+% 各候補の結果を表にまとめる。
+
+% \begin{center}
+% \begin{tabular}{c|c|c|c|c}
+% $c$（$\theta$）& open 固定 & 留保可（$\sigma\ge\theta-\delta$）& 出力 $M$ & $|M|$ \\
+% \hline
+% $A$（$100$）& $A$ & $B$     & $\{A\to o,\,B\to t_1\}$            & $2$ \\
+% $B$（$95$） & $B$ & $C$     & $\{B\to o,\,C\to t_1\}$            & $2$ \\
+% $C$（$88$） & $C$ & $B,D$   & $\{C\to o,\,B\to t_1,\,D\to t_2\}$ & $\mathbf{3}\ \bigstar$ \\
+% $D$（$82$） & $D$ & $B,C$   & $\{D\to o,\,B\to t_1,\,C\to t_2\}$ & $3$ \\
+% \end{tabular}
+% \end{center}
+
+% $c=C$ と $c=D$ がともにサイズ $3$ を達成する。
+% 両者ともマッチ学生集合は $\{B,C,D\}$，
+% スコア降順列は $(95,88,82)$ で辞書式にも同点であるから，
+% ループ先着の $c=C$ が採用され，最終出力は
+% \[
+% \mu^*=\{C\to o,\ B\to t_1,\ D\to t_2\}.
+% \]
+
+
+% \paragraph{定義の充足.}
+% 未マッチは $A$ のみ。
+% \begin{itemize}
+%     \item \textbf{非浪費性：} $\mathcal{T}(A)=\emptyset$ ゆえ (W2) は不成立。
+%     $o$ は満席ゆえ (W1) も該当せず，仮に $A$ を $o$ に入れると
+%     $e=100$ となり $B(95),D(82)$ が点数制約を破り
+%     score-feasibility が崩れる。よって浪費は生じない。
+%     \item \textbf{同一カテゴリ内公平：} $t_1$ は $B(95)$，$t_2$ は $D(82)$
+%     が占有し，同じカテゴリに権利を持ち、より高得点の未マッチ学生は存在しない
+%     （$A$ は資格なし）。
+%     \item \textbf{カテゴリ間公平：} $A$ を入れる
+%     いかなる $\mu'$ も $e=100$ となり $B,D$ を落として
+%     $|\mu'|<|\mu^*|$，すなわちより多様な $\mu'$ が存在しない。
+%     よって justified envy は生じない。
+% \end{itemize}
+% \end{example}
+
+
+% \section{New paper}
+% How to De-Reserve Reserves: Admissions to Technical Colleges in India
+
+
+% \section{0603のミーティング以降の文章}
+
+% \section{重複カテゴリ下の De-Reservation (ODR)}
+
+% \subsection{方針}
+
+% CIMM は「規模最大→スコア辞書式最大」を直接最適化するため，
+% 一般席カットオフを意図的に下げて下位学生を open に座らせることがあり，
+% 最上位学生 $A$ が溢れる（例 \ref{ex:cimm-pinned}）。
+% 本節では，\textbf{open 席は常に全体スコア上位で埋める}という
+% メリット尊重を構成上保証し，
+% それにより埋まらなくなった留保席（\textbf{余った枠}）だけを
+% 一般枠へ転換する前進型アルゴリズムを与える。
+% これは論文の従来法（de-reservation）の重複カテゴリへの自然な拡張である。
+
+% \subsection{同一カテゴリ内公平性の open 拡張}
+
+% 従来の \cref{def:within-cat-final} は留保カテゴリ $t \in T$ のみを走査し，
+% open 席を対象に含めていなかった。これが
+% 「$A$ が未マッチでも違反にならない」抜けの原因である。
+% そこで各学生の資格集合を
+% \[
+%     \mathcal{T}^{+}(i) \;:=\; \mathcal{T}(i) \cup \{o\}
+% \]
+% と拡張し（全学生が open に資格を持つ），
+% 席カテゴリ $c \in T \cup \{o\}$ 全体で公平性を要求する。
+
+% \begin{definition}[一般枠も考慮した同一カテゴリ内公平性]
+% \label{def:within-open}
+% score-feasible なマッチング $\mu$ が公平であるとは，
+% 任意の席カテゴリ $c \in T \cup \{o\}$ と任意の2学生 $i,j$ について，
+% 以下を同時に満たす状況が\textbf{存在しない}ことをいう：
+% (1) $c \in \mathcal{T}^{+}(i) \cap \mathcal{T}^{+}(j)$，
+% (2) $\sigma(i) > \sigma(j)$，
+% (3) $j$ が $c$ の席に座っている，
+% (4) $i$ は未マッチ。
+% \end{definition}
+
+% \begin{definition}[緩和した非浪費性]
+% \label{def:nonwaste-card}
+% score-feasible なマッチング $\mu$ が\textbf{非浪費的}であるとは，
+% de-reserved 容量ベクトル $\hat q$ と $\hat q$ 下の score-feasible な
+% $\mu'$ で，$\mu$ のマッチ者を全員保持しつつ $|\mu'|>|\mu|$ となるものが
+% \emph{存在しない}ことをいう。
+% \end{definition}
+
+
+% \begin{definition}[カテゴリ間公平性]
+% \label{def:across-cat-B}
+% score-feasible なマッチング $\mu$ が\textbf{カテゴリ間で公平}であるとは，
+% 未マッチ学生 $i\in I\setminus\mu$ と既マッチ学生 $j\in\mu$ で
+% $\sigma(i)>\sigma(j)$ なる任意の対について，次の (F-open) と (F-res) の
+% \textbf{いずれも成立しない}ことをいう：
+% \begin{itemize}
+%     \item[\textbf{(F-open)}] $j\in\mu_o$ であり，かつ
+%     $\mu'_o:=(\mu_o\setminus\{j\})\cup\{i\}$（他は不変）とした $\mu'$ が
+%     score-feasible（$i$ を $j$ の代わりに一般席へ入れても点数制約が保たれる）。
+%     \item[\textbf{(F-res)}] ある $t\in\mathcal{T}(i)$ について $j\in\mu_t$
+%     （$j$ が $i$ の資格カテゴリの留保席に座っている）。
+% \end{itemize}
+% \end{definition}
+
+% つまり、高得点でありながら溢れた学生 $i$ がいるとき，
+% $i$ が\emph{正当に座れたはずの席}を，$i$ より低得点の学生が
+% 占めていてはならない。ここで「正当に座れたはずの席」とは
+% (a) $i$ の資格カテゴリ $t\in\mathcal{T}(i)$ の留保席，または
+% (b) 点数制約を壊さない範囲の一般席 $o$，を指す。
+% 逆に，$i$ が資格を持たない留保枠を下位者が占めることは
+% \textbf{許容する}
+
+
+% \subsection{アルゴリズム}
+
+% 可変容量 $\hat q^o,\{\hat q^t\}$ を用いる。各stepで
+% open を全体上位で埋め，残りを留保席へ LexMax で割り当て，
+% 空席（余った枠）が出れば 1 つ open へ転換して再計算する。
+
+% \begin{algorithm}[H]
+% \caption{\textsc{Overlapping De-Reservation (ODR)}}
+% \label{alg:odr}
+% \begin{algorithmic}[1]
+% \Require $I,\ \sigma,\ \mathcal{T}(\cdot),\ q^o,\ \{q^t\}_{t\in T},\ \delta$
+% \Ensure マッチング $\mu=(O,(\mu_t)_{t\in T})$
+% \State $\hat q^o \gets q^o$;\quad $\hat q^t \gets q^t\ (\forall t\in T)$
+% \Loop
+%     \State $O \gets$ スコア上位 $\min\{\hat q^o,\,|I|\}$ 名
+         
+%     \State $e \gets \min_{j\in O}\sigma(j)$ \quad（$O=\emptyset$ なら $e\gets+\infty$）
+%     \State $R \gets \{\, i \in I\setminus O : \sigma(i) \ge e-\delta \,\}$
+%     \State 二部グラフ $G$ を作る：左 $R$，右 各 $t\in T$（容量 $\hat q^t$），
+%            辺 $(i,t)\Leftrightarrow t\in\mathcal{T}(i)$
+%     \State $(\mu_t)_{t\in T} \gets \textsc{LexMaxMatching}(G)$
+    
+%     \If{ある $t\in T$ で $|\mu_t| < \hat q^t$（割り当てられていない枠が存在）}
+%         \State そのような枠を 1 つ選び，$\hat q^o \mathrel{+}= 1$，$\hat q^t \mathrel{-}= 1$
+%     \Else
+%         \State \Return $\mu=(O,(\mu_t)_{t\in T})$
+%     \EndIf
+% \EndLoop
+% \end{algorithmic}
+% \end{algorithm}
+
+% \subsection{動作例}
+ 
+% \begin{example}
+% \label{ex:odr}
+% カテゴリ集合を $T=\{t_1,t_2\}$，容量を
+% \[
+% q^o=1,\qquad q^{t_1}=1,\qquad q^{t_2}=1
+% \]
+% とし，最大許容点差を $\delta=10$ とする
+% （例 \ref{ex:cimm-pinned} と同一のインスタンス）。
+% 学生のスコアと資格カテゴリは以下の通りである。
+ 
+% \begin{center}
+% \begin{tabular}{c|c|c}
+% 学生 & スコア $\sigma$ & 資格カテゴリ $\mathcal{T}(i)$ \\
+% \hline
+% $A$ & $100$ & $\emptyset$ \\
+% $B$ & $95$  & $\{t_1\}$ \\
+% $C$ & $88$  & $\{t_1,t_2\}$ \\
+% $D$ & $82$  & $\{t_2\}$ \\
+% \end{tabular}
+% \end{center}
+ 
+% 総容量は $Q=q^o+q^{t_1}+q^{t_2}=3$ である。
+% ODR は可変容量 $\hat q$ を保ちながら，
+% 各stepで open を全体上位で埋め，
+% 残りを留保席へ \textsc{LexMaxMatching} で割り当て，
+% \textbf{余った枠}（割り当てのつかない留保席）が出れば
+% それを 1 つ open へ転換して再計算する。
+ 
+% \paragraph{step 1（$\hat q=(1,1,1)$）.}
+% open はスコア上位 $\hat q^o=1$ 名ゆえ $O=\{A\}$，
+% カットオフは $e=\sigma(A)=100$。
+% 留保候補は $\sigma\ge e-\delta=90$ を満たす
+% $O$ 外の学生で，$R=\{B\}$（$C=88,\ D=82$ は $90$ 未満で脱落）。
+% 二部グラフ上 \textsc{LexMax} は $B\to t_1$ を返す。
+% \[
+% \mu_{t_1}=\{B\}\ (\text{満席}),\qquad \mu_{t_2}=\emptyset.
+% \]
+% $t_2$ は $|\mu_{t_2}|=0<1=\hat q^{t_2}$ で\textbf{余った枠}。
+% これを open へ転換し，
+% \[
+% \hat q^o:\ 1\to 2,\qquad \hat q^{t_2}:\ 1\to 0.
+% \]
+ 
+% \paragraph{step 2（$\hat q=(2,1,0)$）.}
+% open はスコア上位 $2$ 名ゆえ $O=\{A,B\}$，
+% カットオフは $e=\sigma(B)=95$。
+% 留保候補は $\sigma\ge 95-10=85$ ゆえ $R=\{C\}$
+% （$D=82<85$ で脱落）。
+% $\hat q^{t_2}=0$ なので $t_2$ は閉じており，
+% $C$ は $t_1$ にのみ割り当て可能で $C\to t_1$。
+% \[
+% \mu_{t_1}=\{C\}\ (\text{満席}),\qquad \mu_{t_2}:\ \hat q^{t_2}=0.
+% \]
+% 余った枠は存在しないのでループを終了する。
+ 
+% \medskip
+% \noindent
+% stepごとの推移をまとめる。
+ 
+% \begin{center}
+% \begin{tabular}{c|c|c|c|c}
+% step & $\hat q=(\hat q^o,\hat q^{t_1},\hat q^{t_2})$ & $O$（$e$）& 留保割当 & 余った枠 \\
+% \hline
+% $1$ & $(1,1,1)$ & $\{A\}\ (100)$  & $B\to t_1$ & $t_2$ \\
+% $2$ & $(2,1,0)$ & $\{A,B\}\ (95)$ & $C\to t_1$ & なし（終了）\\
+% \end{tabular}
+% \end{center}
+ 
+% \noindent 最終出力は
+% \[
+% \mu^*:\quad \mu_o=\{A,B\},\quad \mu_{t_1}=\{C\},\quad \mu_{t_2}=\emptyset,
+% \]
+% すなわち $\{A\to o,\ B\to o,\ C\to t_1\}$，未マッチは $D$ のみ。
+% サイズは $3=Q$ で全席が埋まっている。
+% \end{example}
+
+% \paragraph{定義の充足.}
+% 未マッチは最下位の $D(82)$ のみ。
+% \begin{itemize}
+%     \item \textbf{同一カテゴリ内公平性（open考慮・\cref{def:within-open}）：}
+%     $D$ の資格席は $\mathcal{T}^{+}(D)=\{t_2,o\}$。
+%     $c=o$ では在籍者 $A(100),B(95)$ がともに $D$ より高得点ゆえ違反なし。
+%     $c=t_2$ は de-reserve 済みで誰も座っていない（$\mu_{t_2}=\emptyset$）ため違反なし。
+%     どの席カテゴリにも「在籍者より高得点で資格をもつ未マッチ学生」は存在しない。
+%     \item \textbf{非浪費性（\cref{def:nonwaste-card}）：}
+%     全 $Q=3$ 席が充足済みで $|\mu^*|=3=\min(|I|,Q)$。
+%     $D$ を加えるとマッチ数が $4>Q$ となり総容量を超えるため，
+%     既マッチ者 $A,B,C$ を保持したまま $D$ を入れる
+%     （de-reserve をどう使っても）手段はない。
+%     \item \textbf{カテゴリ間公平性（\cref{def:across-cat-B}）：}
+%     唯一の未マッチ $D(82)$ より低得点のマッチ学生は存在しない
+%     （$A,B,C$ はいずれも $82$ より高い）。
+%     よって $\sigma(i)>\sigma(j)$ なる対 $(i,j)=(D,\,\text{既マッチ})$ 自体が存在せず，
+%     (F-open)・(F-res) はともに不成立。
+% \end{itemize}
+
+% \section{6/16のフィードバック}
+% \begin{itemize}
+%     \item workingは引用するな(score-feasibleの出所はどこなのか->ないらしいのでどうしようか)
+%     \item インドの論文と比べてどこが簡単でどこがむずいのか
+%     ->カテゴリが一つしかない点でこちらの方がむずい
+%     \item 問題設定として微妙ではないか(優先じゅんいがカテゴリの中でないのはどうなのか)->2016くらいの多様性制約の論文に記述がある
+%     \item そもそもこのde-reserveはどういうケースで使われていてどういう->単一カテゴリのみで使われていてOBCという特殊な留保カテゴリのみde-reserveの対象である
+%     \item カテゴリ間公平性を数式でかいた方がいいだろう
+%     \item そもそもde-reserveはどういうケースで有効なのか
+%     前提それで議論していいのか->わからない。現状は重複していないモデルでのみ考えられている
+% \end{itemize}
+
+
+% 学生がカテゴリに対して優先順位をもつという状況を想定している
+% de-resreveを利用しなくてもいい
+% de-reserveはそこまで良くない
+
+% \section{順位があるという過程のもとで}
+% モデルの説明
+
+% 点数の制約が重要
+
+% 両立できないもとの性質
+
+% アルゴリズムの開発。。。
+
+
+\section{June 19}
+
+what if we add scores to students with a reserved category and then ignore the categories?
+
+For instance, we add 10 points to each female and then let them compete with males?
+
+\section{June 19: Score-Elevated Overlapping Reserve}
+
+本節では，留保カテゴリに属する学生へカテゴリ別の加点を与えたうえで，
+各カテゴリ内では加点後スコアによって学生を比較するメカニズムを考える。
+考え方としては，「女性に10点を加点して男性と同じプールで競わせる」
+ような方式を，重複カテゴリを持つ留保制度に拡張するものである。カテゴリ別の privilege を扱うという点では，多次元特権を扱う \citet{AyBo21a} と関連する（ただし \citet{AyBo21a} では特権はカテゴリ別の留保席として実装されており，本稿のような加点方式ではない）。また，未充足の留保枠を融通する de-reservation の発想は \citet{AyTu20a} と，インドの入試における留保・de-reservation を扱う \citet{AyTu23a} に近い。
+
+重要なのは，score-feasibility を通常の元スコア cutoff ではなく，
+\textbf{留保カテゴリ側では加点後 cutoff を用いて定義する}点である。
+すなわち，一般カテゴリでは元スコアの cutoff を用い，
+留保カテゴリではカテゴリ別加点後スコアの cutoff を用いる。一般カテゴリの cutoff が留保カテゴリの cutoff を上回るべきという発想自体は，インドの admissions を扱う \citet{AyTu23a} の open-category-first の議論に対応している。本稿ではこれを踏まえ，cutoff 差そのものを制度上の制約として明示的に定式化する。
+
+\subsection{基本記号}
+
+学生集合を $I$，留保カテゴリ集合を $T$ とする。
+一般カテゴリを $o$ と書き，席カテゴリ全体の集合を
+\[
+    V:=T\cup\{o\}
+\]
+とする。
+
+各学生 $i\in I$ は，元スコア $\sigma(i)\in\mathbb R_+$，
+資格を持つ留保カテゴリ集合
+\[
+    \mathcal T(i)\subseteq T
+\]
+および席カテゴリ集合 $V$ 上の選好 $\succ_i$ を持つ。
+各カテゴリ $c\in V$ の容量を $q^c$ とする。
+また，各留保カテゴリ $t\in T$ について，加点パラメータ
+\[
+    k_t\geq 0
+\]
+を固定する。
+
+\begin{definition}[カテゴリ別加点後スコア]
+\label{def:category-adjusted-score}
+各カテゴリ $c\in V$ と各学生 $i\in I$ について，
+カテゴリ $c$ における加点後スコア $\sigma_c(i)$ を
+\[
+    \sigma_c(i)
+    :=
+    \begin{cases}
+        \sigma(i), & \text{if } c=o, \\[4pt]
+        \sigma(i)+k_c\mathbf 1\{c\in\mathcal T(i)\}, & \text{if } c\in T
+    \end{cases}
+\]
+と定義する。
+\end{definition}
+
+\noindent
+つまり，一般カテゴリでは元スコアで比較し，留保カテゴリ $t$ では，
+$t$ に資格を持つ学生だけに $k_t$ 点を加える。
+資格を持たない学生も留保カテゴリへ応募できる設定では，
+その学生の加点は $0$ である。
+留保カテゴリを資格者のみに限定したい場合には，後述の応募可能カテゴリ集合から
+資格外カテゴリを除けばよい。
+
+\begin{definition}[応募可能カテゴリ集合]
+\label{def:acceptable-categories}
+学生 $i$ が応募可能なカテゴリ集合を $V_i\subseteq V$ と書く。
+本節の基本設定では
+\[
+    V_i=V
+\]
+とする。ただし，留保カテゴリを資格者のみに限定するモデルでは
+\[
+    V_i=\{o\}\cup\mathcal T(i)
+\]
+とすればよい。
+\end{definition}
+
+\begin{definition}[マッチング]
+\label{def:matching-score-elevated}
+マッチング $\mu$ とは，
+\[
+    \mu=(\mu_c)_{c\in V}
+\]
+であり，任意の $c\in V$ について
+\[
+    \mu_c\subseteq I,\qquad |\mu_c|\leq q^c
+\]
+を満たし，さらに任意の異なる $c,c'\in V$ について
+\[
+    \mu_c\cap\mu_{c'}=\emptyset
+\]
+を満たすものをいう。
+マッチした学生全体の集合を
+\[
+    M(\mu):=\bigcup_{c\in V}\mu_c
+\]
+と書く。
+また，学生 $i$ が割り当てられたカテゴリを $\mu(i)$ と書き，
+未マッチの場合は $\mu(i)=\emptyset$ とする。
+\end{definition}
+
+\subsection{Score-feasibility}
+
+本節の score-feasibility は，
+「一般カテゴリの cutoff と留保カテゴリの cutoff の差が $\delta$ 以下である」
+という cutoff 型制約を保つ。
+ただし，score-elevated mechanism と整合させるため，
+一般カテゴリの cutoff は元スコアで測り，留保カテゴリの cutoff は
+加点後スコアで測る。
+
+\begin{definition}[Cutoff]
+\label{def:adjusted-cutoff}
+マッチング $\mu$ における一般カテゴリの cutoff を
+\[
+    e_o(\mu):=\min_{i\in\mu_o}\sigma(i)
+\]
+と定義する。
+また，留保カテゴリ $t\in T$ の加点後 cutoff を
+\[
+    e_t^+(\mu):=\min_{i\in\mu_t}\sigma_t(i)
+\]
+と定義する。
+ただし，$\mu_o=\emptyset$ または $\mu_t=\emptyset$ の場合には，
+対応する cutoff 条件は課さない。
+\end{definition}
+
+\begin{definition}[Score-feasibility]
+\label{def:score-feasibility-adjusted-cutoff}
+マッチング $\mu$ が \textbf{score-feasible} であるとは，
+任意の留保カテゴリ $t\in T$ について，
+$\mu_o\neq\emptyset$ かつ $\mu_t\neq\emptyset$ ならば，
+\[
+    e_o(\mu)-e_t^+(\mu)\leq \delta
+\]
+が成立することをいう。
+\end{definition}
+
+\noindent
+この定義では，留保カテゴリにおける加点を制度上の正当な補正として扱う。
+したがって，制約されるのは元スコア cutoff の差ではなく，
+一般カテゴリの元スコア cutoff と，留保カテゴリの加点後 cutoff の差である。
+
+\subsection{望ましい性質}
+
+以下では，score-elevated mechanism に対して要求する性質を整理する。
+ここでは，通常の fairness は独立には置かず，
+\textbf{カテゴリ間公平性}のみを要求する。
+
+\begin{definition}[同一カテゴリ内公平性]
+\label{def:within-cat-final}
+マッチング $\mu$ が
+\textbf{同一カテゴリ内で公平（fair within categories）}であるとは，
+任意のカテゴリ $t \in T$ と任意の2人の学生 $i, j$ について，
+以下を同時に満たす状況が存在しないことをいう：
+\begin{enumerate}
+    \item $t \in \mathcal{T}(i) \cap \mathcal{T}(j)$（両者が $t$ に資格を持つ），
+    \item $\sigma(i) > \sigma(j)$，
+    \item $j \in \mu_t$（$j$ が $t$ の留保席に座っている），
+    \item $i \notin \mu$（$i$ は未マッチ）。
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Feasibility]
+\label{def:capacity-feasibility}
+マッチング $\mu$ が \textbf{feasible} であるとは，
+任意のカテゴリ $c\in V$ について容量制約
+\[
+    |\mu_c|\leq q^c
+\]
+を満たし，かつ任意の学生が高々一つのカテゴリにのみ割り当てられることをいう。
+すなわち，任意の異なる $c,c'\in V$ について
+\[
+    \mu_c\cap\mu_{c'}=\emptyset
+\]
+である。
+\end{definition}
+
+\begin{definition}[Score-feasible non-wastefulness]
+\label{def:score-feasible-nonwastefulness}
+マッチング $\mu$ が
+\textbf{non-wasteful} であるとは，未マッチ学生 $i\in I\setminus M(\mu)$ と
+カテゴリ $c\in V_i$ について，$i$ をカテゴリ $c$ に追加したマッチング $\mu'$ が
+feasible かつ score-feasible になるような空席 $c$ が存在しないことをいう。
+\end{definition}
+
+\noindent
+空席があっても，そこに学生を入れることで score-feasibility が壊れる場合，
+その空席は浪費とはみなさない。
+
+\begin{definition}[カテゴリ間公平性]
+\label{def:across-category-fairness}
+マッチング $\mu$ が
+\textbf{カテゴリ間で公平（fair across categories）}であるとは，
+未マッチ学生 $i\in I\setminus M(\mu)$ と既マッチ学生 $j\in M(\mu)$ について，
+\[
+    \mathcal T(i)\cap \mathcal T(j)=\emptyset
+\]
+かつ $j$ の割当カテゴリを $c=\mu(j)$ としたとき，
+以下をすべて満たす状況が存在しないことをいう：
+\begin{enumerate}
+    \item $c\in V_i$；
+    \item $\sigma_c(i)>\sigma_c(j)$；
+    \item $j$ を $i$ に置き換えたマッチング
+    \[
+        \mu'_c:=(\mu_c\setminus\{j\})\cup\{i\},
+        \qquad
+        \mu'_{c'}:=\mu_{c'}\quad(c'\neq c)
+    \]
+    が score-feasible である。
+\end{enumerate}
+\end{definition}
+
+\noindent
+この定義は，高い加点後スコアを持つ未マッチ学生が，
+低い加点後スコアの既マッチ学生を score-feasible に置き換えられるにもかかわらず，
+未マッチで残ることを排除する。
+逆に，置き換えによって score-feasibility が壊れる場合には，
+その羨望は正当化されない。
+
+\begin{definition}[カテゴリ間公平性]
+\label{def:across-no-common-category}
+マッチング $\mu$ が
+\textbf{カテゴリ間で公平}であるとは，
+未マッチ学生 $i\in I\setminus M(\mu)$ と既マッチ学生 $j\in M(\mu)$ について，
+\[
+    \mathcal T(i)\cap \mathcal T(j)=\emptyset
+\]
+かつ $j$ の割当カテゴリを $c=\mu(j)$ としたとき，
+以下をすべて満たす状況が存在しないことをいう：
+\begin{enumerate}
+    \item $c\in V_i$，すなわち $i$ は $j$ の割当カテゴリ $c$ に応募可能である；
+    \item $\sigma_c(i)>\sigma_c(j)$；
+    \item $j$ を $i$ に置き換えたマッチング
+    \[
+        \mu'_c:=(\mu_c\setminus\{j\})\cup\{i\},
+        \qquad
+        \mu'_{c'}:=\mu_{c'}\quad(c'\neq c)
+    \]
+    が score-feasible である。
+\end{enumerate}
+\end{definition}
+
+\noindent
+これは初期の ``across types'' という直観をそのまま数式化したものである。
+$i$ と $j$ が共通の留保カテゴリを持たないにもかかわらず，
+$i$ のほうが $j$ の占めるカテゴリで高いスコアを持ち，
+しかも $j$ を $i$ に置き換えても制度制約を破らないならば，
+$i$ を未マッチのまま残すべきではない。
+なお，$\mathcal T(i)\cap\mathcal T(j)=\emptyset$ の下で
+$c\in T$ かつ $c\in V_i$ は起こりえないため，
+この定義で実質的に問題になるのは open category に関する complaint である。
+
+\begin{remark}[Why reserved-category complaints cannot arise here]
+\label{rem:no-common-only-open}
+\cref{def:across-no-common-category} では，
+共通留保カテゴリを持たない二人の学生 $i,j$ を比べる。
+もし $j$ の割当カテゴリが reserved category $c=t\in T$ で，
+しかも $c\in V_i$ なら，
+$j\in\mu_t$ から $t\in\mathcal T(j)$，また $c=t\in V_i$ かつ $t\neq o$ から
+$t\in\mathcal T(i)$ である。
+したがって
+\[
+    t\in\mathcal T(i)\cap\mathcal T(j),
+\]
+となり，共通留保カテゴリがないという仮定に反する。
+ゆえに，この定義の下で正当な complaint の候補となりうるのは open category だけである。
+\end{remark}
+
+\subsection{Student-Proposing Score-Elevated Mechanism}
+
+以下のメカニズムは，学生提案型 deferred acceptance をカテゴリ別加点スコアに合わせて書き換えたものである \citep{GaSh62a,Roth08a}。
+
+\begin{algorithm}[H]
+\caption{\textsc{Student-Proposing Score-Elevated Mechanism}}
+\label{alg:student-proposing-score-elevated}
+\begin{algorithmic}[1]
+\Require 学生集合 $I$，カテゴリ集合 $V=T\cup\{o\}$，
+         容量 $(q^c)_{c\in V}$，学生のカテゴリ選好 $(\succ_i)_{i\in I}$，
+         元スコア $\sigma$，資格集合 $\mathcal{T}(\cdot)$，
+         加点パラメータ $(k_t)_{t\in T}$
+\Ensure マッチング $\mu=(\mu_c)_{c\in V}$
+ 
+\State 各カテゴリ $c\in V$ について $\mu_c\gets\emptyset$
+\State 各学生 $i\in I$ を未マッチとする
+\State 各カテゴリ $c\in V$ と各学生 $i\in I$ について $\sigma_c(i)$ を計算する
+\State 各学生 $i\in I$ の応募可能カテゴリ集合を
+       $V_i := \{o\} \cup \mathcal{T}(i)$ とする
+ 
+\While{ある未マッチ学生 $i$ が，$V_i$ 内でまだ応募していないカテゴリを持つ}
+    \State $i$ は，$V_i$ 内でまだ応募していないカテゴリの中で，
+           選好 $\succ_i$ において最も好むカテゴリ $c$ に応募する
+    \State カテゴリ $c$ は，現在保持している学生 $\mu_c$ と新たな応募者 $i$ を合わせた集合
+           $\mu_c\cup\{i\}$ の中から，加点後スコア $\sigma_c$ が高い順に最大 $q^c$ 名を保持する
+    \State 保持されなかった学生は未マッチに戻る
+\EndWhile
+ 
+\State \Return $\mu=(\mu_c)_{c\in V}$
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\subsection{動作例}
+ 
+\paragraph{Example: Student-Proposing Score-Elevated Mechanism}
+\label{ex:student-proposing-score-elevated}
+カテゴリ集合を $T=\{t_1,t_2\}$，一般カテゴリを $o$，$V=\{o,t_1,t_2\}$ とする。
+各カテゴリの容量は
+\[
+    q^o=1,\qquad q^{t_1}=1,\qquad q^{t_2}=1,
+\]
+加点パラメータは $k_{t_1}=k_{t_2}=10$，最大許容点数差は $\delta=10$ とする。
+ 
+学生の元スコア，資格カテゴリ，応募可能カテゴリ，およびカテゴリ選好は以下の通りである。
+応募可能カテゴリは $V_i=\{o\}\cup\mathcal{T}(i)$ によって定まり，
+選好 $\succ_i$ は $V_i$ 内のカテゴリのみを対象とする。
+ 
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+学生 & 元スコア $\sigma(i)$ & 資格カテゴリ $\mathcal{T}(i)$
+    & 応募可能カテゴリ $V_i$ & カテゴリ選好 $\succ_i$ \\
+\hline
+$A$ & $100$ & $\emptyset$     & $\{o\}$        & $o$ \\
+$B$ & $96$  & $\{t_1\}$      & $\{o,t_1\}$    & $t_1\succ_B o$ \\
+$C$ & $90$  & $\{t_1\}$      & $\{o,t_1\}$    & $t_1\succ_C o$ \\
+$D$ & $88$  & $\{t_2\}$      & $\{o,t_2\}$    & $t_2\succ_D o$ \\
+$E$ & $85$  & $\{t_1,t_2\}$ & $\{o,t_1,t_2\}$ & $t_2\succ_E t_1\succ_E o$ \\
+\end{tabular}
+\end{center}
+ 
+各カテゴリにおける加点後スコア $\sigma_c(i)$ は次の通りである。
+ 
+\begin{center}
+\begin{tabular}{c|c|c|c}
+学生 & $\sigma_o(i)$ & $\sigma_{t_1}(i)$ & $\sigma_{t_2}(i)$ \\
+\hline
+$A$ & $100$ & $100$ & $100$ \\
+$B$ & $96$  & $106$ & $96$  \\
+$C$ & $90$  & $100$ & $90$  \\
+$D$ & $88$  & $88$  & $98$  \\
+$E$ & $85$  & $95$  & $95$  \\
+\end{tabular}
+\end{center}
+ 
+\noindent
+ただし $A$ は $\mathcal{T}(A)=\emptyset$ ゆえ $V_A=\{o\}$ のみに応募可能であり，
+$t_1,t_2$ の列は参考のため記載するが，$A$ はこれらのカテゴリに応募できない。
+ 
+\paragraph{step 1.}
+各学生は $V_i$ 内の選好最上位カテゴリに応募する。
+\[
+    A\to o,\quad B\to t_1,\quad C\to t_1,\quad D\to t_2,\quad E\to t_2.
+\]
+ 
+一般カテゴリ $o$ には $A$ のみが応募しているので $\mu_o=\{A\}$。
+カテゴリ $t_1$ では $B,C$ が競争する：
+\[
+    \sigma_{t_1}(B)=96+10=106,\qquad \sigma_{t_1}(C)=90+10=100.
+\]
+$t_1$ は $B$ を保持し，$C$ を拒否する。
+カテゴリ $t_2$ では $D,E$ が競争する：
+\[
+    \sigma_{t_2}(D)=88+10=98,\qquad \sigma_{t_2}(E)=85+10=95.
+\]
+$t_2$ は $D$ を保持し，$E$ を拒否する。
+ 
+\paragraph{step 2.}
+拒否された $C$ は $V_C=\{o,t_1\}$ 内の次の選好 $o$ に，
+$E$ は $V_E=\{o,t_1,t_2\}$ 内の次の選好 $t_1$ に応募する。
+\[
+    C\to o,\quad E\to t_1.
+\]
+ 
+一般カテゴリ $o$ では $A,C$ が競争する：
+\[
+    \sigma_o(A)=100,\qquad \sigma_o(C)=90.
+\]
+$o$ は $A$ を保持し，$C$ を拒否する。
+カテゴリ $t_1$ では $B,E$ が競争する：
+\[
+    \sigma_{t_1}(B)=106,\qquad \sigma_{t_1}(E)=85+10=95.
+\]
+$t_1$ は $B$ を保持し，$E$ を拒否する。
+ 
+\paragraph{step 3.}
+$C$ は $V_C=\{o,t_1\}$ の全カテゴリへの応募を終えたため，これ以上応募できない。
+$E$ は $V_E$ 内の次の選好 $o$ に応募する。
+\[
+    E\to o.
+\]
+ 
+一般カテゴリ $o$ では $A,E$ が競争する：
+\[
+    \sigma_o(A)=100,\qquad \sigma_o(E)=85.
+\]
+$o$ は $A$ を保持し，$E$ を拒否する。
+$E$ も $V_E=\{o,t_1,t_2\}$ の全カテゴリへの応募を終えた。
+ 
+アルゴリズムは終了する。最終的なマッチングは
+\[
+    \mu_o=\{A\},\qquad \mu_{t_1}=\{B\},\qquad \mu_{t_2}=\{D\},
+\]
+$M(\mu)=\{A,B,D\}$，未マッチ学生は $\{C,E\}$ である。
+ 
+各ステップの推移をまとめると以下の通りである。
+ 
+\begin{center}
+\begin{tabular}{c|l|l}
+step & 応募 & 判定 \\
+\hline
+$1$ & $A\to o,\ B\to t_1,\ C\to t_1,\ D\to t_2,\ E\to t_2$
+    & $t_1$: $B$ 保持，$C$ 拒否；$t_2$: $D$ 保持，$E$ 拒否 \\
+$2$ & $C\to o,\ E\to t_1$
+    & $o$: $A$ 保持，$C$ 拒否；$t_1$: $B$ 保持，$E$ 拒否 \\
+$3$ & $E\to o$
+    & $o$: $A$ 保持，$E$ 拒否 \\
+\end{tabular}
+\end{center}
+ 
+\subsection*{性質の確認}
+ 
+\paragraph{Non-wastefulness.}
+$|\mu_o|+|\mu_{t_1}|+|\mu_{t_2}|=3=q^o+q^{t_1}+q^{t_2}$ ゆえ全席が埋まっており，non-wasteful である。
+ 
+\paragraph{Score-feasibility.}
+\[
+    e_o(\mu)=100,\quad
+    e_{t_1}^+(\mu)=106,\quad
+    e_{t_2}^+(\mu)=98.
+\]
+\[
+    e_o(\mu)-e_{t_1}^+(\mu)=-6\leq 10,\qquad
+    e_o(\mu)-e_{t_2}^+(\mu)=2\leq 10.
+\]
+よって score-feasible である。
+ 
+\paragraph{同一カテゴリ内公平性.}
+カテゴリ $t_1$ の保持者は $B$（$\sigma_{t_1}=106$）．
+$t_1$ に資格を持つ未マッチ学生は $C$（$\sigma_{t_1}=100$）と $E$（$\sigma_{t_1}=95$）であり，
+いずれも $B$ を上回らない。
+カテゴリ $t_2$ の保持者は $D$（$\sigma_{t_2}=98$）．
+$t_2$ に資格を持つ未マッチ学生は $E$（$\sigma_{t_2}=95$）のみであり，$D$ を上回らない。
+よって同一カテゴリ内公平性が成立する。
+ 
+\paragraph{カテゴリ間公平性.}
+未マッチ学生 $C,E$ と既マッチ学生 $A,B,D$ の各ペアを確認する。
+ 
+$C$（$\sigma=90$）について：
+$o$（占有者 $A$）：$\sigma_o(C)=90<100=\sigma_o(A)$；
+$t_1$（占有者 $B$）：$\sigma_{t_1}(C)=100<106=\sigma_{t_1}(B)$；
+$t_2$ は $t_2\notin V_C$ ゆえ応募不可。
+よって $C$ に正当な羨望は存在しない。
+ 
+$E$（$\sigma=85$）について：
+$o$（占有者 $A$）：$\sigma_o(E)=85<100$；
+$t_1$（占有者 $B$）：$\sigma_{t_1}(E)=95<106$；
+$t_2$（占有者 $D$）：$\sigma_{t_2}(E)=95<98$。
+よって $E$ に正当な羨望も存在しない。
+ 
+したがって，カテゴリ間公平性が成立する。
+
+\paragraph{カテゴリ間公平性}
+共通留保カテゴリを持たない unmatched--matched pair だけを見ると，
+候補は
+\[
+    (C,A),\qquad (C,D),\qquad (E,A)
+\]
+である。
+ここで $(C,D)$ については，$D$ の割当カテゴリは $t_2$ であるが，
+$t_2\notin V_C$ なので $C$ はその reserved seat に応募できず，
+complaint 自体が成立しない。
+また $(C,A)$ と $(E,A)$ は open category に関する比較であるが，
+\[
+    \sigma(C)=90<100=\sigma(A),\qquad
+    \sigma(E)=85<100=\sigma(A).
+\]
+したがって，この例では no-common-category 版の across-category complaint も存在しない。
+
+% ==============================================================
+\section{Notation and Setup}
+% ==============================================================
+ 
+We fix a single school with a finite student set $I$ and category set
+$V = T \cup \{o\}$, where $T$ is the set of reserved categories and $o$ is
+the open category.
+ 
+\begin{itemize}
+  \item $\sigma(i)\in\mathbb{R}_+$: raw score of student $i$.
+  \item $\T(i)\subseteq T$: reserved categories for which $i$ is eligible.
+  \item $k_t\ge 0$: bonus parameter for reserved category $t\in T$.
+  \item Category-adjusted score:
+        \[
+          \sigma_c(i) :=
+          \begin{cases}
+            \sigma(i), & c = o,\\[4pt]
+            \sigma(i) + k_t\,\mathbf{1}\{t\in\T(i)\}, & c = t\in T.
+          \end{cases}
+        \]
+  \item $q^c$: capacity of category $c\in V$.
+  \item $\delta\ge 0$: maximum allowable cutoff gap.
+  \item Open cutoff: $e_o(\mu) := \min_{i\in\mu_o}\sigma(i)$
+        ($+\infty$ if $\mu_o=\emptyset$).
+  \item Reserved adjusted cutoff:
+        $e_t^+(\mu) := \min_{i\in\mu_t}\sigma_t(i)$
+        ($+\infty$ if $\mu_t=\emptyset$).
+  \item \textbf{Score-feasibility}: $\mu$ is \emph{score-feasible} if for
+        all $t\in T$ with $\mu_o\ne\emptyset$ and $\mu_t\ne\emptyset$,
+        \[
+          e_o(\mu) - e_t^+(\mu) \;\le\; \delta.
+        \]
+  \item \textbf{Application set}:
+        Each student $i$ may apply only to categories for which she is
+        eligible:
+        \[
+          V_i \;:=\; \{o\} \cup \T(i).
+        \]
+        A student cannot apply to a reserved category unless she holds the
+        corresponding qualification.  This is the sole model considered
+        throughout.
+\end{itemize}
+ 
+ 
+\subsection{性質と証明}
+
+\begin{proposition}[Feasibility]
+\label{prop:se-feasible}
+\textsc{Student-Proposing Score-Elevated Mechanism} の出力 $\mu$ は feasible である。
+\end{proposition}
+
+\begin{proof}
+構成上，各カテゴリ $c$ は任意のステップで最大 $q^c$ 名しか保持しない。
+したがって最終出力でも $|\mu_c|\le q^c$ が成り立つ。
+また，DA では各学生は同時に高々一つのカテゴリにしか保持されないため，
+異なるカテゴリに同じ学生が割り当てられることはない。
+よって $\mu$ は feasible である。
+\end{proof}
+
+\begin{proposition}[Non-wastefulness]
+\label{prop:se-nonwasteful}
+\textsc{Student-Proposing Score-Elevated Mechanism} の出力 $\mu$ は non-wasteful である。
+\end{proposition}
+
+\begin{proof}
+背理法による。未マッチ学生 $i\in I\setminus M(\mu)$ とカテゴリ $c\in V_i$ が存在し，
+$|\mu_c|<q^c$ であると仮定する。
+$i$ は未マッチであるから，アルゴリズム終了時までに $V_i$ 内の全カテゴリへ応募し，
+すべてから拒否されている。したがって，$i$ はあるステップ $r_0$ で $c$ に応募し，
+拒否された。
+
+カテゴリ $c$ が $i$ を拒否するのは，その時点で $c$ の全 $q^c$ 席が，
+$c$ の優先順位 $\succ_c^S$ において $i$ より上位の学生で埋まっている場合だけである。
+よってステップ $r_0$ の時点でカテゴリ $c$ は満席である。
+その後，カテゴリ $c$ は保持学生をより上位の応募者に置き換えることはあっても，
+席数を減らして空席を作ることはない。
+したがって最終的にも $|\mu_c|=q^c$ であり，$|\mu_c|<q^c$ に矛盾する。
+
+ゆえに，未マッチ学生を応募可能カテゴリの空席へ追加することはそもそもできない。
+したがって，その追加によって feasible かつ score-feasible なマッチングが得られる
+こともなく，$\mu$ は non-wasteful である。
+\end{proof}
+
+\begin{proposition}[Score-feasibility is not generally guaranteed]
+\label{prop:se-score-feasibility-not-guaranteed}
+\textsc{Student-Proposing Score-Elevated Mechanism} の出力は，一般には score-feasible でない。
+\end{proposition}
+
+\begin{proof}
+次の反例を考える。カテゴリ集合を $V=\{o,t\}$，容量を
+\[
+    q^o=q^t=1
+\]
+とする。最大許容点差を $\delta=10$，加点を $k_t=0$ とする。
+学生は $A,B$ の2人で，
+\[
+    \sigma(A)=100,\qquad \mathcal T(A)=\emptyset,
+\]
+\[
+    \sigma(B)=80,\qquad \mathcal T(B)=\{t\}.
+\]
+応募可能カテゴリは $V_A=\{o\}$，$V_B=\{o,t\}$ である。
+選好を $A$ は $o$ のみ，$B$ は $t\succ_B o$ とする。
+
+アルゴリズムでは $A$ が open category $o$ に，$B$ が reserved category $t$ に
+割り当てられる。したがって
+\[
+    \mu_o=\{A\},\qquad \mu_t=\{B\}.
+\]
+このとき
+\[
+    e_o(\mu)=100,
+    \qquad
+    e_t^+(\mu)=\sigma_t(B)=80+0=80.
+\]
+ゆえに
+\[
+    e_o(\mu)-e_t^+(\mu)=20>10=\delta.
+\]
+したがって，出力 $\mu$ は score-feasible ではない。
+\end{proof}
+
+\begin{proposition}[同一カテゴリ内公平性]
+\label{prop:se-within-fair}
+\textsc{Student-Proposing Score-Elevated Mechanism} の出力 $\mu$ は，
+同一カテゴリ内で公平である。
+\end{proposition}
+
+\begin{proof}
+背理法による。未マッチ学生 $i\in I\setminus M(\mu)$，既マッチ学生 $j\in M(\mu)$，
+および $c=\mu(j)$ が存在し，$c\in V_i$ かつ $i\succ_c^S j$ が成り立つと仮定する。
+
+$i$ は未マッチであるから，アルゴリズム終了時までに $V_i$ 内の全カテゴリへ応募し，
+すべてから拒否されている。特に，$i$ はあるステップ $r_0$ で $c$ に応募し，拒否された。
+拒否された時点で，カテゴリ $c$ の全席は $\succ_c^S$ において $i$ より上位の学生で
+占められていた。その後，カテゴリ $c$ は保持学生をさらに上位の学生に置き換えることは
+あっても，$i$ 以下の学生を保持することはない。
+したがって，最終的な $\mu_c$ の任意の学生 $k$ について $k\succ_c^S i$ が成り立つ。
+特に $j\in\mu_c$ なので $j\succ_c^S i$ である。
+これは $i\succ_c^S j$ に矛盾する。
+\end{proof}
+
+\begin{proposition}[カテゴリ間公平性]
+\label{prop:se-across-fair}
+\textsc{Student-Proposing Score-Elevated Mechanism} の出力 $\mu$ は，
+\cref{def:se-across-category-fairness} の意味でカテゴリ間で公平である。
+\end{proposition}
+
+\begin{proof}
+背理法による。未マッチ学生 $i\in I\setminus M(\mu)$ と既マッチ学生 $j\in M(\mu)$ が存在し，
+$c=\mu(j)$ について，
+\[
+    c\in V_i,
+    \qquad
+    i\succ_c^S j,
+\]
+かつ $j$ を $i$ に置き換えたマッチングが score-feasible であると仮定する。
+
+しかし，$i$ は未マッチであり $c\in V_i$ であるから，$i$ はアルゴリズム中に
+カテゴリ $c$ へ応募し，拒否されている。上の同一カテゴリ内公平性の証明と同じく，
+拒否後，カテゴリ $c$ の最終保留者はすべて $\succ_c^S$ において $i$ より上位である。
+したがって，$j\in\mu_c$ について $j\succ_c^S i$ が成り立つ。
+これは $i\succ_c^S j$ に矛盾する。
+
+実際には，置き換え後の score-feasibility を確認するまでもなく，
+$i\succ_c^S j$ となる既マッチ学生 $j$ 自体が存在しない。
+したがって，\cref{def:se-across-category-fairness} の三条件を同時に満たす対も存在しない。
+\end{proof}
+
+\begin{proposition}[カテゴリ間公平性]
+\label{prop:se-across-no-common}
+\textsc{Student-Proposing Score-Elevated Mechanism} の出力 $\mu$ は，
+\cref{def:across-no-common-category} の意味でもカテゴリ間で公平である。
+\end{proposition}
+
+\begin{proof}
+背理法による。\cref{def:across-no-common-category} の違反があると仮定する。
+すると未マッチ学生 $i\in I\setminus M(\mu)$ と既マッチ学生 $j\in M(\mu)$ が存在し，
+\[
+    \mathcal T(i)\cap\mathcal T(j)=\emptyset
+\]
+かつ $c=\mu(j)\in V_i$，$\sigma_c(i)>\sigma_c(j)$，および $j$ を $i$ に置き換えた
+matching が score-feasible である。
+
+まず，reserved category に対する complaint 自体が起こりえないことを示す。
+もし $c\in T$ なら，$j\in\mu_c$ より $c\in\mathcal T(j)$ であり，
+また $c\in V_i$ かつ $c\neq o$ より $c\in\mathcal T(i)$ である。これは
+\[
+    \mathcal T(i)\cap\mathcal T(j)=\emptyset
+\]
+に矛盾する。したがって，共通留保カテゴリを持たない二人の間で
+reserved seat をめぐる complaint は定義上不可能である。
+ゆえに $c=o$ でなければならない。
+
+すると $i$ は open category に応募して拒否されている。SPSE の rejection monotonicity により，
+open category の最終保留者はすべて $i$ 以上の raw score を持つ。したがって $j\in\mu_o$ なら
+\[
+    \sigma(i)\le \sigma(j),
+\]
+すなわち $\sigma_o(i)\le \sigma_o(j)$ である。これは $\sigma_c(i)>\sigma_c(j)$ に矛盾する。
+よって \cref{def:across-no-common-category} の違反は存在しない。
+\end{proof}
+
+\subsection{まとめ}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\toprule
+\textbf{性質} & \textbf{結果} & \textbf{証明の要点} \\
+\midrule
+Feasibility              & 常に成立     & 各カテゴリが容量以内しか保持しない \\
+Non-wastefulness         & 常に成立     & 未マッチ学生は全応募先から拒否済み，拒否後も満席 \\
+Score-feasibility        & 一般には不成立 & アルゴリズムが cutoff 制約を直接強制しない \\
+同一カテゴリ内公平性     & 常に成立     & 拒否後，そのカテゴリの保留者は全員，拒否学生より上位 \\
+カテゴリ間公平性         & 常に成立     & 置き換え可能性を問う前に，優先順位違反が存在しない \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{score-feasibilityを守るためには}
+de-reserveを利用しscoreの調整を図る?
+->元のカテゴリを追跡する？
+
+
+\section{7月3日}
+
+\begin{itemize}
+    \item 不可能性の反例（全ての性質を満たさない）
+    \item ODAを追加・分析
+    \item SPSEの分析（どんな条件でScore-feasibility を満たすか）
+    \item 一部の性質を緩和して、Score-feasibility を満たすアルゴの設計
+    \item 保留解除により、アルゴの設計
+    \item 表でアルゴの比較
+    \item 実験（時間があれば）
+\end{itemize}
+
+% ============================================================
+\section{カテゴリ選好を考慮した重複カテゴリ下の De-Reservation}
+% ============================================================
+
+本節では，重複カテゴリを持つ学生がカテゴリに対して選好を持つ場合の
+de-reservation 型メカニズムを定義する。
+以下では，このメカニズムを
+\textsc{Preference-Aware Overlapping De-Reservation}，
+または \textsc{PA-ODR} と呼ぶ。
+
+本メカニズムは，インドの admissions における de-reservation の議論 \citep{AyTu20a,AyTu23a} を重複カテゴリへ拡張することを意図している。Score-Elevated Mechanism と同じく，
+留保カテゴリにおいて elevated score を用いて score-feasibility を定義する。
+そのうえで，score-feasibility を満たす範囲内で，
+学生のカテゴリ選好を one-to-one counting の決定に反映する。
+
+
+
+% ------------------------------------------------------------
+\subsection{Category Preferences}
+% ------------------------------------------------------------
+
+各学生 $i$ は，応募可能カテゴリ集合
+\[
+    V_i=\{o\}\cup\mathcal T(i)
+\]
+上に厳密な選好順序
+\[
+    \succ_i
+\]
+を持つと仮定する。
+ここで，$c\succ_i c'$ は，学生 $i$ がカテゴリ $c'$ よりも
+カテゴリ $c$ に割り当てられることを好むことを意味する。
+
+例えば，
+\[
+    t_2\succ_i t_1\succ_i o
+\]
+であれば，学生 $i$ は一般カテゴリよりも留保カテゴリを好み，
+留保カテゴリの中では $t_2$ を $t_1$ より好むことを意味する。
+
+カテゴリ選好をマッチング問題に組み込むために，
+preference rank を定義する。
+
+\begin{definition}[Preference rank]
+学生 $i$ とカテゴリ $c\in V_i$ について，
+$r_i(c)$ を，$i$ の選好順序における $c$ の順位とする。
+最も好ましいカテゴリの rank を $1$，
+二番目に好ましいカテゴリの rank を $2$，
+というように定義する。
+\end{definition}
+
+したがって，$r_i(c)$ が小さいほど，学生 $i$ にとってカテゴリ $c$ は望ましい。
+
+% ------------------------------------------------------------
+\subsection{Preference-Aware Lexicographic Matching}
+% ------------------------------------------------------------
+
+固定された open cutoff $e$ の下で，
+留保カテゴリへの割当可能性は学生単位ではなく，
+学生--カテゴリのペア単位で判定する。
+これは，カテゴリごとに加点 $k_t$ が異なる可能性があるためである。
+
+したがって，二部グラフ $G(e)$ を次のように構成する。
+左側の頂点集合は
+\[
+    I\setminus \mu_o
+\]
+であり，右側の頂点集合は留保カテゴリ集合 $T$ である。
+
+辺集合は次のように定義する：
+\[
+    (i,t)\in E(e)
+    \quad\Longleftrightarrow\quad
+    t\in\mathcal T(i)
+    \text{ and }
+    \sigma(i)+k_t\ge e-\delta.
+\]
+
+この条件は，学生 $i$ がカテゴリ $t$ に割り当てられたとき，
+elevated score によって score-feasibility を満たすことを意味する。
+
+このグラフ上で，容量付き matching を次の順序で選ぶ。
+
+\begin{enumerate}
+    \item マッチ人数を最大化する。
+    \item その中で，割り当てられた学生--カテゴリペアの elevated score vector を辞書式最大にする。
+    \item その中で，preference-rank vector を辞書式最小にする。
+\end{enumerate}
+
+この手続きを
+\[
+    \textsc{PrefLexMaxMatching}
+\]
+と呼ぶ。分配制約の下で matching を実行可能集合として捉える視点は \citet{GKK+17a} と共通している。ただし \citet{GKK+17a} では制約は heredity（遺伝性）を満たす整数ベクトル上の条件として与えられており，本稿のようなグラフ上の定式化そのものを用いているわけではない。
+
+ここで，学生 $i$ がカテゴリ $t$ に割り当てられた場合の elevated score は
+\[
+    \sigma_t(i)=\sigma(i)+k_t
+\]
+である。
+また，preference-rank vector は，マッチした学生を対応する elevated score の降順に並べ，
+その順に
+\[
+    r_i(t)
+\]
+を並べたベクトルである。
+
+この定義により，カテゴリ選好は，マッチ人数最大化と elevated score に基づく
+辞書式最大化の後に考慮される。
+したがって，カテゴリ選好が score-feasibility やスコア上の基準を覆すことはない。
+
+% ------------------------------------------------------------
+\subsection{Algorithm}
+% ------------------------------------------------------------
+% ------------------------------------------------------------
+\subsection{アルゴリズム}
+% ------------------------------------------------------------
+
+\begin{algorithm}[H]
+\caption{\textsc{Preference-Aware Overlapping De-Reservation}（PA-ODR）}
+\label{alg:pa-odr}
+\small
+
+\textbf{入力：}
+学生集合 $I$，raw score $\sigma$，資格カテゴリ集合 $\mathcal T(\cdot)$，
+カテゴリ選好 $(\succ_i)_{i\in I}$，容量 $q^o,(q^t)_{t\in T}$，
+加点 $(k_t)_{t\in T}$，許容ギャップ $\delta$。
+
+\textbf{出力：}
+割当 $\mu=(\mu_o,(\mu_t)_{t\in T})$。
+
+\begin{enumerate}
+    \item 初期有効容量を
+    \[
+        \hat q^o \leftarrow q^o,
+        \qquad
+        \hat q^t \leftarrow q^t \quad (t\in T)
+    \]
+    とする。
+
+    \item 以下を停止するまで繰り返す。
+
+    \begin{enumerate}
+        \item 一般カテゴリ $o$ に，raw score $\sigma(i)$ が高い順に
+        $\min\{\hat q^o,|I|\}$ 人を割り当てる。
+        その集合を $\mu_o$ とする。
+
+        \item 一般カテゴリの cutoff を
+        \[
+            e=
+            \begin{cases}
+            +\infty, & \text{if } \mu_o=\emptyset,\\
+            \min_{i\in\mu_o}\sigma(i), & \text{otherwise}
+            \end{cases}
+        \]
+        とする。
+
+        \item 残りの学生 $I\setminus\mu_o$ と留保カテゴリ $T$ の間に
+        二部グラフ $G(e)$ を作る。
+
+        \item 学生 $i\in I\setminus\mu_o$ とカテゴリ $t\in T$ について，
+        次の条件を満たすとき，辺 $(i,t)$ を張る：
+        \[
+            t\in\mathcal T(i)
+            \quad\text{and}\quad
+            \sigma(i)+k_t\ge e-\delta.
+        \]
+
+        \item 各留保カテゴリ $t$ の容量を $\hat q^t$ とする。
+
+        \item $G(e)$ 上で，次の順序で容量付き matching を選ぶ：
+        \begin{enumerate}
+            \item マッチ人数を最大化する。
+            \item その中で elevated score vector を辞書式最大にする。
+            \item その中で preference-rank vector を辞書式最小にする。
+        \end{enumerate}
+        得られた留保カテゴリへの割当を $(\mu_t)_{t\in T}$ とする。
+
+        \item もし
+        \[
+            |\mu_t|<\hat q^t
+        \]
+        を満たす留保カテゴリ $t$ が存在するならば，そのようなカテゴリを
+        一つ選び $t^\ast$ とする。そして
+        \[
+            \hat q^{t^\ast}\leftarrow \hat q^{t^\ast}-1,
+            \qquad
+            \hat q^o\leftarrow \hat q^o+1
+        \]
+        と更新し，次の反復へ進む。
+
+        \item そのような留保カテゴリが存在しないならば，
+        アルゴリズムを停止し，
+        \[
+            \mu=(\mu_o,(\mu_t)_{t\in T})
+        \]
+        を出力する。
+    \end{enumerate}
+\end{enumerate}
+\end{algorithm}
+% ------------------------------------------------------------
+\subsection{Interpretation}
+% ------------------------------------------------------------
+
+\textsc{PA-ODR} は，score-feasibility を hard constraint として扱う。
+一般カテゴリの cutoff $e$ が決まると，
+留保カテゴリへの割当可能性は，学生--カテゴリのペアごとに
+\[
+    \sigma(i)+k_t\ge e-\delta
+\]
+で判定される。
+
+したがって，ある学生 $i$ が複数のカテゴリに資格を持つ場合でも，
+$i$ がすべての留保カテゴリに割当可能であるとは限らない。
+例えば，
+\[
+    \sigma(i)+k_{t_1}\ge e-\delta
+\]
+であるが，
+\[
+    \sigma(i)+k_{t_2}< e-\delta
+\]
+であれば，$i$ は $t_1$ には割当可能だが，$t_2$ には割当不可能である。
+
+この点が，raw score のみで
+\[
+    R(e)=\{i:\sigma(i)\ge e-\delta\}
+\]
+を作る場合との違いである。
+elevated score を用いる場合，score-feasibility は学生集合ではなく，
+学生--カテゴリ辺の条件として表現される。
+
+また，\textsc{PA-ODR} は，score constraint の下で埋められない留保席を
+一般カテゴリへ転換する。
+したがって，本メカニズムは元の容量ベクトル $q$ を常に維持するわけではない。
+非浪費性や公平性は，de-reservation 後の最終容量ベクトル
+\[
+    \hat q=(\hat q^o,(\hat q^t)_{t\in T})
+\]
+に関して評価される。
+
+% ============================================================
+\subsection{Properties}
+% ============================================================
+
+本節では，\textsc{PA-ODR} が満たす性質をまとめる。
+
+% ------------------------------------------------------------
+\subsubsection{評価する性質}
+% ------------------------------------------------------------
+
+de-reservation によって quota が $q$ から最終容量ベクトル $\hat q$ へ変わる点を除けば，
+\textsc{PA-ODR} で評価する性質は \textsc{SPSE} と同じである。
+したがって，feasibility と non-wastefulness は $\hat q$ に関して読み替え，
+within-category fairness と across-category fairness は同じ定義を用いる。
+加えて，\textsc{PA-ODR} では score-feasibility が hard constraint として課されるため，
+その成立も別に確認する。
+
+% ------------------------------------------------------------
+\subsubsection{性質の一覧}
+% ------------------------------------------------------------
+
+\[
+\begin{array}{l|c|l}
+\text{性質}
+& \text{\textsc{PA-ODR}}
+& \text{注意}
+\\
+\hline
+\text{Elevated-score feasibility}
+& \checkmark
+& \text{辺の構成により保証される}
+\\
+\text{Non-wastefulness}
+& \checkmark
+& \text{最終容量ベクトル } \hat q \text{ に関して成立}
+\\
+\text{Within-category fairness}
+& \checkmark
+& \text{\textsc{PrefLexMaxMatching} により成立}
+\\
+\text{Across-category fairness}
+& \checkmark
+& \text{\textsc{SPSE} と同じ意味で成立}
+\\
+\text{カテゴリ選好の反映}
+& \checkmark
+& \text{人数最大化・スコア辞書式最大化の後に考慮}
+\\
+\text{元の quota の維持}
+& \text{保証しない}
+& \text{留保席が de-reserve されうる}
+\end{array}
+\]
+
+この表で重要なのは，quota の参照先だけが変わる，という点である。
+\textsc{PA-ODR} は元の容量ベクトル $q$ を維持しないことがあるため，
+feasibility と non-wastefulness は de-reservation 後の最終容量ベクトル $\hat q$ に関して評価する。
+一方で，公平性の考え方そのものは \textsc{SPSE} と同じである。
+
+\subsubsection{正式な結果}
+% ------------------------------------------------------------
+
+\begin{proposition}[停止性]
+\label{prop:pa-odr-termination}
+\textsc{PA-ODR} は有限回で停止する。
+\end{proposition}
+
+\begin{proof}
+ある反復でアルゴリズムが停止しないとする。
+このとき，ある留保カテゴリ $t^\ast$ について
+\[
+    |\mu_{t^\ast}|<\hat q^{t^\ast}
+\]
+が成り立つ。
+この場合，アルゴリズムは
+\[
+    \hat q^{t^\ast}\gets \hat q^{t^\ast}-1,
+    \qquad
+    \hat q^o\gets \hat q^o+1
+\]
+と更新する。
+
+したがって，アルゴリズムが停止しない各反復において，
+\[
+    \sum_{t\in T}\hat q^t
+\]
+は1だけ減少する。
+この値は非負整数であるため，有限回の反復後には必ず停止する。
+\end{proof}
+
+\begin{proposition}[Elevated-score feasibility]
+\label{prop:pa-odr-score-feasible}
+\textsc{PA-ODR} の出力は elevated-score feasible である。
+\end{proposition}
+
+\begin{proof}
+アルゴリズムの最終反復を固定し，そのときの open cutoff を $e$ とする。
+構成より，
+\[
+    e=e_o(\mu)
+\]
+である。
+
+学生 $i$ が留保カテゴリ $t$ に割り当てられるためには，
+最終反復で構成されたグラフに辺 $(i,t)$ が存在しなければならない。
+辺の定義より，
+\[
+    (i,t)\in E(e)
+    \quad\Longleftrightarrow\quad
+    t\in\mathcal T(i)
+    \text{ かつ }
+    \sigma(i)+k_t\ge e-\delta.
+\]
+したがって，任意の $i\in\mu_t$ について，
+\[
+    \sigma_t(i)=\sigma(i)+k_t\ge e-\delta.
+\]
+ここで $e=e_o(\mu)$ であるから，
+\[
+    \sigma_t(i)\ge e_o(\mu)-\delta
+\]
+が成り立つ。
+
+両辺について $i\in\mu_t$ の最小値を取ると，
+\[
+    e_t^+(\mu)
+    =
+    \min_{i\in\mu_t}\sigma_t(i)
+    \ge
+    e_o(\mu)-\delta.
+\]
+したがって，
+\[
+    e_o(\mu)-e_t^+(\mu)\le\delta.
+\]
+これは任意の非空の留保カテゴリ $t$ について成り立つ。
+よって，出力は elevated-score feasible である。
+\end{proof}
+
+\begin{proposition}[Non-wastefulness]
+\label{prop:pa-odr-nonwaste}
+\textsc{PA-ODR} の出力は，最終容量ベクトル $\hat q$ に関して
+non-wasteful である。
+\end{proposition}
+
+\begin{proof}
+\textsc{PA-ODR} は，正の最終容量を持つ留保カテゴリがすべて埋まったときに停止する。
+すなわち，停止時には，任意の $t\in T$ について，
+\[
+    \hat q^t>0
+    \quad\Longrightarrow\quad
+    |\mu_t|=\hat q^t
+\]
+が成り立つ。
+もしある $t$ について
+\[
+    |\mu_t|<\hat q^t
+\]
+が成り立つならば，アルゴリズムはその留保席を一般カテゴリへ転換し，
+停止しないからである。
+
+また，一般カテゴリも最終容量 $\hat q^o$ まで埋められている。
+ただし，学生数が総容量より少ない場合には，未マッチ学生自体が存在しない。
+
+いま，未マッチ学生 $i\in I\setminus M(\mu)$ とカテゴリ $c\in V_i$ が存在し，
+$i$ を $c$ に追加しても feasible であると仮定する。
+すると，カテゴリ $c$ は最終容量ベクトル $\hat q$ の下で空席を持たなければならない。
+しかし上で見たように，停止時には正の最終容量を持つすべての留保カテゴリは満席であり，
+一般カテゴリも $\hat q^o$ まで埋められている。
+したがって，そのような空席は存在しない。
+よって，出力は最終容量ベクトル $\hat q$ に関して
+non-wasteful である。
+\end{proof}
+
+\begin{proposition}[Within-category fairness]
+\label{prop:pa-odr-within}
+\textsc{PA-ODR} の出力は，同一カテゴリ内で公平である。
+\end{proposition}
+
+\begin{proof}
+最終反復の open cutoff を $e$ とする。
+留保カテゴリ $t\in T$ と学生 $i,j$ が存在し，
+\[
+    t\in\mathcal T(i)\cap\mathcal T(j),
+\]
+\[
+    \sigma(i)>\sigma(j),
+\]
+\[
+    j\in\mu_t,
+    \qquad
+    i\in I\setminus M(\mu)
+\]
+であると仮定する。
+
+$i$ と $j$ はともに $t$ の資格を持つので，両者には同じ bonus $k_t$ が加わる。
+したがって
+\[
+    \sigma_t(i)=\sigma(i)+k_t>\sigma(j)+k_t=\sigma_t(j)
+\]
+が成り立つ。
+また，$j\in\mu_t$ であるから，最終反復で構成された留保グラフには辺 $(j,t)$ が存在し，
+特に
+\[
+    \sigma_t(j)\ge e-\delta
+\]
+である。上の不等式より $\sigma_t(i)>\sigma_t(j)\ge e-\delta$ なので，
+$i$ に対しても辺 $(i,t)$ が存在する。
+
+そこで，最終反復で得られた留保 matching の中で $j$ を $i$ に置き換えた matching を考える。
+辺 $(i,t)$ が存在するので，この置換は留保側の容量制約を破らず，マッチ人数も変えない。
+一方で，カテゴリ $t$ に割り当てられた学生の adjusted score は
+$\sigma_t(j)$ から $\sigma_t(i)$ へ strictly に上がる。
+したがって，新しい matching の elevated score vector は元のものを辞書式に strictly 改善する。
+しかし，\textsc{PrefLexMaxMatching} は最大サイズの matching の中で
+elevated score vector を辞書式最大にしているから，これは矛盾である。
+
+よってそのような $i,j$ は存在せず，出力は同一カテゴリ内で公平である。
+\end{proof}
+
+\begin{proposition}[Across-category fairness]
+\label{prop:pa-odr-across}
+\textsc{PA-ODR} の出力は，カテゴリ間で公平である。
+\end{proposition}
+
+\begin{proof}
+最終反復の open cutoff を $e$ とする。
+未マッチ学生 $i$ とマッチ済み学生 $j$ が存在し，
+$j$ がカテゴリ $c$ に割り当てられており，
+\[
+    c\in V_i,
+\]
+\[
+    \sigma_c(i)>\sigma_c(j)
+\]
+であると仮定する。
+
+まず，$c=o$ の場合を考える。
+一般カテゴリでは
+\[
+    \sigma_o(i)=\sigma(i)
+\]
+である。
+\textsc{PA-ODR} では，一般カテゴリは最終容量 $\hat q^o$ の下で
+raw score の高い学生から割り当てられる。
+したがって，未マッチ学生 $i$ が，一般カテゴリに割り当てられている学生 $j$ より
+高い raw score を持つことはありえない。矛盾。
+
+次に，$c=t\in T$ の場合を考える。$c=t\in V_i$ であるから，
+\[
+    t\in\mathcal T(i)
+\]
+である。
+\[
+    \sigma_t(j)\ge e-\delta
+\]
+は，$j\in\mu_t$ であることから従う。仮定 $\sigma_t(i)>\sigma_t(j)$ より
+\[
+    \sigma_t(i)>e-\delta
+\]
+であるから，最終反復で構成された留保グラフには辺
+\[
+    (i,t)
+\]
+が存在する。
+
+そこで，reserved matching の中で $j$ を $i$ に置き換えた matching を考える。
+辺 $(i,t)$ が存在するので，この置換は容量制約を破らず，マッチ人数も変えない。
+さらに
+\[
+    \sigma_t(i)>\sigma_t(j)
+\]
+であるため，elevated score vector を辞書式に strictly 改善する。
+しかし，これは \textsc{PrefLexMaxMatching} が
+最大サイズの matching の中で elevated score vector を辞書式最大にしていることに反する。
+
+したがって，そのような $i,j$ は存在しない。
+よって，出力はカテゴリ間で公平である。
+\end{proof}
+
+\begin{proposition}[Across-category fairness with no common reserved category]
+\label{prop:pa-odr-across-no-common}
+\textsc{PA-ODR} の出力は，\cref{def:across-no-common-category} の意味でも
+カテゴリ間で公平である。
+\end{proposition}
+
+\begin{proof}
+背理法による。\cref{def:across-no-common-category} の違反があると仮定する。
+すると未マッチ学生 $i$ と既マッチ学生 $j$ が存在し，
+\[
+    \mathcal T(i)\cap\mathcal T(j)=\emptyset
+\]
+かつ $c=\mu(j)\in V_i$，$\sigma_c(i)>\sigma_c(j)$，および $j$ を $i$ に置き換えた
+matching が score-feasible である。
+
+まず，reserved category に対する complaint 自体が起こりえないことを示す。
+もし $c\in T$ なら，$j\in\mu_c$ より $c\in\mathcal T(j)$ であり，
+また $c\in V_i$ かつ $c\neq o$ より $c\in\mathcal T(i)$ である。これは
+\[
+    \mathcal T(i)\cap\mathcal T(j)=\emptyset
+\]
+に矛盾する。したがって，共通留保カテゴリを持たない二人の間で
+reserved seat をめぐる complaint は定義上不可能である。
+ゆえに $c=o$ である。
+
+しかし PA-ODR では open category は最終容量 $\hat q^o$ のもとで
+raw score 上位の学生から割り当てられる。したがって $j\in\mu_o$ であるなら，
+未マッチ学生 $i$ が
+\[
+    \sigma(i)>\sigma(j)
+\]
+を満たすことはできない。これは $\sigma_o(i)>\sigma_o(j)$ に矛盾する。
+よって \cref{def:across-no-common-category} の違反は存在しない。
+\end{proof}
+
+\begin{proposition}[カテゴリ選好の反映]
+\label{prop:pa-odr-preference}
+最終反復の open cutoff $e$ と最終容量ベクトル $\hat q$ を固定する。
+このとき，\textsc{PA-ODR} の留保割当は，
+最大サイズかつ elevated score vector を辞書式最大にする留保割当の中で，
+preference-rank vector を辞書式最小にする。
+\end{proposition}
+
+\begin{proof}
+最終反復の $e$ と $\hat q$ を固定すると，
+留保カテゴリへの割当問題は，固定された二部グラフ $G(e)$ 上の
+容量付き matching problem である。
+
+\textsc{PA-ODR} は，このグラフ上で
+\textsc{PrefLexMaxMatching} を実行する。
+\textsc{PrefLexMaxMatching} は定義により，次の順序で matching を選ぶ：
+\begin{enumerate}
+    \item マッチ人数を最大化する。
+    \item その中で elevated score vector を辞書式最大化する。
+    \item その中で preference-rank vector を辞書式最小化する。
+\end{enumerate}
+
+したがって，最初の二つの基準を満たす matching の中で，
+カテゴリ選好を最もよく反映する matching が選ばれる。
+よって命題が従う。
+\end{proof}
+
+% ============================================================
+\subsection{Examples}
+% ============================================================
+
+\paragraph{Example: PA-ODR の動作例}
+\label{ex:pa-odr-main}
+カテゴリ集合を
+\[
+    T=\{t_1,t_2\}
+\]
+とし，
+\[
+    q^o=1,
+    \qquad
+    q^{t_1}=1,
+    \qquad
+    q^{t_2}=1,
+    \qquad
+    \delta=10
+\]
+とする。
+カテゴリ別加点を
+\[
+    k_{t_1}=5,
+    \qquad
+    k_{t_2}=10
+\]
+とする。
+
+学生は次の4人である。
+\[
+\begin{array}{c|c|c|c}
+\text{学生} & \text{raw score } \sigma & \text{資格カテゴリ} & \text{カテゴリ選好} \\
+\hline
+A & 100 & \emptyset & o \\
+B & 86  & \{t_1,t_2\} & t_2\succ_B t_1\succ_B o \\
+C & 84  & \{t_1\} & t_1\succ_C o \\
+D & 82  & \{t_2\} & t_2\succ_D o
+\end{array}
+\]
+
+\paragraph{Step 1.}
+初期容量は
+\[
+    \hat q^o=1,
+    \qquad
+    \hat q^{t_1}=1,
+    \qquad
+    \hat q^{t_2}=1.
+\]
+一般カテゴリは raw score 上位1人で埋めるため，
+\[
+    \mu_o=\{A\}.
+\]
+したがって，
+\[
+    e=100.
+\]
+
+留保カテゴリへの辺は elevated score によって判定される。
+すなわち，
+\[
+    (i,t)\in E(e)
+    \quad\Longleftrightarrow\quad
+    t\in\mathcal T(i)
+    \text{ and }
+    \sigma(i)+k_t\ge 100-10=90.
+\]
+
+学生 $B$ について，
+\[
+    \sigma(B)+k_{t_1}=86+5=91,
+\]
+\[
+    \sigma(B)+k_{t_2}=86+10=96.
+\]
+したがって，
+\[
+    B\to t_1,
+    \qquad
+    B\to t_2
+\]
+の両方の辺が存在する。
+
+学生 $C$ について，
+\[
+    \sigma(C)+k_{t_1}=84+5=89<90
+\]
+であるため，
+\[
+    C\to t_1
+\]
+の辺は存在しない。
+
+学生 $D$ について，
+\[
+    \sigma(D)+k_{t_2}=82+10=92\ge 90
+\]
+であるため，
+\[
+    D\to t_2
+\]
+の辺が存在する。
+
+したがって，留保グラフの辺は
+\[
+    B\to t_1,
+    \qquad
+    B\to t_2,
+    \qquad
+    D\to t_2
+\]
+である。
+
+\textsc{PrefLexMaxMatching} は，まずマッチ人数を最大化する。
+サイズ2の matching として，
+\[
+    B\to t_1,
+    \qquad
+    D\to t_2
+\]
+が可能である。
+したがって，
+\[
+    \mu_{t_1}=\{B\},
+    \qquad
+    \mu_{t_2}=\{D\}.
+\]
+
+すべての留保席が埋まったため，de-reservation は行われず，
+アルゴリズムは停止する。
+
+\paragraph{Final assignment.}
+最終割当は
+\[
+    \mu_o=\{A\},
+    \qquad
+    \mu_{t_1}=\{B\},
+    \qquad
+    \mu_{t_2}=\{D\}.
+\]
+
+elevated-score feasibility を確認する。
+一般カテゴリの cutoff は
+\[
+    e_o=100.
+\]
+留保カテゴリの elevated cutoff は
+\[
+    e_{t_1}^+=\sigma(B)+k_{t_1}=91,
+\]
+\[
+    e_{t_2}^+=\sigma(D)+k_{t_2}=92.
+\]
+したがって，
+\[
+    e_o-e_{t_1}^+=100-91=9\le 10,
+\]
+\[
+    e_o-e_{t_2}^+=100-92=8\le 10.
+\]
+よって，最終割当は elevated-score feasible である。
+
+\paragraph{Across-category fairness with no common reserved category in the example.}
+この例で唯一の未マッチ学生は $C$ であり，既マッチ学生は $A,B,D$ である。
+$B$ とは $t_1$ を共有するので，$(C,B)$ は no-common-category 版の対象ではない。
+$D$ とは共通留保カテゴリを持たないが，$D$ の割当カテゴリは $t_2$ であり，
+$t_2\notin V_C$ だから，$C$ はその reserved seat に対して complaint を述べることができない。
+したがって，共通留保カテゴリなし版で実際に問題になりうるのは $(C,A)$ だけである。
+しかし
+\[
+    \sigma(C)=84<100=\sigma(A),
+\]
+なので open category に関する complaint も成立しない。
+この例でも，reserved category に対する complaint は起こりえず，
+no-common-category 版 across-category fairness は open category の比較に還元されている。
+
+\paragraph{Example: PA-ODR における de-reservation}
+\label{ex:pa-odr-dereservation}
+カテゴリ集合を
+\[
+    T=\{t_1,t_2\}
+\]
+とし，
+\[
+    q^o=1,
+    \qquad
+    q^{t_1}=1,
+    \qquad
+    q^{t_2}=1,
+    \qquad
+    \delta=10
+\]
+とする。
+カテゴリ別加点を
+\[
+    k_{t_1}=5,
+    \qquad
+    k_{t_2}=5
+\]
+とする。
+
+学生は次の4人である。
+\[
+\begin{array}{c|c|c|c}
+\text{学生} & \text{raw score } \sigma & \text{資格カテゴリ} & \text{カテゴリ選好} \\
+\hline
+A & 100 & \emptyset & o \\
+B & 92  & \{t_1\} & t_1\succ_B o \\
+C & 80  & \{t_2\} & t_2\succ_C o \\
+D & 78  & \{t_1,t_2\} & t_2\succ_D t_1\succ_D o
+\end{array}
+\]
+
+\paragraph{Step 1.}
+初期容量は
+\[
+    \hat q^o=1,
+    \qquad
+    \hat q^{t_1}=1,
+    \qquad
+    \hat q^{t_2}=1.
+\]
+一般カテゴリは raw score 上位1人で埋めるため，
+\[
+    \mu_o=\{A\}.
+\]
+したがって，
+\[
+    e=100.
+\]
+留保カテゴリへの辺は
+\[
+    \sigma(i)+k_t\ge 100-10=90
+\]
+を満たす場合に張られる。
+
+学生 $B$ について，
+\[
+    \sigma(B)+k_{t_1}=92+5=97\ge 90
+\]
+であるため，
+\[
+    B\to t_1
+\]
+の辺が存在する。
+
+一方，学生 $C$ について，
+\[
+    \sigma(C)+k_{t_2}=80+5=85<90
+\]
+であるため，$C\to t_2$ の辺は存在しない。
+学生 $D$ についても，
+\[
+    \sigma(D)+k_{t_1}=78+5=83<90,
+\]
+\[
+    \sigma(D)+k_{t_2}=78+5=83<90
+\]
+であるため，どちらの留保カテゴリにも辺を持たない。
+
+したがって，この反復では
+\[
+    \mu_{t_1}=\{B\},
+    \qquad
+    \mu_{t_2}=\emptyset.
+\]
+$t_2$ は埋まらないため，この席を一般カテゴリへ転換する：
+\[
+    \hat q^{t_2}\gets 0,
+    \qquad
+    \hat q^o\gets 2.
+\]
+
+\paragraph{Step 2.}
+更新後の容量は
+\[
+    \hat q^o=2,
+    \qquad
+    \hat q^{t_1}=1,
+    \qquad
+    \hat q^{t_2}=0.
+\]
+一般カテゴリは raw score 上位2人で埋めるため，
+\[
+    \mu_o=\{A,B\}.
+\]
+したがって，
+\[
+    e=92.
+\]
+留保カテゴリへの辺は
+\[
+    \sigma(i)+k_t\ge 92-10=82
+\]
+を満たす場合に張られる。
+
+$t_2$ は容量0である。
+$t_1$ について，学生 $D$ は
+\[
+    \sigma(D)+k_{t_1}=78+5=83\ge 82
+\]
+を満たすため，
+\[
+    D\to t_1
+\]
+の辺が存在する。
+したがって，
+\[
+    \mu_{t_1}=\{D\}.
+\]
+すべての正の留保容量が埋まったため，アルゴリズムは停止する。
+
+\paragraph{Final assignment.}
+最終割当は
+\[
+    \mu_o=\{A,B\},
+    \qquad
+    \mu_{t_1}=\{D\},
+    \qquad
+    \mu_{t_2}=\emptyset.
+\]
+
+このとき，一般カテゴリの cutoff は
+\[
+    e_o=92.
+\]
+留保カテゴリ $t_1$ の elevated cutoff は
+\[
+    e_{t_1}^+=\sigma(D)+k_{t_1}=78+5=83.
+\]
+したがって，
+\[
+    e_o-e_{t_1}^+=92-83=9\le 10.
+\]
+よって，最終割当は elevated-score feasible である。
+
+この例では，$t_2$ の席は score constraint の下で埋められないため，
+一般カテゴリへ転換された。
+したがって，PA-ODR は elevated-score feasibility を保つ一方で，
+元の留保容量を必ずしも維持しないことが分かる。
+
+
+% \section{0709:横尾先生とのミーティング}
+
+% \subsection{総括}
+
+% FB内容から見ると，本稿の当面の課題は，主に
+% \begin{enumerate}
+%     \item \textbf{モデル設定の整理}
+%     \item \textbf{怪しい定義の修正}
+%     \item \textbf{PA-ODR メカニズムの再検討}
+%     \item \textbf{PrimA 投稿に向けた最低限の形作り}
+% \end{enumerate}
+% の4点にある．特に，fairness の定義と de-reservation の正当化は，
+% 現状のままでは突っ込まれやすい箇所であり，最優先で見直す必要がある．
+
+% \subsection{まず最優先でやること}
+
+% \subsubsection{Across-category fairness の定義の見直し}
+
+% 最も強いFBは across-category fairness の定義に向けられた．
+% 以前の定義では，
+% 「共通カテゴリーを持たない学生同士を比較し，片方を外して片方を入れる」
+% という構図になっていたが，これに対しては
+% \begin{itemize}
+%     \item そもそも $i$ を入れられるなら $j$ を外さずに追加できるのではないか
+%     \item 異なるカテゴリーに属する学生同士を比較する意味が曖昧ではないか
+% \end{itemize}
+% という疑問が残る．
+
+% したがって，次の点を再確認する必要がある．
+% \begin{enumerate}
+%     \item 孫先生が言っていた diversity goal の意味を確認する．
+%     \item 「共通カテゴリーを持たない学生間の公平性」を独立に定義するのでなく，
+%     共通の席カテゴリを通じて比較できる complaint に限定する．
+%     \item したがって，
+%     「$j$ を $i$ に置き換えられない理由は，多様性制約・容量制約・点数制約にある」
+%     という形に definition を寄せる．
+%     \item 現在のスコアベクトル比較による定義は，一旦保留し，修正候補として扱う．
+% \end{enumerate}
+
+% \subsubsection{category replacement fairness}
+%   \begin{definition}[Shared-category constrained replacement fairness]
+%   \label{def:shared-category-constrained-fairness}
+%   マッチング $\mu$ が \textbf{shared-category constrained replacement fair} であると
+%   は，
+%   未割り当て学生 $i\in I\setminus M(\mu)$ と割り当て済み学生 $j\in M(\mu)$，
+%   および $j$ の割当カテゴリ $c=\mu(j)$ について，
+%   次をすべて満たす状況が存在しないことをいう：
+%   \begin{enumerate}
+%       \item $c\in V_i\cap V_j$，
+%       \item $\sigma_c(i)>\sigma_c(j)$，
+%       \item $j$ を $i$ に置き換えたマッチング
+%       \[
+%           \mu'_c:=(\mu_c\setminus\{j\})\cup\{i\},
+%           \qquad
+%           \mu'_{c'}:=\mu_{c'}\quad(c'\neq c)
+%       \]
+%       が feasible である，
+%       \item $\mu'$ が score-feasible である．
+%   \end{enumerate}
+%   \end{definition}
+
+
+% \paragraph{現時点の修正方針}
+% 少なくとも当面は，
+% \begin{itemize}
+%     \item 共通カテゴリーを持たない学生同士を直接比べる fairness は採用しない
+%     \item complaint は，共通の席カテゴリを通じて一対一置換できる場合に限る
+%     \item したがって，比較対象は実質的に「open を共有する」か「同じ reserved category を共有する」学生に限る
+% \end{itemize}
+% という方向で整理するのがよい．
+
+% \paragraph{含意}
+% この方針を取ると，本稿で扱う fairness は一般的な across-category fairness というより，
+% counting 制約と score-feasibility の下での
+% \emph{constrained replacement fairness} と理解すべきことになる．
+% この限定を明示すれば，
+% 「なぜ全く別のカテゴリにいる学生同士を比べるのか」
+% という批判はかなり避けやすい．
+
+% \subsubsection{カテゴリー選好を入れる意味の再検討}
+
+% カテゴリーごとに同じ加点を与えるなら，
+% そのカテゴリー内での学生順位は変わらない．
+% すると加点は，カテゴリ内順位を変えるためでなく，
+% score-feasibility を満たすためだけに使われている可能性がある．
+
+% この点から，学生のカテゴリー選好をモデルに残す意味も再検討すべきである．
+% やるべきことは次の通りである．
+% \begin{enumerate}
+%     \item 学生がカテゴリーに対して選好を持つ設定が本当に必要か確認する．
+%     \item 「一般枠で入りたい」「留保枠で入りたい」という選好に現実的意味があるか整理する．
+%     \item 意味が弱いなら，選好を削って，スコア・資格・容量だけのモデルに単純化する．
+%     \item 残すなら，「なぜカテゴリー選好が必要なのか」を明示的に説明できるようにする．
+% \end{enumerate}
+
+% 特に，一般入試か推薦入試かといった制度上の区分に学生の選好を直接乗せるのは，
+% やや不自然に見える可能性がある．この点は本稿のモデル化の説得力に直結する．
+
+% \subsubsection{De-reservation を使ってよい問題設定かの再確認}
+
+% PA-ODR では，埋まらない留保枠を一般枠へ戻す de-reservation を用いている．
+% しかし，これに対しては
+% \begin{itemize}
+%     \item そもそも容量を変更してよいのか
+%     \item score-feasibility のせいで不自然に誰かが落とされないか
+%     \item 一般枠を増やしたことで，別の学生が入ってきて挙動が不自然にならないか
+% \end{itemize}
+% という懸念がある．
+
+% したがって，
+% \begin{enumerate}
+%     \item de-reservation の先行研究を読み直す
+%     \item そこで「なぜ枠を一般枠へ戻してよいのか」を確認する
+%     \item 自分の問題設定でも同じ正当化が通るか検討する
+%     \item 正当化できないなら，PA-ODR から de-reservation を外すか，別メカニズムに切り替える
+% \end{enumerate}
+% という順で整理する必要がある．
+
+% ここは PA-ODR の根幹であり，正当化に失敗するとメカニズム全体を再設計する必要がある．
+
+% \subsection{次にやること}
+
+% \subsubsection{Score-feasibility の定義の再検討}
+
+% 現在の定義は，
+% 一般カテゴリー cutoff と留保カテゴリー cutoff の差を一定以下に抑える，
+% という形である．しかし，この定義にはまだ曖昧さが残る．
+
+% 特に問題になるのは次の点である．
+% \begin{itemize}
+%     \item 一般枠が満員でない場合に cutoff をどう定義するか
+%     \item 「最低合格点」よりも「最高で落ちた人」の方が自然な基準ではないか
+%     \item 全員合格している場合に cutoff をどう考えるか
+%     \item score-feasibility を強く課しすぎると，不自然な割当てにならないか
+% \end{itemize}
+
+% したがって，
+% \begin{enumerate}
+%     \item open が満員でない場合の cutoff 定義を明確化する
+%     \item 最低合格点基準と，次点者・不合格者最高点基準の両方を比較する
+%     \item 空き枠や de-reservation と score-feasibility が衝突する例を点検する
+%     \item 必要なら score-feasibility 自体を少し弱める
+% \end{enumerate}
+% という作業が必要である．
+
+% \paragraph{候補定義の整理}
+% 少なくとも，open 側の benchmark には次の 3 通りがありうる．
+
+% \begin{enumerate}
+%     \item \textbf{現行の最低合格点基準}
+%     \[
+%         e_o(\mu):=\min_{i\in\mu_o}\sigma(i)
+%     \]
+%     を用い，$|\mu_o|=q^o$ のときにだけ
+%     \[
+%         e_o(\mu)-e_t^+(\mu)\le \delta
+%     \]
+%     を課す．
+
+%     \item \textbf{open 次点者基準}
+%     open に入らなかった学生の元スコア最大値
+%     \[
+%         b_o(\mu):=\max_{i\in I\setminus \mu_o}\sigma(i)
+%     \]
+%     を benchmark にして，
+%     \[
+%         b_o(\mu)-e_t^+(\mu)\le \delta
+%     \]
+%     を課す．
+%     これは「open に入った最低点」ではなく，
+%     「open から外れた中で最も高い点」と reserved cutoff を比較する考え方である．
+
+%     \item \textbf{空席時は制約なし，満席時は次点者基準}
+%     open が満員でないときには score 制約を課さず，
+%     満員のときだけ
+%     \[
+%         b_o(\mu)-e_t^+(\mu)\le \delta
+%     \]
+%     を課す．
+%     これは「競争的な open cutoff があるときだけ gap を問題にする」
+%     という意味で，現行定義より自然でありつつ，
+%     最低合格点基準よりも vacancy に敏感である．
+% \end{enumerate}
+
+% \paragraph{当面の推奨}
+% 現時点では，3番目，
+% すなわち
+% \begin{quote}
+% open が満員でないときには score 制約を課さず，
+% 満員のときだけ「open 次点者」と reserved adjusted cutoff の差を抑える
+% \end{quote}
+% という定義が最も自然に見える．
+% cutoff を競争的境界として解釈するという見方とも比較的整合的である
+% \citep{ABB24a,KaKo17a}．
+
+% 理由は次の通りである．
+% \begin{itemize}
+%     \item open に空席があるのに最低合格点を cutoff と呼ぶのは不自然である
+%     \item 一方で，open が満員なら「最高で外れた学生」は競争的境界として解釈しやすい
+%     \item reserved に回された高得点学生がいる場合でも，
+%     「open から見てどこまで下げているか」を直接測れる
+% \end{itemize}
+
+% \paragraph{今後の定義候補}
+% この方針で行くなら，open benchmark を
+% \[
+%     b_o(\mu):=
+%     \begin{cases}
+%         \max_{i\in I\setminus \mu_o}\sigma(i), & \text{if } |\mu_o|=q^o,\\
+%         -\infty, & \text{if } |\mu_o|<q^o
+%     \end{cases}
+% \]
+% とおき，score-feasibility を
+% \[
+%     b_o(\mu)-e_t^+(\mu)\le \delta
+%     \qquad
+%     (\forall t\in T\text{ with }\mu_t\neq\emptyset)
+% \]
+% で定める，というのが最も有力な修正案である．
+
+% \begin{definition}[候補：次点者基準の score-feasibility]
+% \label{def:score-feasibility-next-rejected-candidate}
+% マッチング $\mu$ に対して，
+% \[
+%     b_o(\mu):=
+%     \begin{cases}
+%         \max_{i\in I\setminus \mu_o}\sigma(i), & \text{if } |\mu_o|=q^o,\\[4pt]
+%         -\infty, & \text{if } |\mu_o|<q^o
+%     \end{cases}
+% \]
+% と定める．
+
+% このとき，$\mu$ が \textbf{next-rejected score-feasible} であるとは，
+% 任意の留保カテゴリ $t\in T$ について $\mu_t\neq\emptyset$ ならば
+% \[
+%     b_o(\mu)-e_t^+(\mu)\le \delta
+% \]
+% が成り立つことをいう．
+% \end{definition}
+
+% \paragraph{この定義の読み方}
+% open が満員でないときには $b_o(\mu)=-\infty$ とするので，score 制約は自動的に満たされる．
+% open が満員のときにのみ，
+% 「open から外れた側で最も高い raw score」と reserved adjusted cutoff を比較する．
+% したがって，現行定義よりも vacancy に敏感であり，
+% 「一般枠に空きがあるのに cutoff を持ち出す」不自然さを避けやすい．
+
+% \begin{proposition}[open を実力順に埋めるメカニズムでは旧定義が新定義を含意する]
+% \label{prop:old-implies-next-rejected-under-open-merit}
+% マッチング $\mu$ が open-merit を満たし，
+% さらに open が満員であるとする．
+% このとき，$\mu$ が \cref{def:score-feasibility-adjusted-cutoff} の意味で
+% score-feasible ならば，
+% \cref{def:score-feasibility-next-rejected-candidate} の意味でも
+% next-rejected score-feasible である．
+% \end{proposition}
+
+% \begin{proof}
+% open-merit より，open に入っていない任意の学生 $i\in I\setminus\mu_o$ と
+% open 在籍者 $j\in\mu_o$ について
+% \[
+%     \sigma(i)\le \sigma(j)
+% \]
+% が成り立つ．
+% したがって，open が満員であるとき
+% \[
+%     b_o(\mu)=\max_{i\in I\setminus\mu_o}\sigma(i)
+%     \le
+%     \min_{j\in\mu_o}\sigma(j)
+%     =e_o(\mu)
+% \]
+% である．
+
+% いま，$\mu$ が旧定義の意味で score-feasible であると仮定すると，
+% 任意の $\mu_t\neq\emptyset$ について
+% \[
+%     e_o(\mu)-e_t^+(\mu)\le \delta
+% \]
+% が成り立つ．上で示した $b_o(\mu)\le e_o(\mu)$ を用いれば，
+% \[
+%     b_o(\mu)-e_t^+(\mu)
+%     \le
+%     e_o(\mu)-e_t^+(\mu)
+%     \le
+%     \delta.
+% \]
+% よって，$\mu$ は next-rejected score-feasible である．
+% \end{proof}
+
+% \paragraph{含意}
+% この命題により，少なくとも
+% \begin{itemize}
+%     \item open を raw score 上位で明示的に埋める PA-ODR
+% \end{itemize}
+% については，旧定義で示した score-feasibility から
+% 新しい next-rejected score-feasibility が従う．
+
+% 一方で，
+% \begin{itemize}
+%     \item SPSE
+%     \item 閾値調整 DA
+% \end{itemize}
+% のように open を単純な raw score 上位で埋めるとは限らないメカニズムについては，
+% この含意はそのままでは使えない．
+% したがって，新定義を本稿の正式定義に採用するなら，
+% それらのメカニズムについては別途解析が必要になる．
+
+% \paragraph{この定義で確認すべき点}
+% \begin{itemize}
+%     \item $I\setminus\mu_o$ には reserved に入った学生も含まれるが，
+%     それを benchmark に入れるのが制度的に自然か
+%     \item open が満員でも，reserved に回った高得点学生が benchmark を引き上げすぎないか
+%     \item PA-ODR と閾値調整 DA の両方が，この新しい定義の下でどう振る舞うか
+% \end{itemize}
+
+% \subsubsection{PA-ODR の代替として「閾値を動かす DA」案の検討}
+
+% FB では，de-reservation で容量を動かすよりも，
+% まずスコア閾値を置き，その閾値を満たす学生だけを対象に DA を走らせる方が
+% 自然ではないか，という代替案が示された．
+
+% \paragraph{位置づけ}
+% この案は，発想としては独立の新メカニズムというより，
+% \emph{adaptive DA の一変種}とみる方が自然である．
+% すなわち，
+% \begin{itemize}
+%     \item DA を固定し，
+%     \item 応募可能集合の方を閾値で段階的に調整し，
+%     \item 望ましい条件を満たす最初の，あるいは最良の閾値を採用する
+% \end{itemize}
+% という構造自体は adaptive DA 的である \citep{GaSh62a,Roth08a,RKG21a}．
+
+% \paragraph{どこが違うのか}
+% 違いがあるとすれば，その「適応対象」と「停止基準」である．
+% 本稿の案では，
+% \begin{itemize}
+%     \item 適応対象は reserved category への応募可能性
+%     \item 閾値条件は
+%     \[
+%         \sigma(i)+k_t\ge \tau-\delta
+%     \]
+%     という score-elevated な資格制約
+%     \item 停止基準は score-feasibility と人数基準
+% \end{itemize}
+% にある．
+% また，分配制約や cutoff をメカニズムの内部で明示的に扱うという意味でも，
+% matching with constraints の系譜に位置づける方が自然である
+% \citep{EHYY14a,GKK+17a,KaKo17a,ABB24a}．
+% したがって，完全に別物というより，
+% \textbf{score-feasibility を目的にした adaptive DA の specialized version}
+% として書くのが最も正確である．
+
+% この方向では，
+% \begin{enumerate}
+%     \item まず最低点のような閾値を置く
+%     \item カテゴリーごとにその閾値以下の学生を応募対象から外す
+%     \item その上で DA あるいは類似のアルゴリズムを実行する
+%     \item 埋まらない場合には閾値を少しずつ下げる
+% \end{enumerate}
+% という，いわばグリッドサーチ型のメカニズムが候補になる．
+
+% 今後は，
+% \begin{enumerate}
+%     \item このメカニズムを簡潔に定式化する
+%     \item PA-ODR より自然かどうかを比較する
+%     \item score-feasibility を保証できるかを検討する
+%     \item reserved quota をどこまで維持できるかを確認する
+% \end{enumerate}
+% 必要がある．
+
+% PA-ODR が de-reservation に強く依存する以上，この代替案は新しい本命候補になりうる．
+
+% \paragraph{候補メカニズムの素案}
+% 現時点での最も単純な案は次の通りである．
+% \begin{enumerate}
+%     \item open cutoff の候補値 $\tau$ を置く
+%     \item 各 reserved category $t$ について，
+%     \[
+%         \sigma(i)+k_t\ge \tau-\delta
+%     \]
+%     を満たす学生だけを $t$ に応募可能とする
+%     \item その応募集合の上で DA を実行する
+%     \item 望ましい割当が得られなければ，$\tau$ を少し下げて繰り返す
+% \end{enumerate}
+
+% この案では，score-feasibility を
+% 「割当後に de-reservation で帳尻を合わせる制約」ではなく，
+% 「留保席への応募可能性を事前に制御する閾値制約」
+% として扱うことになる．
+
+% \paragraph{実装案 1: 閾値調整 DA の具体仕様}
+% 今後の比較のため，次のようにアルゴリズムを固定して考えるのがよい．
+% \begin{enumerate}
+%     \item raw score を高い順に
+%     \[
+%         \sigma^{(1)}>\sigma^{(2)}>\cdots>\sigma^{(m)}
+%     \]
+%     と並べ，候補閾値集合を
+%     \[
+%         \Theta:=\{\sigma^{(1)},\sigma^{(2)},\dots,\sigma^{(m)}\}
+%     \]
+%     とする．
+%     \item 各 $\tau\in\Theta$ について，学生 $i$ の応募可能カテゴリ集合を
+%     \[
+%         V_i(\tau)
+%         :=
+%         \{o\}
+%         \cup
+%         \{\,t\in\mathcal T(i):\sigma(i)+k_t\ge \tau-\delta\,\}
+%     \]
+%     と定める．
+%     \item 応募集合 $(V_i(\tau))_{i\in I}$ の下で student-proposing DA を実行し，
+%     マッチング $\mu(\tau)$ を得る．
+%     \item $\mu(\tau)$ が score-feasible であるような $\tau$ のうち，
+%     \begin{enumerate}
+%         \item まず配置人数 $|M(\mu(\tau))|$ を最大にするものを選ぶ
+%         \item その中で $\tau$ を最大にするものを選ぶ
+%     \end{enumerate}
+%     \item 残った候補が複数あるときは，カテゴリ選好を入れるなら学生選好を反映する DA 出力を採用し，
+%     選好を入れないなら任意のものを採用する．
+% \end{enumerate}
+
+% \paragraph{この具体化の意図}
+% この仕様にすると，
+% \begin{itemize}
+%     \item 閾値の探索範囲が有限になる
+%     \item 「まず人数，次にできるだけ高い cutoff を保つ」という目的が明確になる
+%     \item de-reservation を使わずに score-feasibility を管理する，という PA-ODR との違いがはっきりする
+% \end{itemize}
+% という利点がある．
+
+% \paragraph{書き方の方針}
+% したがって，論文中ではこの案を
+% \begin{quote}
+% adaptive DA に基づく score-threshold adjustment
+% \end{quote}
+% あるいは
+% \begin{quote}
+% adaptive DA style mechanism for score-feasibility
+% \end{quote}
+% のように位置づけるのがよい．
+% もし先行研究にさらに近い名前があるなら，独自名称を強く押し出すより，
+% 「adaptive DA の本設定向け変形」として書いた方が安全である．
+
+% \paragraph{PA-ODR との比較メモ}
+% \begin{center}
+% \renewcommand{\arraystretch}{1.3}
+% \begin{tabular}{lccc}
+% \toprule
+% \textbf{性質 / 論点} & \textbf{SPSE} & \textbf{閾値調整 DA} & \textbf{PA-ODR} \\
+% \midrule
+% Feasibility & 成立 & 成立 & 成立 \\
+% Within-category fairness & 成立 & 成立しそう & 成立 \\
+% Constrained replacement fairness & 成立 & 成立 & 成立 \\
+% Score-feasibility & 一般には不成立 & 設計次第で成立候補 & 成立 \\
+% 元の reserved quota の維持 & 成立 & 成立 & 一般に不成立 \\
+% de-reservation への依存 & なし & なし & あり \\
+% カテゴリ選好の扱い & 直接反映 & 直接反映可能 & tie-break として反映 \\
+% 配置人数最大化 & 保証しない & 一般に不成立 & 保証 \\
+% 制度上の自然さ & 高い & 高い可能性 & 制度仮定に依存 \\
+% \bottomrule
+% \end{tabular}
+% \end{center}
+
+% \paragraph{暫定評価}
+% 閾値調整 DA の利点は，
+% \begin{itemize}
+%     \item reserved quota を崩さずに score 制約を扱える可能性があること
+%     \item de-reservation を制度仮定として受け入れなくてもよいこと
+% \end{itemize}
+% にある．
+% 一方で，
+% \begin{itemize}
+%     \item 配置人数最大化を保証できるか
+%     \item どの閾値停止ルールが最も自然か
+% \end{itemize}
+% はまだ未解決である．
+
+% \paragraph{定義を固定した上で示したい命題}
+% 以下，score-feasible な閾値が少なくともひとつ存在すると仮定し，
+% 実装案 1 が選ぶ最終閾値を $\hat\tau$，
+% その出力を
+% \[
+%     \mu^{\mathrm{TDA}}:=\mu(\hat\tau)
+% \]
+% と書く．
+
+% \begin{proposition}[閾値調整 DA の feasibility]
+% \label{prop:tda-feasible}
+% 任意の固定 $\tau\in\Theta$ に対して，DA が返すマッチング $\mu(\tau)$ は feasible である．
+% \end{proposition}
+
+% \begin{proof}
+% 固定した $\tau$ の下では，各学生の応募可能カテゴリ集合 $V_i(\tau)$ が与えられた
+% 通常の学生提案型 DA を実行しているだけである．
+% 各カテゴリ $c\in V$ は任意の段階で高々 $q^c$ 人しか保留しないから，
+% 最終出力でも
+% \[
+%     |\mu_c(\tau)|\le q^c
+% \]
+% が成り立つ．
+% また，各学生は同時に高々一つのカテゴリにしか保留されないため，
+% 異なるカテゴリに同じ学生が重複して割り当てられることはない．
+% したがって，
+% \[
+%     \mu_c(\tau)\cap\mu_{c'}(\tau)=\emptyset\qquad(c\neq c')
+% \]
+% である．
+% よって $\mu(\tau)$ は feasible である．
+% \end{proof}
+
+% \begin{proposition}[閾値調整 DA の within-category fairness]
+% \label{prop:tda-within}
+% 任意の固定 $\tau\in\Theta$ に対して，DA が返すマッチング $\mu(\tau)$ は
+% within-category fairness を満たす．
+% \end{proposition}
+
+% \begin{proof}
+% 背理法による．ある留保カテゴリ $t\in T$ と学生 $i,j$ が存在し，
+% \[
+%     t\in\mathcal T(i)\cap\mathcal T(j),\qquad
+%     \sigma(i)>\sigma(j),\qquad
+%     j\in \mu_t(\tau),\qquad
+%     i\notin M(\mu(\tau))
+% \]
+% が成り立つと仮定する．
+
+% $j\in\mu_t(\tau)$ であるから，学生 $j$ はカテゴリ $t$ に応募可能であり，
+% \[
+%     \sigma(j)+k_t\ge \tau-\delta
+% \]
+% を満たす．ところが $\sigma(i)>\sigma(j)$ であり，$i,j$ は同じカテゴリ $t$ の資格を持つので，
+% \[
+%     \sigma(i)+k_t>\sigma(j)+k_t\ge \tau-\delta
+% \]
+% である．したがって，$i$ もまた $t$ に応募可能である．
+
+% さらに，同じカテゴリ $t$ の中では両者に同じ bonus $k_t$ が加わるから，
+% \[
+%     \sigma_t(i)=\sigma(i)+k_t>\sigma(j)+k_t=\sigma_t(j)
+% \]
+% が成り立つ．
+% よってカテゴリ $t$ の優先順位では $i$ が $j$ を上回る．
+
+% $i$ は未割り当てであるから，DA の過程で $V_i(\tau)$ 内のすべての応募可能カテゴリに応募しており，
+% 特に $t$ にも応募して拒否されている．
+% $i$ が $t$ から拒否された時点では，$t$ の全席は $i$ より高優先の学生で埋まっていた．
+% その後 DA では，カテゴリ $t$ の保留集合はさらに高優先の学生へ置き換わることはあっても，
+% $i$ より低優先の学生を残すことはない．
+% したがって最終的に $j\in\mu_t(\tau)$ ならば，$j$ は $i$ より高優先でなければならない．
+% これは $\sigma_t(i)>\sigma_t(j)$ に矛盾する．
+
+% よってそのような $i,j$ は存在せず，$\mu(\tau)$ は within-category fairness を満たす．
+% \end{proof}
+
+% \begin{proposition}[閾値調整 DA の score-feasibility]
+% \label{prop:tda-score-feasible}
+% score-feasible な閾値集合
+% \[
+%     \Theta^{\mathrm{SF}}
+%     :=
+%     \{\tau\in\Theta:\mu(\tau)\text{ が score-feasible}\}
+% \]
+% が空でないとする．このとき実装案 1 が返す最終出力
+% $\mu^{\mathrm{TDA}}$ は score-feasible である．
+% \end{proposition}
+
+% \begin{proof}
+% 実装案 1 では，まず $\Theta^{\mathrm{SF}}$ に属する閾値の中だけで候補を比較し，
+% その中から配置人数最大，次いで閾値最大のものを選ぶ．
+% したがって，選ばれた $\hat\tau$ 自身が
+% \[
+%     \hat\tau\in\Theta^{\mathrm{SF}}
+% \]
+% を満たす．
+% 定義より，これは
+% \[
+%     \mu(\hat\tau)
+% \]
+% が score-feasible であることと同値である．
+% ところが $\mu^{\mathrm{TDA}}:=\mu(\hat\tau)$ と定めたので，
+% $\mu^{\mathrm{TDA}}$ は score-feasible である．
+% \end{proof}
+
+% \begin{proposition}[閾値調整 DA の shared-category constrained replacement fairness]
+% \label{prop:tda-shared-category-fair}
+% 任意の固定 $\tau\in\Theta$ に対して，DA が返すマッチング $\mu(\tau)$ は
+% shared-category constrained replacement fairness を満たす．
+% したがって，score-feasible な閾値の中から採用された最終出力
+% $\mu^{\mathrm{TDA}}$ も shared-category constrained replacement fairness を満たす．
+% \end{proposition}
+
+% \begin{proof}
+% まず固定した $\tau\in\Theta$ の下での DA 出力 $\mu(\tau)$ を考える．
+% 背理法により，$\mu(\tau)$ が
+% \cref{def:across-category-fairness-score-elevated} の意味で
+% shared-category constrained replacement fair でないと仮定する．
+% すると，未割り当て学生 $i\in I\setminus M(\mu(\tau))$ と
+% 割り当て済み学生 $j\in M(\mu(\tau))$，および共通にアクセスできる席カテゴリ
+% \[
+%     c=\mu(j)\in V_i\cap V_j
+% \]
+% が存在して，次を満たす：
+% \begin{enumerate}
+%     \item $\sigma_c(i)>\sigma_c(j)$；
+%     \item $j$ を $i$ に置き換えたマッチング $\mu'$ が feasible かつ score-feasible である．
+% \end{enumerate}
+
+% $c\in V_i$ であるから，$i$ は固定閾値 $\tau$ の下でカテゴリ $c$ に応募可能である．
+% $i$ は未割り当てであるため，DA の過程で $V_i(\tau)$ 内の全カテゴリへ応募しており，
+% 特にカテゴリ $c$ にも応募して拒否されている．
+% したがって，$i$ が $c$ から拒否された時点では，カテゴリ $c$ の全席は
+% $i$ より高優先の学生で占められていた．
+% その後 DA の単調性により，カテゴリ $c$ の最終保持者はすべて
+% $i$ より高優先でなければならない．
+% 特に $j\in\mu_c(\tau)$ なので，$j$ は $i$ より高優先である．
+
+% しかし，本稿の優先順位はカテゴリ $c$ における adjusted score によって定まり，
+% ここでは
+% \[
+%     \sigma_c(i)>\sigma_c(j)
+% \]
+% であるから，$i$ は $j$ より高優先でなければならない．
+% これは上の結論に矛盾する．
+
+% よって，そのような対 $(i,j)$ は存在せず，$\mu(\tau)$ は
+% shared-category constrained replacement fairness を満たす．
+
+% 最後に，最終出力 $\mu^{\mathrm{TDA}}$ は，ある固定閾値 $\hat\tau\in\Theta$ に対する
+% DA 出力 $\mu(\hat\tau)$ そのものである．
+% したがって上で示した結果を $\hat\tau$ に適用すれば，
+% $\mu^{\mathrm{TDA}}$ も shared-category constrained replacement fairness を満たす．
+% \end{proof}
+
+% \begin{proposition}[閾値調整 DA は quota を変更しない]
+% \label{prop:tda-no-dereservation}
+% 実装案 1 は容量ベクトル $q$ 自体を変更しない．特に，reserved quota の
+% de-reservation は起こらない．
+% \end{proposition}
+
+% \begin{proof}
+% 実装案 1 で変化するのは，各閾値 $\tau$ の下での応募可能カテゴリ集合
+% \[
+%     (V_i(\tau))_{i\in I}
+% \]
+% だけである．
+% 一方，DA を実行する際の容量は全ての $\tau$ に対して
+% \[
+%     (q^c)_{c\in V}
+% \]
+% のまま固定されている．
+% アルゴリズムのどの段階でも，ある reserved category の容量を減らして
+% open category の容量を増やす更新は行われない．
+% したがって，本メカニズムは容量ベクトル $q$ を変更せず，
+% reserved quota の de-reservation も起こらない．
+% \end{proof}
+
+% \begin{proposition}[閾値調整 DA は人数最大化を一般には達成しない]
+% \label{prop:tda-not-cardinality-maximal}
+% 実装案 1 は，score-feasible なマッチングの中で配置人数を最大化するとは限らない．
+% \end{proposition}
+
+% \begin{proof}
+% 次のインスタンスを考える．
+% カテゴリ集合を
+% \[
+%     V=\{o,t_1,t_2\},\qquad q^o=q^{t_1}=q^{t_2}=1
+% \]
+% とし，bonus を
+% \[
+%     k_{t_1}=5,\qquad k_{t_2}=10,
+% \]
+% 許容ギャップを $\delta=10$ とする．
+% 学生は
+% \[
+% \begin{array}{c|c|c|c}
+% \text{学生} & \sigma & \mathcal T(\cdot) & \text{選好}\\\hline
+% A & 100 & \emptyset & o\\
+% B & 86 & \{t_1,t_2\} & t_2\succ_B t_1\succ_B o\\
+% D & 82 & \{t_2\} & t_2\succ_D o
+% \end{array}
+% \]
+% の3人である．
+
+% このとき raw score の候補閾値集合は
+% \[
+%     \Theta=\{100,86,82\}
+% \]
+% である．
+% 各 $\tau\in\Theta$ について，$B$ は
+% \[
+%     \sigma(B)+k_{t_1}=91,\qquad \sigma(B)+k_{t_2}=96
+% \]
+% を持ち，$D$ は
+% \[
+%     \sigma(D)+k_{t_2}=92
+% \]
+% を持つ．
+% したがって，いずれの $\tau\in\Theta$ に対しても
+% $B$ は $t_1,t_2$ の両方に応募可能であり，$D$ は $t_2$ に応募可能である．
+
+% しかし，DA では学生選好に従って $B$ はまず $t_2$ に応募し，
+% $D$ と競合して $t_2$ を獲得する．
+% 一方，$t_1$ に応募できるのは $B$ だけであり，$B$ が $t_2$ に保持されるため
+% $t_1$ は空席のまま残る．
+% したがって，どの $\tau\in\Theta$ に対しても
+% \[
+%     \mu(\tau)=\bigl(\mu_o=\{A\},\ \mu_{t_1}=\emptyset,\ \mu_{t_2}=\{B\}\bigr)
+% \]
+% となり，配置人数は $2$ である．
+
+% ところが，次のマッチング
+% \[
+%     \mu^\star
+%     =
+%     \bigl(\mu_o=\{A\},\ \mu_{t_1}=\{B\},\ \mu_{t_2}=\{D\}\bigr)
+% \]
+% を考えると，
+% \[
+%     e_o(\mu^\star)=100,\qquad
+%     e_{t_1}^+(\mu^\star)=91,\qquad
+%     e_{t_2}^+(\mu^\star)=92
+% \]
+% であるから
+% \[
+%     e_o(\mu^\star)-e_{t_1}^+(\mu^\star)=9\le 10,\qquad
+%     e_o(\mu^\star)-e_{t_2}^+(\mu^\star)=8\le 10.
+% \]
+% よって $\mu^\star$ は score-feasible であり，配置人数は $3$ である．
+
+% 以上より，実装案 1 の出力は常に人数 $2$ だが，
+% 人数 $3$ の score-feasible なマッチング $\mu^\star$ が存在する．
+% したがって，実装案 1 は score-feasible なマッチングの中で
+% 配置人数を最大化するとは限らない．
+% \end{proof}
+
+% \paragraph{小さい反例で確認したい点}
+% 逆に，次の点は小例で先に確かめる必要がある．
+% \begin{itemize}
+%     \item 閾値を高く取りすぎると non-wastefulness がどのように崩れるか
+%     \item PA-ODR より人数が減る典型例がどの程度簡単に作れるか
+%     \item 閾値停止規則を少し変えたときに性質がどう変わるか
+% \end{itemize}
+
+% \paragraph{当面の判断}
+% 現時点では，
+% \begin{itemize}
+%     \item PA-ODR は「人数最大化と score-feasibility を優先する制度案」
+%     \item 閾値調整 DA は「quota を維持しつつ score-feasibility を達成したい場合の代替案」
+% \end{itemize}
+% として並行して保持し，どちらを本命にするかは
+% de-reservation の制度的妥当性と reserved quota 維持の重要性を見て決めるのがよい．
+
+% \subsection{証明・検証としてやること}
+
+% \subsubsection{諸性質の両立可能性の確認}
+
+% 現在念頭にある性質は
+% \begin{itemize}
+%     \item feasibility
+%     \item score-feasibility
+%     \item non-wastefulness
+%     \item within-category fairness
+%     \item shared-category constrained replacement fairness
+% \end{itemize}
+% である．
+
+% しかし，これらが同時に両立するとはまだ限らない．
+% 特に shared-category constrained replacement fairness をどう定めるかによっては，
+% 不可能性がすぐに出る可能性がある．
+
+% したがって，
+% \begin{enumerate}
+%     \item まず shared-category constrained replacement fairness を除いた4性質が両立可能か確認する
+%     \item PA-ODR がそれらを本当に満たすか証明する
+%     \item shared-category constrained replacement fairness を追加した瞬間に不可能性が出ないか，小さい例で探す
+%     \item 反例が見つかれば，それを impossibility theorem に使えるか検討する
+% \end{enumerate}
+% という順で進めるのがよい．
+
+% \subsection{SPSE と PA-ODR の比較の整理}
+
+% 現状の比較は概ね，
+% \begin{itemize}
+%     \item SPSE は自然な DA 拡張だが score-feasibility を保証しない
+%     \item PA-ODR は score-feasibility を満たすが reserved quota を維持しないことがある
+% \end{itemize}
+% という整理になっている．
+
+% ただし，投稿原稿ではこれをもっと明確に示す必要がある．
+% やるべきことは次の通りである．
+% \begin{enumerate}
+%     \item 比較表を整理し，各性質について「成立 / 不成立 / 未証明」を明示する
+%     \item 不成立の性質については簡潔な反例を用意する
+%     \item PA-ODR の強みと弱みを一文で言えるようにする
+% \end{enumerate}
+
+% 現時点での暫定的な要約は，
+% SPSE は制度として自然だが cutoff gap を直接制御しないため score-feasibility が弱く，
+% PA-ODR は score-feasibility を守る代わりに元の reserved quota を崩しうる，
+% という点にある．
+
+\section{新アルゴリズム}
+
+
+すでに割り当てられている学生についても，
+\textbf{より好むカテゴリに自分より低優先の学生がいる}
+状況を排除する。
+
+\begin{definition}[Category-assignment stability]
+$\mu$ が \textbf{category-assignment stable} であるとは，
+学生 $i,j\in I$ とカテゴリ $c,c'\in V$ について
+\[
+i\in\mu_{c'},
+\qquad
+j\in\mu_c,
+\qquad
+c\in V_i,
+\qquad
+c\succ_i c',
+\qquad
+\sigma_c(i)>\sigma_c(j)
+\]
+を同時に満たす組 $(i,j,c,c')$ が存在しないことをいう。
+\end{definition}
+
+\vspace{0.5em}
+つまり，学生 $i$ が現在のカテゴリ $c'$ よりカテゴリ $c$ を好み，
+さらに $c$ において在籍者 $j$ より高い優先順位を持つなら，
+$j$ が $c$ に割り当てられ，$i$ が $c'$ に割り当てられる状況を禁止する。
+
+\textsc{Adaptive Threshold DA} は，学生提案型 DA
+\citep{GaSh62a,Roth08a} を各閾値で実行し，応募可能カテゴリ集合を
+cutoff 条件に応じて変化させる手続きである。この意味で，本メカニズムは
+DA 自体を変更するというより，制約に応じて DA の入力を反復的に調整する
+adaptive DA 型の手続きに位置づけられる
+\citep{RKG21a}。
+
+\begin{algorithm}[H]
+\caption{\textsc{Adaptive Threshold DA}}
+\label{alg:adaptive-threshold-da}
+\begin{algorithmic}[1]
+\Require
+$I,V,q,\sigma,\mathcal T,(k_t)_{t\in T},\delta,(\succ_i)_{i\in I}$
+
+\State 閾値候補を高い順に
+\[
+\Theta=\{\tau_1>\tau_2>\cdots>\tau_K\}
+\]
+と並べる
+
+\State $\mathcal C\gets\emptyset$
+
+\For{$\tau\in\Theta$}
+    \State 各学生 $i$ の応募可能集合を
+    \[
+    V_i(\tau)
+    =
+    \{o\}
+    \cup
+    \{t\in\mathcal T(i):
+      \sigma(i)+k_t\ge\tau-\delta\}
+    \]
+    とする
+
+    \State $(V_i(\tau))_{i\in I}$ の下で
+    student-proposing DA を実行し，
+    出力を $\mu^\tau$ とする
+
+    \If{$\mu^\tau$ が score-feasible}
+        \State $\mu^\tau$ を $\mathcal C$ に加える
+    \EndIf
+\EndFor
+
+\State $\mathcal C$ の中から
+\[
+|M(\mu^\tau)|
+\]
+を最大にするものを選ぶ
+
+\State 同数なら，より高い閾値 $\tau$ の候補を選ぶ
+\State \Return $\mu^\tau$
+\end{algorithmic}
+\end{algorithm}
+
+
+% ============================================================
+\subsection{停止性と候補の存在}
+% ============================================================
+
+\begin{proposition}[停止性]
+\label{prop}
+\textsc{ATDA} は有限回で停止する。
+\end{proposition}
+
+\left{
+\sigma_t(i)+\delta:
+i\in I,\ t\in\mathcal T(i)
+\right}
+\cup{+\infty}
+]
+であるため有限であり，
+[
+|\Theta|
+\le
+1+\sum_{i\in I}|\mathcal T(i)|
+]
+が成立する。
+
+固定された閾値 $\tau$ の下では，学生 $i$ は各カテゴリ
+$c\in V_i(\tau)$ に高々一度しか応募しない。
+したがって，一回の student-proposing DA における応募回数は高々
+[
+\sum_{i\in I}|V_i(\tau)|
+]
+であり有限である。
+
+よって，各閾値についてのDAは有限回で停止する。
+また，調べる閾値の個数も有限であるため，
+\textsc{ATDA} 全体も有限回で停止する。
+\end{proof}
+
+\begin{proposition}[候補集合の非空性]
+\label{prop}
+候補集合 $\mathcal C$ は空ではない。
+\end{proposition}
+
+\begin{proof}
+閾値 $\tau=+\infty$ を考える。
+このとき，任意の学生 $i$ と留保カテゴリ $t$ について
+[
+\sigma_t(i)\ge+\infty-\delta
+]
+は成立しないため，
+[
+V_i(+\infty)={o}
+]
+となる。
+
+したがって，この閾値でのDA出力では，
+すべての留保カテゴリが空である。
+score-feasibility は，空でない留保カテゴリについてのみ
+cutoff gap 条件を要求するため，この割当では空虚に成立する。
+
+よって
+[
+(+\infty,\mu^{+\infty})\in\mathcal C
+]
+であり，$\mathcal C$ は空ではない。
+\end{proof}
+
+% ============================================================
+\subsection{Feasibility と quota の維持}
+% ============================================================
+
+\begin{proposition}[Feasibility]
+\label{prop}
+\textsc{ATDA} の出力 $\mu^\ast$ は feasible である。
+\end{proposition}
+
+\begin{proof}
+任意の閾値 $\tau\in\Theta$ を固定する。
+
+student-proposing DA において，各カテゴリ $c$ は，
+それまでの応募者のうち優先順位 $\succ_c^S$ の上位者を
+最大 $q^c$ 人だけ保持する。
+したがって，アルゴリズムの任意の段階で
+[
+|\mu_c^\tau|\le q^c
+]
+が成立する。
+
+また，各学生は一度に高々一つのカテゴリにのみ保持される。
+学生が新しいカテゴリに保持された場合，
+以前のカテゴリには保持されていない。
+したがって，異なるカテゴリ $c,c'$ について
+[
+\mu_c^\tau\cap\mu_{c'}^\tau=\emptyset
+]
+が成立する。
+
+よって，すべての閾値 $\tau$ について，
+DA出力 $\mu^\tau$ は feasible である。
+
+最終出力 $\mu^\ast$ は，これらのDA出力の一つであるため，
+[
+|\mu_c^\ast|\le q^c
+\qquad(\forall c\in V)
+]
+かつ
+[
+\mu_c^\ast\cap\mu_{c'}^\ast=\emptyset
+\qquad(\forall c\neq c')
+]
+を満たす。
+
+したがって，$\mu^\ast$ は feasible である。
+\end{proof}
+
+\begin{proposition}[元の quota の維持]
+\label{prop}
+\textsc{ATDA} は元の容量ベクトル
+[
+q=(q^o,(q^t)_{t\in T})
+]
+を変更しない。
+\end{proposition}
+
+\begin{proof}
+\textsc{ATDA} が閾値に応じて変更するのは，
+学生と留保カテゴリの間の応募可能辺だけである。
+
+アルゴリズム中には
+[
+q^t\leftarrow q^t-1
+\qquad\text{または}\qquad
+q^o\leftarrow q^o+1
+]
+のような容量更新操作は存在しない。
+
+したがって，すべての閾値において同一の容量ベクトル $q$ の下で
+DAが実行され，最終割当も元の容量ベクトル $q$ に関して
+feasible である。
+
+よって，\textsc{ATDA} は元の quota を維持する。
+\end{proof}
+
+% ============================================================
+\subsection{Score-feasibility}
+% ============================================================
+
+\begin{proposition}[Score-feasibility]
+\label{prop}
+\textsc{ATDA} の出力 $\mu^\ast$ は score-feasible である。
+\end{proposition}
+
+\begin{proof}
+アルゴリズムは，各閾値 $\tau$ におけるDA出力 $\mu^\tau$ を計算した後，
+$\mu^\tau$ が score-feasible である場合に限って
+[
+(\tau,\mu^\tau)
+]
+を候補集合 $\mathcal C$ に加える。
+
+最終出力 $(\tau^\ast,\mu^\ast)$ は
+$\mathcal C$ の要素から選ばれる。
+したがって，候補集合の定義により，
+$\mu^\ast$ は score-feasible である。
+\end{proof}
+
+\begin{remark}
+上の命題は，閾値条件だけから score-feasibility が自動的に従うと
+主張しているのではない。
+
+一般カテゴリの実際の cutoff
+[
+e_o(\mu^\tau)
+]
+が閾値 $\tau$ と一致するとは限らないため，
+各DA出力について score-feasibility を事後的に検査している。
+したがって，score-feasibility は候補選別によって保証される。
+\end{remark}
+
+% ============================================================
+\subsection{最終閾値上の non-wastefulness}
+% ============================================================
+
+\begin{definition}[Threshold non-wastefulness]
+閾値 $\tau$ と feasible なマッチング $\mu$ について，
+$\mu$ が $\tau$ に関して
+\textbf{threshold-non-wasteful} であるとは，
+未割当学生 $i\in I\setminus M(\mu)$ とカテゴリ
+$c\in V_i(\tau)$ について
+[
+|\mu_c|<q^c
+]
+を満たす組 $(i,c)$ が存在しないことをいう。
+\end{definition}
+
+\begin{proposition}[Threshold non-wastefulness]
+\label{prop}
+\textsc{ATDA} の出力 $\mu^\ast$ は，
+最終閾値 $\tau^\ast$ に関して threshold-non-wasteful である。
+\end{proposition}
+
+\begin{proof}
+反対に，$\mu^\ast$ が $\tau^\ast$ に関して
+threshold-non-wasteful でないと仮定する。
+
+すると，未割当学生
+[
+i\in I\setminus M(\mu^\ast)
+]
+とカテゴリ
+[
+c\in V_i(\tau^\ast)
+]
+が存在して，
+[
+|\mu_c^\ast|<q^c
+]
+が成立する。
+
+$\mu^\ast$ は，応募可能集合
+[
+(V_i(\tau^\ast))_{i\in I}
+]
+の下でstudent-proposing DAを実行して得られた割当である。
+
+学生 $i$ は未割当で終了している。
+student-proposing DAでは，未割当学生は，
+応募可能集合内に未応募のカテゴリが残っている限り応募を続ける。
+したがって，アルゴリズム終了時までに，
+$i$ は $V_i(\tau^\ast)$ のすべてのカテゴリへ応募している。
+特に，$i$ はカテゴリ $c$ に応募している。
+
+カテゴリ $c$ は，保持人数が容量 $q^c$ 未満である限り，
+応募者を拒否しない。
+したがって，$i$ が $c$ に応募した時点で
+$c$ に空席があれば，$c$ は $i$ を保持する。
+
+一方，カテゴリ $c$ がある時点で満席になった場合，
+その後は応募者の入替えによって保持集合を更新することはあっても，
+保持人数を減らすことはない。
+したがって，一度満席になったカテゴリが
+最終的に空席を持つことはない。
+
+ところが，最終割当では
+[
+|\mu_c^\ast|<q^c
+]
+である。
+したがって，カテゴリ $c$ はDAの実行中に一度も満席になっていない。
+
+よって，$i$ が $c$ に応募した時点で空席が存在し，
+$c$ は $i$ を保持し続ける。
+したがって，$i$ は最終的に未割当ではあり得ない。
+
+これは
+[
+i\notin M(\mu^\ast)
+]
+に矛盾する。
+
+よって，そのような組 $(i,c)$ は存在せず，
+$\mu^\ast$ は $\tau^\ast$ に関して
+threshold-non-wasteful である。
+\end{proof}
+
+% ============================================================
+\subsection{Threshold-constrained category stability}
+% ============================================================
+
+各学生 $i$ の割当先を
+[
+a_\mu(i):=
+\begin{cases}
+c, & \text{if }i\in\mu_c,\
+\emptyset, & \text{if }i\notin M(\mu)
+\end{cases}
+]
+と書く。
+
+\begin{definition}[Threshold-constrained category stability]
+閾値 $\tau$ とマッチング $\mu$ について，
+学生 $i$ とカテゴリ $c$ の組 $(i,c)$ が blocking pair であるとは，
+次の条件をすべて満たすことをいう：
+\begin{enumerate}
+\item
+[
+c\in V_i(\tau);
+]
+\item
+[
+c\succ_i a_\mu(i);
+]
+\item 次の少なくとも一方が成立する：
+\begin{enumerate}
+\item
+[
+|\mu_c|<q^c;
+]
+\item ある $j\in\mu_c$ が存在して
+[
+i\succ_c^S j.
+]
+\end{enumerate}
+\end{enumerate}
+
+マッチング $\mu$ が閾値 $\tau$ に関して
+\textbf{threshold-constrained category stable} であるとは，
+blocking pair が存在しないことをいう。
+\end{definition}
+
+\begin{proposition}[Threshold-constrained category stability]
+\label{prop}
+\textsc{ATDA} の出力 $\mu^\ast$ は，
+最終閾値 $\tau^\ast$ に関して
+threshold-constrained category stable である。
+\end{proposition}
+
+\begin{proof}
+反対に，$\mu^\ast$ にblocking pair $(i,c)$ が存在すると仮定する。
+
+定義より，
+[
+c\in V_i(\tau^\ast)
+]
+かつ
+[
+c\succ_i a_{\mu^\ast}(i)
+]
+である。
+
+$\mu^\ast$ は，応募可能集合
+[
+(V_h(\tau^\ast))_{h\in I}
+]
+の下でstudent-proposing DAを実行して得られた割当である。
+
+学生 $i$ は，選好順にカテゴリへ応募する。
+$c$ は現在の割当先 $a_{\mu^\ast}(i)$ より好ましいため，
+$i$ が最終的に別カテゴリへ割り当てられている場合には，
+$i$ はその別カテゴリへ応募する前に $c$ へ応募している。
+
+$i$ が未割当の場合には，DAの終了時までに
+すべての応募可能カテゴリへ応募しているため，
+やはり $i$ は $c$ へ応募している。
+
+したがって，いずれの場合も，学生 $i$ はDAの実行中に
+カテゴリ $c$ へ応募している。
+
+まず，
+[
+|\mu_c^\ast|<q^c
+]
+である場合を考える。
+
+前命題の証明と同様に，最終的に空席を持つカテゴリは
+DAの実行中に一度も満席になっていない。
+したがって，$i$ が $c$ へ応募した時点で $c$ には空席があり，
+$c$ は $i$ を拒否しない。
+
+よって，$i$ は $c$ に保持されるため，
+最終的に $c$ より好ましくないカテゴリに割り当てられたり，
+未割当になったりすることはない。
+これは
+[
+c\succ_i a_{\mu^\ast}(i)
+]
+に矛盾する。
+
+次に，ある $j\in\mu_c^\ast$ について
+[
+i\succ_c^S j
+]
+である場合を考える。
+
+$i$ は $c$ に応募したにもかかわらず，
+最終的には $c$ に割り当てられていない。
+したがって，$i$ はある時点で $c$ から拒否された。
+
+カテゴリ $c$ は，各時点において，
+それまでに応募した学生の中から
+優先順位 $\succ_c^S$ の上位最大 $q^c$ 人だけを保持する。
+したがって，カテゴリ $c$ が学生 $i$ を拒否した時点では，
+$c$ が保持しているすべての学生が
+優先順位上 $i$ より上位である。
+
+さらに，その後に新しい応募者が現れても，
+$c$ はそれまでの応募者全体の中から
+上位最大 $q^c$ 人を保持し続ける。
+よって，一度 $i$ を拒否した後に，
+$i$ より優先順位が低い学生を最終的に保持することはない。
+
+しかし，
+[
+j\in\mu_c^\ast
+]
+かつ
+[
+i\succ_c^S j
+]
+である。
+これは上のDAの保持規則に矛盾する。
+
+以上より，blocking pairのいずれの場合も矛盾が生じる。
+したがって，$\mu^\ast$ にblocking pairは存在せず，
+$\mu^\ast$ は最終閾値 $\tau^\ast$ に関して
+threshold-constrained category stable である。
+\end{proof}
+
+% ============================================================
+\subsection{割当済み学生間の Category-assignment stability}
+% ============================================================
+
+\begin{definition}[Threshold-constrained category-assignment stability]
+閾値 $\tau$ とマッチング $\mu$ について，
+$\mu$ が
+\textbf{threshold-constrained category-assignment stable}
+であるとは，学生 $i,j\in I$ とカテゴリ $c,c'\in V$ について
+[
+i\in\mu_{c'},
+\qquad
+j\in\mu_c,
+\qquad
+c\in V_i(\tau),
+\qquad
+c\succ_i c',
+\qquad
+i\succ_c^S j
+]
+を同時に満たす組 $(i,j,c,c')$ が存在しないことをいう。
+\end{definition}
+
+\begin{corollary}[Category-assignment stability]
+\label{cor}
+\textsc{ATDA} の出力 $\mu^\ast$ は，
+最終閾値 $\tau^\ast$ に関して
+threshold-constrained category-assignment stable である。
+\end{corollary}
+
+\begin{proof}
+反対に，学生 $i,j\in I$ とカテゴリ $c,c'\in V$ が存在して
+[
+i\in\mu_{c'}^\ast,
+\qquad
+j\in\mu_c^\ast,
+\qquad
+c\in V_i(\tau^\ast),
+\qquad
+c\succ_i c',
+\qquad
+i\succ_c^S j
+]
+が成立すると仮定する。
+
+$i\in\mu_{c'}^\ast$ であるから，
+[
+a_{\mu^\ast}(i)=c'
+]
+である。
+したがって，
+[
+c\succ_i a_{\mu^\ast}(i)
+]
+が成立する。
+
+また，$j\in\mu_c^\ast$ かつ $i\succ_c^S j$ であるため，
+$(i,c)$ は threshold-constrained category stability の意味で
+blocking pair となる。
+
+これは
+\cref{prop}
+に矛盾する。
+
+よって，そのような組は存在せず，
+$\mu^\ast$ は threshold-constrained category-assignment stable である。
+\end{proof}
+
+% ============================================================
+\subsection{Within-category fairness}
+% ============================================================
+
+\begin{definition}[Threshold-constrained within-category fairness]
+閾値 $\tau$ とマッチング $\mu$ について，
+$\mu$ が $\tau$ に関して
+\textbf{threshold-constrained within-category fair}
+であるとは，学生 $i,j\in I$ とカテゴリ $c\in V$ について
+[
+i\notin M(\mu),
+\qquad
+j\in\mu_c,
+\qquad
+c\in V_i(\tau),
+\qquad
+i\succ_c^S j
+]
+を同時に満たす組 $(i,j,c)$ が存在しないことをいう。
+\end{definition}
+
+\begin{corollary}[Within-category fairness]
+\label{cor}
+\textsc{ATDA} の出力 $\mu^\ast$ は，
+最終閾値 $\tau^\ast$ に関して
+threshold-constrained within-category fair である。
+\end{corollary}
+
+\begin{proof}
+反対に，学生 $i,j\in I$ とカテゴリ $c\in V$ が存在して
+[
+i\notin M(\mu^\ast),
+\qquad
+j\in\mu_c^\ast,
+\qquad
+c\in V_i(\tau^\ast),
+\qquad
+i\succ_c^S j
+]
+が成立すると仮定する。
+
+a_{\mu^\ast}(i)
+]
+が成立する。
+
+さらに，$j\in\mu_c^\ast$ かつ $i\succ_c^S j$ である。
+したがって，$(i,c)$ は
+threshold-constrained category stability の意味でblocking pairである。
+
+これは
+\cref{prop}
+に矛盾する。
+
+よって，そのような組は存在せず，
+$\mu^\ast$ は最終閾値 $\tau^\ast$ に関して
+threshold-constrained within-category fair である。
+\end{proof}
+
+% ============================================================
+\subsection{閾値DA候補内での人数最大性}
+% ============================================================
+
+\begin{proposition}[候補集合内での人数最大性]
+\label{prop}
+\textsc{ATDA} の出力 $\mu^\ast$ は，
+score-feasible な閾値DA出力の中で
+マッチ人数を最大にする。
+
+すなわち，任意の $\tau\in\Theta$ について，
+$\mu^\tau$ が score-feasible ならば
+[
+|M(\mu^\ast)|
+\ge
+|M(\mu^\tau)|
+]
+が成立する。
+\end{proposition}
+
+\left{
+(\tau,\mu^\tau):
+\tau\in\Theta,\
+\mu^\tau\text{ is score-feasible}
+\right}
+]
+である。
+
+アルゴリズムは，この候補集合の中から，
+第1選択基準として
+[
+|M(\mu^\tau)|
+]
+を最大化する候補を選ぶ。
+
+したがって，任意の
+[
+(\tau,\mu^\tau)\in\mathcal C
+]
+に対して
+[
+|M(\mu^\ast)|
+\ge
+|M(\mu^\tau)|
+]
+が成立する。
+
+score-feasibleな任意の閾値DA出力は
+$\mathcal C$ に含まれるため，命題が従う。
+\end{proof}
+
+\begin{proposition}[最大閾値の選択]
+\label{prop}
+マッチ人数を最大にするscore-feasibleな閾値DA出力が複数存在する場合，
+\textsc{ATDA} はその中で閾値が最大の候補を選ぶ。
+\end{proposition}
+
+\begin{proof}
+これは\textsc{ATDA}の第2選択基準そのものである。
+
+すなわち，まずマッチ人数を最大にする候補に集合を制限し，
+その集合内で閾値 $\tau$ を最大化する。
+したがって，最終閾値 $\tau^\ast$ は，
+マッチ人数最大の候補の中で最大である。
+\end{proof}
+
+  \begin{center}
+  \begin{tabular}{lccc}
+    \toprule
+    性質 & SPSE & カットオフ調整 DA & PA-ODR \\
+    \midrule
+    Feasibility
+      & 成立 & 成立 & 成立 $(\hat q)$ \\
+    Non-wastefulness
+      & 成立 & 成立しうる& 成立 $(\hat q)$ \\
+    Within-category fairness
+      & 成立 & 成立 & 成立 \\
+    Score-feasibility
+      & 不保証 & 成立 & 成立 \\
+    Category stability
+      & 成立 & 制約辺上で成立 & 一般に不成立 \\
+    元の quota 維持
+      & 成立 & 成立 & 不保証 \\
+    人数最大化
+      & 不保証 & 不保証 & 成立 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+\clearpage
+\section{追記：共通加点モデルへの差し替え案}
+\label{sec:common-bonus-revision}
+
+本節は，本文中の score-elevated model を，
+「留保カテゴリごとに異なる加点を置く」モデルではなく，
+「すべての留保カテゴリに同一の加点を置く」モデルへ差し替えるための案である。
+以下では，加点はカテゴリに依存せず，共通のパラメータ
+\[
+    k\ge 0
+\]
+で表される。
+
+\subsection{モデル}
+
+学生集合を $I$，留保カテゴリ集合を $T$，一般カテゴリを $o$ とし，
+\[
+    V=T\cup\{o\}
+\]
+とおく。各カテゴリ $c\in V$ は容量 $q^c$ を持つ。
+各学生 $i\in I$ は raw score $\sigma(i)$ と，資格を持つ留保カテゴリ集合
+\[
+    \mathcal T(i)\subseteq T
+\]
+を持つ。学生 $i$ が応募可能なカテゴリ集合は
+\[
+    V_i=\{o\}\cup\mathcal T(i)
+\]
+である。
+
+本稿では one-to-one counting を採用する。すなわち，学生が複数の留保カテゴリに資格を持つ場合でも，
+実際にマッチしたときには高々一つのカテゴリにのみカウントされる。
+
+\begin{definition}[共通加点後スコア]
+学生 $i$ と応募可能カテゴリ $c\in V_i$ について，加点後スコアを
+\[
+    \sigma_c(i)=
+    \begin{cases}
+        \sigma(i), & c=o,\\[3pt]
+        \sigma(i)+k, & c\in T
+    \end{cases}
+\]
+と定義する。
+\end{definition}
+
+したがって，留保カテゴリでは全て同じ $k$ 点が加えられる。
+カテゴリ別の加点パラメータは置かない。
+このため，ある学生が複数の留保カテゴリに資格を持つ場合，
+その学生の加点後スコアはどの留保カテゴリでも同じである。
+違いは，資格集合・容量・カテゴリ選好・one-to-one counting によって生じる。
+
+\begin{definition}[マッチングと feasibility]
+マッチングとは
+\[
+    \mu=(\mu_c)_{c\in V}
+\]
+であり，$\mu_c\subseteq I$ を満たす。
+マッチング $\mu$ が feasible であるとは，
+\[
+    |\mu_c|\le q^c\quad(c\in V)
+\]
+かつ，異なるカテゴリ $c,c'$ について
+\[
+    \mu_c\cap\mu_{c'}=\emptyset
+\]
+であり，さらに $i\in\mu_c$ なら $c\in V_i$ が成り立つことをいう。
+\end{definition}
+
+\begin{definition}[Score-feasibility]
+一般カテゴリの cutoff を
+\[
+    e_o(\mu)=\min_{i\in\mu_o}\sigma(i)
+\]
+とし，留保カテゴリ $t$ の加点後 cutoff を
+\[
+    e_t^+(\mu)=\min_{i\in\mu_t}\sigma_t(i)
+\]
+とする。ただし，$\mu_o=\emptyset$ または $\mu_t=\emptyset$ のとき，
+対応する cutoff 条件は課さない。
+
+マッチング $\mu$ が score-feasible であるとは，任意の非空の留保カテゴリ $t$ について
+\[
+    e_o(\mu)-e_t^+(\mu)\le \delta
+\]
+が成り立つことをいう。
+\end{definition}
+
+共通加点の下では，留保カテゴリ $t$ に学生 $i$ を割り当てたときの点数条件は
+\[
+    \sigma(i)+k\ge e_o(\mu)-\delta
+\]
+である。したがって，ある重複資格学生がこの条件を満たすなら，
+点数面では資格を持つすべての留保カテゴリに割当可能である。
+それでも one-to-one counting のため，その学生をどの一つのカテゴリに数えるかは
+別途決めなければならない。
+
+\subsection{SPSE}
+
+\textsc{Student-Proposing Score-Elevated Mechanism} は，学生提案型 DA を
+カテゴリ集合 $V_i$ 上で実行する手続きである。
+各学生は自分のカテゴリ選好に従って未応募カテゴリへ順に応募し，
+各カテゴリ $c$ は応募者と保持者の中から加点後スコア $\sigma_c$ が高い順に
+最大 $q^c$ 名を保持する。
+
+\begin{proposition}[SPSE の feasibility]
+SPSE の出力は feasible である。
+\end{proposition}
+
+\begin{proof}
+各ステップで各カテゴリは高々 $q^c$ 名しか保持しない。
+また，学生は一度に一つのカテゴリにしか保持されず，拒否された場合にのみ次のカテゴリへ応募する。
+さらに，学生 $i$ は $V_i=\{o\}\cup\mathcal T(i)$ の中にあるカテゴリにしか応募しない。
+したがって，容量制約，one-to-one counting，資格制約のすべてが満たされる。
+\end{proof}
+
+\begin{proposition}[SPSE の non-wastefulness]
+SPSE の出力は，空席へ未マッチ学生を追加して feasibility と score-feasibility の両方を保てる，
+という意味での浪費を持たない。
+\end{proposition}
+
+\begin{proof}
+未マッチ学生 $i$ をある応募可能カテゴリ $c\in V_i$ に追加できると仮定する。
+追加後も feasible であるためには，SPSE の最終出力で $|\mu_c|<q^c$ でなければならない。
+しかし $i$ は未マッチで終了しているので，$i$ は $V_i$ 内の全カテゴリに応募済みであり，
+特に $c$ にも応募して拒否されている。
+カテゴリが学生を拒否するのは，その時点で容量いっぱいの候補を保持している場合だけである。
+その後カテゴリはより高い加点後スコアの学生へ入れ替えることはあっても，
+自発的に空席を作らない。
+したがって最終的に $|\mu_c|=q^c$ であり，$|\mu_c|<q^c$ に矛盾する。
+\end{proof}
+
+\begin{proposition}[SPSE の within-category fairness]
+SPSE の出力では，ある留保カテゴリ $t$ において，
+$t$ に資格を持つ未マッチ学生 $i$ が，実際に $t$ に割り当てられた学生 $j$ より
+高い加点後スコアを持つことはない。
+\end{proposition}
+
+\begin{proof}
+そのような $i,j,t$ が存在すると仮定する。
+$i$ は未マッチなので，SPSE の過程で $t$ に応募し，拒否されている。
+拒否時点で $t$ は $q^t$ 名の学生を保持しており，その全員の加点後スコアは
+$\sigma_t(i)$ 以上である。
+以後，$t$ は保持者をより高い加点後スコアの学生に入れ替えることしかない。
+したがって最終的に $t$ に残る任意の学生の加点後スコアは $\sigma_t(i)$ 以上である。
+これは $j\in\mu_t$ かつ $\sigma_t(i)>\sigma_t(j)$ に矛盾する。
+\end{proof}
+
+ただし，SPSE は score-feasibility を保証しない。
+例えば $q^o=q^t=1$，$\delta=10$，$k=0$，
+$A(100,\emptyset)$，$B(80,\{t\})$ とし，$B$ が $t$ を $o$ より好むとする。
+SPSE は $\mu_o=\{A\}$，$\mu_t=\{B\}$ を返し，
+\[
+    e_o(\mu)-e_t^+(\mu)=100-80=20>10
+\]
+となる。
+
+\subsection{PA-ODR}
+
+PA-ODR は，score-feasibility を hard constraint として扱い，
+埋められない留保容量を一般カテゴリへ de-reserve する手続きである。
+
+固定された open cutoff $e$ の下で，二部グラフ $G(e)$ を作る。
+左側は一般カテゴリに割り当てられていない学生，右側は留保カテゴリ $T$ である。
+辺は
+\[
+    (i,t)\in E(e)
+    \quad\Longleftrightarrow\quad
+    t\in\mathcal T(i)
+    \text{ and }
+    \sigma(i)+k\ge e-\delta
+\]
+で定義する。
+
+共通加点の下では，点数条件 $\sigma(i)+k\ge e-\delta$ は学生単位で決まる。
+しかし，資格制約と one-to-one counting があるため，割当問題は依然として
+学生--カテゴリの二部 matching として扱う必要がある。
+
+\textsc{PrefLexMaxMatching} は，$G(e)$ 上の容量付き matching を次の順序で選ぶ：
+\begin{enumerate}
+    \item マッチ人数を最大化する。
+    \item その中で，マッチした学生の elevated score vector を辞書式最大化する。
+    \item その中で，preference-rank vector を辞書式最小化する。
+\end{enumerate}
+
+\begin{proposition}[PA-ODR の停止性]
+PA-ODR は有限回で停止する。
+\end{proposition}
+
+\begin{proof}
+停止しない各反復では，ある留保カテゴリ $t^\ast$ について
+$|\mu_{t^\ast}|<\hat q^{t^\ast}$ が成立し，
+\[
+    \hat q^{t^\ast}\leftarrow \hat q^{t^\ast}-1,
+    \qquad
+    \hat q^o\leftarrow \hat q^o+1
+\]
+と更新される。
+したがって，総留保容量 $\sum_{t\in T}\hat q^t$ は各非停止反復で 1 だけ減少する。
+これは非負整数なので，有限回で停止する。
+\end{proof}
+
+\begin{proposition}[PA-ODR の score-feasibility]
+PA-ODR の出力は score-feasible である。
+\end{proposition}
+
+\begin{proof}
+最終反復の open cutoff を $e$ とする。
+留保カテゴリ $t$ に割り当てられる学生 $i$ は，最終グラフ $G(e)$ の辺 $(i,t)$ を通じて選ばれる。
+したがって
+\[
+    \sigma_t(i)=\sigma(i)+k\ge e-\delta
+\]
+である。
+非空の任意の留保カテゴリ $t$ について最小値を取れば，
+\[
+    e_t^+(\mu)\ge e-\delta=e_o(\mu)-\delta
+\]
+である。
+よって
+\[
+    e_o(\mu)-e_t^+(\mu)\le \delta
+\]
+が成立する。
+\end{proof}
+
+\begin{proposition}[PA-ODR の non-wastefulness]
+PA-ODR の出力は，最終容量ベクトル $\hat q$ に関して non-wasteful である。
+\end{proposition}
+
+\begin{proof}
+PA-ODR は，すべての正の留保容量が埋まったときに停止する。
+もしある留保カテゴリ $t$ で $|\mu_t|<\hat q^t$ なら，そのカテゴリの容量が
+さらに de-reserve されるため，停止条件に反する。
+また，一般カテゴリは各反復で raw score 上位から $\hat q^o$ 名まで埋められる。
+したがって，未マッチ学生を追加できる空席は最終容量ベクトル $\hat q$ の下では存在しない。
+よって，feasibility と score-feasibility を保ったまま未マッチ学生を追加することはできない。
+\end{proof}
+
+\begin{proposition}[PA-ODR の de-reservation-adjusted within-category fairness]
+PA-ODR の最終出力において，de-reservation 後の最終グラフ $G(e)$ 上で同じ留保カテゴリ $t$ に辺を持つ
+未マッチ学生 $i$ と，$t$ に割り当てられた学生 $j$ が存在し，
+\[
+    \sigma_t(i)>\sigma_t(j)
+\]
+となることはない。
+\end{proposition}
+
+\begin{proof}
+そのような $i,j,t$ が存在すると仮定する。
+辺 $(i,t)$ が存在するので，$j$ を $i$ に置き換えても留保 matching のサイズは変わらない。
+また，置き換えによって elevated score vector は辞書式に strictly 改善する。
+これは \textsc{PrefLexMaxMatching} が，最大サイズの matching の中で
+elevated score vector を辞書式最大化していることに反する。
+\end{proof}
+
+\subsection{共通加点モデルでの注意点}
+
+カテゴリごとの加点を許すモデルでは，重複資格学生が
+$t_1$ には点数面で割当可能だが $t_2$ には割当不可能，という状況が起こりうる。
+しかし共通加点モデルでは，そのような非対称性は起こらない。
+重複資格学生については，
+\[
+    \sigma(i)+k\ge e-\delta
+\]
+を満たすかどうかだけが点数面の判定であり，満たすなら資格を持つすべての留保カテゴリで
+点数条件を満たす。
+
+したがって，本モデルで重要なのは「カテゴリごとに異なる score advantage」ではなく，
+「同じ score advantage を受ける重複資格学生を，one-to-one counting の下で
+どの留保カテゴリに数えるか」である。
+SPSE が score-feasibility を壊しうる理由も，カテゴリごとの加点差ではなく，
+重複資格学生のカテゴリ割当が他カテゴリの cutoff を間接的に悪化させる点にある。
+
+\IfFileExists{main.bbl}{\input{main.bbl}}{\bibliography{references}}
+
+\end{document}

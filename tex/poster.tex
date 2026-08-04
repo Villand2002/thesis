@@ -1,0 +1,187 @@
+\documentclass[12pt,dvipdfmx]{jsarticle}
+
+% A0 portrait poster template for pLaTeX + dvipdfmx.
+\usepackage[
+  paperwidth=841mm,
+  paperheight=1189mm,
+  top=35mm,
+  bottom=35mm,
+  left=35mm,
+  right=35mm
+]{geometry}
+
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{url}
+\usepackage{hyperref}
+
+\definecolor{posterblue}{RGB}{20,62,112}
+\definecolor{postergreen}{RGB}{31,116,90}
+\definecolor{postergray}{RGB}{245,247,250}
+\definecolor{posterline}{RGB}{210,218,226}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\columnsep}{22mm}
+\setlength{\columnseprule}{0pt}
+
+\renewcommand{\baselinestretch}{1.12}
+\newcommand{\postertitle}[1]{%
+  {\fontsize{54}{64}\selectfont\bfseries #1\par}
+}
+\newcommand{\posterauthor}[1]{%
+  \vspace{8mm}{\fontsize{28}{36}\selectfont #1\par}
+}
+\newcommand{\posteraffiliation}[1]{%
+  \vspace{3mm}{\fontsize{22}{30}\selectfont #1\par}
+}
+
+\newtcolorbox{posterblock}[1]{
+  enhanced,
+  breakable,
+  colback=white,
+  colframe=posterline,
+  coltitle=white,
+  colbacktitle=posterblue,
+  title={#1},
+  fonttitle=\fontsize{25}{31}\selectfont\bfseries,
+  fontupper=\fontsize{20}{30}\selectfont,
+  boxrule=1.2pt,
+  arc=2mm,
+  left=7mm,
+  right=7mm,
+  top=6mm,
+  bottom=7mm,
+  before skip=0mm,
+  after skip=12mm
+}
+
+\begin{document}
+
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[postergray] (current page.south west) rectangle (current page.north east);
+  \fill[posterblue] (current page.north west) rectangle ([yshift=-72mm]current page.north east);
+\end{tikzpicture}
+
+\vspace*{-8mm}
+\begin{minipage}{0.74\textwidth}
+  \color{white}
+  \postertitle{ポスタータイトル}
+  \posterauthor{著者名}
+  \posteraffiliation{所属・研究科・メールアドレス}
+\end{minipage}
+\hfill
+\begin{minipage}{0.20\textwidth}
+  \raggedleft
+  \color{white}
+  {\fontsize{22}{28}\selectfont 学会名・日付など}
+\end{minipage}
+
+\vspace{34mm}
+\color{black}
+
+\begin{multicols}{3}
+
+\begin{posterblock}{研究背景}
+ここに研究背景を書く。問題設定、先行研究との差分、なぜ重要かを短くまとめる。
+
+\vspace{4mm}
+\begin{itemize}
+  \item 背景となる制度・市場・モデル。
+  \item 既存研究で分かっていること。
+  \item 本研究が扱う未解決の点。
+\end{itemize}
+\end{posterblock}
+
+\begin{posterblock}{目的}
+本研究の目的を一文から数文で明確に書く。
+
+\[
+  \text{Research Question:}\quad
+  \text{ここに主要な問いを置く}
+\]
+\end{posterblock}
+
+\begin{posterblock}{モデル}
+記号、仮定、制約を整理する。数式が多い場合は、ポスターでは最小限に絞る。
+
+\[
+  f : \mathcal{P} \to \mathcal{A}, \qquad
+  \mu = f(P)
+\]
+
+必要なら図や表で流れを示す。
+\end{posterblock}
+
+\begin{posterblock}{手法}
+証明、シミュレーション、実証分析など、使った方法を書く。
+
+\begin{enumerate}
+  \item データ・入力を準備する。
+  \item メカニズムまたは推定手法を適用する。
+  \item 評価指標で結果を比較する。
+\end{enumerate}
+\end{posterblock}
+
+\begin{posterblock}{主要結果}
+もっとも重要な結論を大きく、少ない数で示す。
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+条件 & 方法 A & 方法 B \\
+\midrule
+ケース 1 & 0.82 & 0.91 \\
+ケース 2 & 0.76 & 0.88 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+表の下に、読み取れる含意を一、二文で書く。
+\end{posterblock}
+
+\begin{posterblock}{図を入れる場所}
+\begin{center}
+\fbox{%
+  \begin{minipage}[c][105mm][c]{0.82\linewidth}
+    \centering
+    \fontsize{22}{28}\selectfont
+    \texttt{\textbackslash includegraphics} で図を挿入
+  \end{minipage}
+}
+\end{center}
+
+例:
+\begin{center}
+\texttt{\textbackslash includegraphics[width=\textbackslash linewidth]\{figures/result.pdf\}}
+\end{center}
+\end{posterblock}
+
+\begin{posterblock}{考察}
+結果の解釈、政策的含意、既存研究との違いを書く。ポスターでは文章を長くしすぎず、箇条書きを中心にする。
+\end{posterblock}
+
+\begin{posterblock}{結論}
+\begin{itemize}
+  \item 結論 1。
+  \item 結論 2。
+  \item 今後の課題。
+\end{itemize}
+\end{posterblock}
+
+\begin{posterblock}{参考文献}
+必要に応じて \texttt{references.bib} を使う。
+
+\vspace{3mm}
+例: 著者名 (年), 論文タイトル, 雑誌名。
+\end{posterblock}
+
+\end{multicols}
+
+\end{document}
