@@ -191,9 +191,10 @@ SPSE keeps the initial reserve capacities and delivers deferred-acceptance-style
 \begin{center}
 \textbf{Table 1:} Comparison of SPSE and PA-ODR.
 
-\small
+\tiny
+\setlength{\tabcolsep}{2pt}
 \renewcommand{\arraystretch}{1.15}
-\begin{tabular}{|L{0.18\textwidth}|L{0.17\textwidth}|L{0.20\textwidth}|}
+\begin{tabular*}{0.96\columnwidth}{@{\extracolsep{\fill}}|p{0.25\columnwidth}|p{0.22\columnwidth}|p{0.25\columnwidth}|}
 \hline
 \textbf{Property} & \textbf{SPSE} & \textbf{PA-ODR} \\
 \hline
@@ -204,7 +205,8 @@ Score-feasibility & Not guaranteed & Guaranteed \\
 Capacity reallocation & Fixed at $q$ & Endogenous \\
 Preferences over categories & Via proposals & Final tie-breaker \\
 \hline
-\end{tabular}
+\end{tabular*}
+\normalsize
 \end{center}
 
 PA-ODR therefore isolates a central modeling choice: enforcing the score-gap rule can naturally be combined with endogenous capacity reallocation, especially once the stronger open-merit requirement of Proposition~\ref{prop:simple-impossibility-short} is taken seriously.

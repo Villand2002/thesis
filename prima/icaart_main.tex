@@ -80,8 +80,9 @@ S\"onmez and Yenmez \cite{SoYe20a,SoYe22a} take reserve capacities as given and 
 \textbf{Table 1:} Comparison of the two mechanisms. Above the rule both mechanisms satisfy the property, although PA-ODR does so only relative to the effective capacities it produces; below the rule they differ outright.
 
 \renewcommand{\arraystretch}{1.15}
-\scriptsize
-\begin{tabular}{|L{0.20\textwidth}|L{0.19\textwidth}|L{0.22\textwidth}|}
+\tiny
+\setlength{\tabcolsep}{2pt}
+\begin{tabular*}{0.96\columnwidth}{@{\extracolsep{\fill}}|p{0.27\columnwidth}|p{0.23\columnwidth}|p{0.29\columnwidth}|}
 \hline
 \textbf{Property} & \textbf{SPSE} & \textbf{PA-ODR} \\
 \hline
@@ -95,7 +96,8 @@ Strategy-proofness & Yes & No (Prop.~\ref{prop:paodr-notsp}) \\
 Reserve capacity & Fixed at $q$ & Deliberate de-reservation, not minimal \\
 % Uses category preferences & Through proposals & Through lexicographic tie-breaking \\
 \hline
-\end{tabular}
+\end{tabular*}
+\normalsize
 \end{center}
 
 \section{\uppercase{Model}}
@@ -490,11 +492,12 @@ As a sanity check we coded both mechanisms in Python and ran them on two familie
 \begin{center}
 \textbf{Table 2:} Prototype outcomes and running times, 100 randomized instances per family.
 
-\scriptsize
+\tiny
+\setlength{\tabcolsep}{1.5pt}
 \renewcommand{\arraystretch}{1.1}
-\begin{tabular}{|L{0.16\textwidth}|L{0.12\textwidth}|r|r|r|L{0.12\textwidth}|}
+\begin{tabular*}{0.96\columnwidth}{@{\extracolsep{\fill}}|p{0.16\columnwidth}|p{0.13\columnwidth}|r|r|r|p{0.16\columnwidth}|}
 \hline
-Family & Mechanism & Med.\ (ms) & Score-feasible & Matched & De-reserved categories \\
+Family & Rule & ms & SF & Match & De-res. \\
 \hline
 $|I|=200$, $|T|=6$ & SPSE & 1.09 & 54/100 & 62.97 & 0.00 \\
  & PA-ODR & 24.08 & 100/100 & 62.97 & 18.57 (39\%) \\
@@ -502,7 +505,8 @@ $|I|=200$, $|T|=6$ & SPSE & 1.09 & 54/100 & 62.97 & 0.00 \\
 $|I|=500$, $|T|=8$ & SPSE & 5.92 & 52/100 & 187.33 & 0.00 \\
  & PA-ODR & 692.51 & 100/100 & 187.33 & 73.24 (49\%) \\
 \hline
-\end{tabular}
+\end{tabular*}
+\normalsize
 \end{center}
 
 The check is not an evidence of average-case performance; it records what the trade-off costs. SPSE breaches the cutoff rule in $46$ and $48$ of the $100$ instances, so Proposition~\ref{prop:spse-not-sf} is neither an artifact of three-student examples nor something scale washes out. PA-ODR never breaches it, at a price growing with the instance: $39\%$ and $49\%$ of the reserve seats. Two readings should be resisted. Both mechanisms match the same number of students at both sizes, so de-reservation buys score-feasibility and nothing else here, and the coverage gain Remark~\ref{sec:trigger} offers in defence of the reserve-completeness stopping rule is a feature of that example. And the price tracks $\delta$ rather than an indiscriminate appetite for de-reserving: on the smaller family, $\delta=2$ retires $30.3$ of the $47.99$ reserve seats and $\delta=25$ only $0.6$.
