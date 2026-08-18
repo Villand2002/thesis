@@ -6,6 +6,23 @@
 
 \usepackage{amsmath,amssymb,bm}
 \usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% 二部グラフ G(e) 描画用スタイル
+\tikzset{
+  stu/.style={draw, rounded corners=2pt, minimum width=15mm, minimum height=5mm,
+              inner sep=1pt, font=\scriptsize},
+  dead/.style={stu, densely dotted, draw=gray!70, text=gray!70},
+  cat/.style={draw, fill=blue!8, minimum width=13mm, minimum height=5mm,
+              inner sep=1pt, font=\scriptsize},
+  note/.style={font=\scriptsize, text=gray!60!black},
+  fedge/.style={draw=gray!55},              % G(e) の辺だが不採用
+  medge/.style={draw=red!75!black, line width=1pt},   % 採用された辺
+  xedge/.style={draw=gray!55, densely dashed},        % 辺はあるが容量 0
+  aedge/.style={draw=blue!70!black, line width=1pt},
+  bedge/.style={draw=orange!85!black, line width=1pt, densely dashed},
+}
 
 \newcommand{\T}{\mathcal{T}}
 \newcommand{\R}{\mathbb{R}}
@@ -401,7 +418,177 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{PA-ODR 3: 動作例}
+\begin{frame}{PA-ODR 3: 重複適合者はどう扱われるか}
+  $|\T(i)|\ge2$ の学生の行き先は，次の 4 段階で決まる。
+  \begin{enumerate}
+    \item \textbf{まず一般枠に吸収されるか}: 生スコア上位 $\min\{\hat q^o,|I|\}$ 人は
+    無条件に $o$ へ。ここに入れば留保側のグラフに現れない（本人が $t\succ o$ でも同じ）
+    \item \textbf{適合カテゴリは全部可か全部不可か}: 共通加点 $k$ の下で
+    admissibility $\sigma(i)+k\ge e-\delta$ はカテゴリに依存しない
+    $\Rightarrow$ 一部だけ可という状態は起きない
+    \item \textbf{誰が入るかは選好と無関係}: 基準 1--2（マトロイド greedy）で合格者集合が一意に確定。
+    振り分け方はその学生自身の合否に影響しない
+    \item \textbf{どこに入るかだけが選好で決まる}: 基準 3（順位ベクトルの辞書式最小化）が振り分け，
+    残った同点は基準 4 が決定的に解消
+  \end{enumerate}
+
+  \vspace{0.3em}
+  \begin{alertblock}{帰結}
+    振り分けの結果，別の留保カテゴリが埋まらず de-reservation が誘発されうる。
+    また重複適合者が $o$ に吸収されると，複数カテゴリが一度に空になりうる。
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{PA-ODR 4: 動作例 A（基準 1 が選好を上書きし，de-reserve は起きない）}
+  \[
+    q^o=q^{t_1}=q^{t_2}=1,\ k=5,\ \delta=10;\quad
+    i_1(100,\emptyset),\ i_2(88,\{t_1,t_2\})\,[t_2\succ t_1\succ o],\
+    i_3(84,\{t_1\}),\ i_4(86,\{t_2\})
+  \]
+  \vspace{-0.6em}
+  \begin{columns}[T]
+    \begin{column}{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=5mm and 16mm]
+        \node[stu] (i2) {$i_2\,(88)$};
+        \node[dead, below=of i2] (i3) {$i_3\,(84)$};
+        \node[stu, below=of i3] (i4) {$i_4\,(86)$};
+        \node[cat, right=of i2] (t1) {$t_1$};
+        \node[cat, right=of i4] (t2) {$t_2$};
+        \draw[medge] (i2) -- (t1);
+        \draw[fedge] (i2) -- (t2);
+        \draw[medge] (i4) -- (t2);
+      \end{tikzpicture}
+      \\[1mm]
+      {\scriptsize $G(100)$：太線 = 採用，細線 = 不採用，点線枠 = 不適格}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \small
+      $\mu_o=\{i_1\}$, $e=100$。admissible には $\sigma(i)+5\ge90$：
+      \[
+        i_2:93\ \checkmark,\quad i_3:89\ \times,\quad i_4:91\ \checkmark
+      \]
+      \vspace{-0.5em}
+      \begin{itemize}\small
+        \item 最大カーディナリティ 2 を達成する割当は
+        $i_2\mapsto t_1,\ i_4\mapsto t_2$ の\textbf{一意}
+        \item $i_2$ は $t_2$ を好むのに $t_1$ へ回される
+        $\Rightarrow$ 行き先はまず\textbf{基準 1} が決める
+        \item 全席が埋まるので\textbf{即停止}（$\hat q$ 不変），gap は $7,9\le\delta$
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{0.3em}
+  {\small de-reservation は留保枠を削る組み込みのバイアスではなく，
+  cutoff 規則を保ったまま埋められない席がある場合にのみ起きる。}
+\end{frame}
+
+\begin{frame}{PA-ODR 5: 動作例 B（振り分けが de-reservation を連鎖させる）}
+  \[
+    i_1(100,\emptyset),\ i_2(95,\{t_1,t_2\})\,[t_1\succ t_2\succ o],\ i_3(82,\{t_2\}),
+    \quad q=(1,1,1),\ k=5,\ \delta=10
+  \]
+  \vspace{-0.7em}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering
+      {\scriptsize 反復 1：$G(100)$，条件 $\sigma\ge85$}\\[1mm]
+      \begin{tikzpicture}[node distance=5mm and 15mm]
+        \node[stu] (i2) {$i_2\,(95)$};
+        \node[dead, below=of i2] (i3) {$i_3\,(82)$};
+        \node[cat, right=of i2] (t1) {$t_1$};
+        \node[cat, right=of i3] (t2) {$t_2$};
+        \draw[medge] (i2) -- (t1);
+        \draw[fedge] (i2) -- (t2);
+        \node[note, right=1.5mm of t2] {空};
+      \end{tikzpicture}
+      \\[1mm]
+      {\scriptsize 基準 3 が $i_2$ を第一志望 $t_1$ へ\\ $\Rightarrow$ $t_2$ が空になり de-reserve}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      {\scriptsize 反復 2：$G(95)$，条件 $\sigma\ge80$}\\[1mm]
+      \begin{tikzpicture}[node distance=5mm and 15mm]
+        \node[stu] (i3) {$i_3\,(82)$};
+        \node[cat, right=of i3] (t2) {$t_2:\hat q{=}0$};
+        \node[cat, above=of t2] (t1) {$t_1$};
+        \draw[xedge] (i3) -- (t2);
+        \node[note, right=1.5mm of t1] {候補なし};
+      \end{tikzpicture}
+      \\[1mm]
+      {\scriptsize $i_3$ は届く（$87\ge85$）が $t_2$ の容量は $0$，\\
+      $t_1$ には辺が無い $\Rightarrow$ 再び de-reserve}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3em}
+  \begin{center}\scriptsize
+  \begin{tabular}{cccccl}
+    \toprule
+    反復 & $\hat q=(\hat q^o,\hat q^{t_1},\hat q^{t_2})$ & $e$ & $\mu_o$ & $(\mu_{t_1},\mu_{t_2})$ & 処理 \\
+    \midrule
+    1 & $(1,1,1)$ & $100$ & $\{i_1\}$ & $(\{i_2\},\emptyset)$ & $t_2$ を de-reserve \\
+    2 & $(2,1,0)$ & $95$  & $\{i_1,i_2\}$ & $(\emptyset,\emptyset)$ & $t_1$ を de-reserve \\
+    3 & $(3,0,0)$ & $82$  & $\{i_1,i_2,i_3\}$ & $(\emptyset,\emptyset)$ & 停止 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  {\small $i_2$ はどちらのカテゴリでも加点後 $100$ で「弱すぎる候補」ではない。
+  3 人全員がマッチするが\textbf{両方の留保枠が消滅}する
+  （TA-DA は $\mu_o=\{i_1\},\mu_{t_1}=\{i_2\}$ と枠を保ち 2 人を取る）。}
+\end{frame}
+
+\begin{frame}{PA-ODR 6: 動作例 C（重複適合者は虚偽申告で得をしうる）}
+  \[
+    i_1(100,\emptyset),\ i_2(95,\{t_1,t_2\}),\ i_3(94,\{t_1,t_2\}),
+    \quad q=(1,1,1),\ k=5,\ \delta=10
+  \]
+  \vspace{-0.5em}
+  \begin{columns}[T]
+    \begin{column}{0.34\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=7mm and 15mm]
+        \node[stu] (i2) {$i_2\,(95)$};
+        \node[stu, below=of i2] (i3) {$i_3\,(94)$};
+        \node[cat, right=of i2] (t1) {$t_1$};
+        \node[cat, right=of i3] (t2) {$t_2$};
+        \draw[aedge] (i2) -- (t1);
+        \draw[aedge] (i3) -- (t2);
+        \draw[bedge] (i2) -- (t2);
+        \draw[bedge] (i3) -- (t1);
+      \end{tikzpicture}
+      \\[1mm]
+      {\scriptsize $G(100)$ は 4 辺すべてを持つ\\
+      青実線 $=\alpha$，橙破線 $=\beta$}
+    \end{column}
+    \begin{column}{0.64\textwidth}
+      \small
+      真の選好は $t_1\succ_{i_2}t_2\succ_{i_2}o$，$o\succ_{i_3}t_1\succ_{i_3}t_2$。
+      基準 1--2 は両者のマッチを確定させるので，決めるのは\textbf{基準 3 だけ}。
+      \vspace{0.3em}
+      \begin{center}\scriptsize
+      \begin{tabular}{lccl}
+        \toprule
+        $i_2$ の申告 & $\alpha$ & $\beta$ & 選択 \\
+        \midrule
+        真 $t_1\succ t_2\succ o$ & $(3,1)$ & $(2,2)$ & $\beta$：第二志望 $t_2$ \\
+        偽 $t_1\succ o\succ t_2$ & $(3,1)$ & $(3,2)$ & $\alpha$：第一志望 $t_1$ \\
+        \bottomrule
+      \end{tabular}
+      \end{center}
+      {\scriptsize 値は順位ベクトルの降順ソート，辞書式に小さい方が選ばれる。}
+      \vspace{0.2em}
+      \begin{itemize}\small
+        \item $t_2$ を $o$ の下に落とすと $r_{i_2}(t_2)$ が $2\to3$ となり，
+        $\beta$ の評価\emph{だけ}が悪化する
+        \item \textbf{単一適合では起こりえない}（振り分けの余地がない）
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{PA-ODR 7: 動作例（順序 $\prec$ への依存）}
   \[
     T=\{t_1,t_2\},\quad q^o=q^{t_1}=q^{t_2}=1,\quad k=5,\ \delta=10,\qquad
     i_1(100,\emptyset),\ i_2(84,\{t_1\}),\ i_3(83,\{t_2\})
@@ -440,7 +627,7 @@
   % \\ {\small 注: これは overlap 由来ではなく cutoff のフィードバック由来（単一資格でも起きる）。}
 \end{frame}
 
-\begin{frame}{PA-ODR 4: 性質}
+\begin{frame}{PA-ODR 8: 性質}
   \begin{block}{命題（停止性・多項式時間・feasibility・score-feasibility・non-wastefulness）}
     \begin{itemize}
       \item \textbf{停止}: 非終了反復ごとに $\sum_t\hat q^t$ が 1 減るので高々 $\sum_t q^t$ 回
