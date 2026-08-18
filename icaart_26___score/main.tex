@@ -88,12 +88,12 @@ S\"onmez and Yenmez \cite{SoYe22a} take reserve capacities as given and impose n
 % \textcolor{red}{Contribution needs to say: adapt the properties to this setting; use DA/SPSE and show it does not guarantee score-feasibility; state the impossibility result; make PA-ODR/de-reservation the main constructive contribution; include the small simulation/prototype check.}
 
 \begin{enumerate}
-\item We adapt the standard properties to overlapping reserves with a cutoff-gap rule: non-wastefulness must be score-relative, while within-category fairness remains unweakened (Section~\ref{sec:model}). The weakening is not idle bookkeeping: TA-DA below satisfies the score-relative notion and violates the plain one, in $46$ of $100$ randomized instances (Section~\ref{sec:experiments}).
+\item We adapt the standard properties to overlapping reserves with a cutoff-gap rule: non-wastefulness must be score-relative, while within-category fairness and swap stability remain unweakened (Section~\ref{sec:model}). The weakening is not idle bookkeeping: TA-DA below satisfies the score-relative notion and violates the plain one, in $46$ of $100$ randomized instances (Section~\ref{sec:experiments}).
 \item We modify student-proposing deferred acceptance for score-elevated categories (SPSE). SPSE is feasible, non-wasteful, strategy-proof and free of justified envy, but using DA this way does not guarantee score-feasibility (Section~\ref{sec:spse}).
 \item We prove that score-feasibility, open-completeness and reserve-completeness may be jointly unattainable, even when each reserve category is individually fulfillable under the cutoff rule (Proposition~\ref{prop:impossibility}, Section~\ref{sec:impossibility}). This is the pivot of the paper: a mechanism enforcing the cutoff rule must give up one of the three, and the last two sections are the two ways of doing so.
-\item We study TA-DA, which keeps the announced capacities and gives up reserve-completeness by restricting proposals to score-admissible pairs. It is score-feasible and fair within categories, but only score-relatively non-wasteful, and it pays for the cutoff rule in coverage rather than in quota (Section~\ref{sec:tada}).
-\item We propose PA-ODR, a deliberate de-reservation mechanism that gives up fixed capacities instead. It enforces score-feasibility and retains non-wastefulness relative to final capacities and within-category fairness, but gives up strategy-proofness and no justified envy (Section~\ref{sec:paodr}).
-\item We implement the reserve-side choice as maximum-weight bipartite matching, formulate minimum de-reservation, and report a prototype comparing all three mechanisms across capacity regimes (Remark~\ref{rem:computation}, Proposition~\ref{prop:minderes}, Section~\ref{sec:experiments}).
+\item We study TA-DA, which keeps the announced capacities and gives up reserve-completeness by restricting proposals to score-admissible pairs. It is score-feasible, fair within categories and swap stable---the last without the no-justified-envy property that yields swap stability for SPSE---but only score-relatively non-wasteful, and it pays for the cutoff rule in coverage rather than in quota (Section~\ref{sec:tada}).
+\item We propose PA-ODR, a deliberate de-reservation mechanism that gives up fixed capacities instead. It enforces score-feasibility and retains non-wastefulness relative to final capacities, within-category fairness and swap stability between reserve categories, but gives up strategy-proofness, no justified envy, and swap stability once the open category is included (Section~\ref{sec:paodr}).
+\item We implement the reserve-side choice as maximum-weight bipartite matching, formulate minimum de-reservation, and report a prototype comparing all three mechanisms across capacity regimes (Remarks~\ref{rem:computation} and~\ref{prop:minderes}, Section~\ref{sec:experiments}).
 \end{enumerate}
 
 \begin{table*}[t]
@@ -108,9 +108,11 @@ S\"onmez and Yenmez \cite{SoYe22a} take reserve capacities as given and impose n
 Feasibility & Yes, at $q$ & Yes, at $q$ & Yes, at final $\hat q$ \\
 Within-category fairness (Def.~\ref{def:fair}) & Yes & Yes (Prop.~\ref{prop:tada-props}) & Yes (Prop.~\ref{prop:paodr-fair}) \\
 Non-wastefulness, score-relative (Def.~\ref{def:nw}) & Yes & Open in general; holds at $o$ (Prop.~\ref{prop:tada-props}) and in every instance tested & Yes, w.r.t.\ $\hat q$ \\
+Swap stability within reserves (Def.~\ref{def:swap}) & Yes & Yes (Prop.~\ref{prop:tada-props}) & Yes (Prop.~\ref{prop:paodr-swap}) \\
 \hline
 Score-feasibility & No (Prop.~\ref{prop:spse-not-sf}) & Yes (Prop.~\ref{prop:tada-props}) & Yes (Prop.~\ref{prop:paodr-basic}) \\
 Non-wastefulness, plain & Yes & No (Ex.~\ref{ex:tada-idle}) & Yes, w.r.t.\ $\hat q$ \\
+Swap stability, all categories (Def.~\ref{def:swap}) & Yes (Lem.~\ref{lem:nje-swap}) & Yes (Prop.~\ref{prop:tada-props}) & No (Ex.~\ref{ex:paodr-envy}) \\
 No justified envy (Def.~\ref{def:nje}) & Yes & No (Ex.~\ref{ex:tada-idle}) & No (Ex.~\ref{ex:paodr-envy}) \\
 Strategy-proofness & Yes (Prop.~\ref{prop:spse-sp}) & Open (Sec.~\ref{sec:tada}) & No (Prop.~\ref{prop:paodr-notsp}) \\
 Reserve capacity & Fixed at $q$ & Fixed at $q$, seats may idle & Deliberate de-reservation, not minimal \\
@@ -140,7 +142,7 @@ Condition (ii) is the formal statement of one-to-one counting. The open category
 For a matching $\mu$ let $e_o(\mu):=\min_{i\in\mu_o}\sigma(i)$, with $e_o(\mu)=-\infty$ if $\mu_o=\emptyset$, and for $t\in T$ let $e_t^+(\mu):=\min_{i\in\mu_t}\sigma_t(i)$, with $e_t^+(\mu)=+\infty$ if $\mu_t=\emptyset$. A feasible $\mu$ is \emph{score-feasible} if $e_o(\mu)-e_t^+(\mu)\le\delta$ for every $t\in T$.
 \end{definition}
 
-We read $e_o(\mu)-e_t^+(\mu)$ as $-\infty$ whenever $\mu_o=\emptyset$ or $\mu_t=\emptyset$, including when both are, so the condition is vacuous there and needs no side condition. No reserve cutoff may fall too far below the open one, measured on the adjusted scale: the bonus is institutionally legitimate and $\delta$ bounds only the gap left after it. The two parameters thus do different work rather than granting the advantage twice, though in raw scores they compound, a reserve admit falling up to $\delta+k$ below the open cutoff; for $k=0$ they coincide and $\delta$ alone bounds the raw gap, which is the ten-point rule of \cite{AyTu23b}. Score-feasibility is an ex post requirement on realized cutoffs, not something implied by the within-category ranking rule, which is why Sections~\ref{sec:tada} and~\ref{sec:paodr} need mechanisms that enforce it directly.
+We read $e_o(\mu)-e_t^+(\mu)$ as $-\infty$ whenever $\mu_o=\emptyset$ or $\mu_t=\emptyset$, including when both are, so the condition is vacuous there and needs no side condition. No reserve cutoff may fall too far below the open one, measured on the adjusted scale: the bonus is institutionally legitimate and $\delta$ bounds only the gap left after it, so the two parameters do different work rather than granting the advantage twice. In raw scores they compound, a reserve admit falling up to $\delta+k$ below the open cutoff; for $k=0$, $\delta$ alone bounds the raw gap, which is the ten-point rule of \cite{AyTu23b}. Score-feasibility is an ex post requirement on realized cutoffs, not something implied by the within-category ranking rule, which is why Sections~\ref{sec:tada} and~\ref{sec:paodr} need mechanisms that enforce it directly.
 
 \subsection{Desiderata}
 
@@ -180,6 +182,26 @@ No justified envy implies within-category fairness: if $i\notin M(\mu)$, $j\in\m
 
 Unlike Definition~\ref{def:fair}, omitting a score-feasibility clause here is a genuine choice, since Lemma~\ref{lem:fair-sf} does not extend: clause (ii) also lets $i$ claim a \emph{vacant} category, lowering that category's cutoff, and clause (i) lets a matched student leave $c'$, which for $c'=o$ \emph{raises} the open cutoff and can break score-feasibility elsewhere. A score-relative weakening would thus have content. We use the unweakened notion because it strengthens Proposition~\ref{prop:spse-nje}; the price is that Example~\ref{ex:paodr-envy} must be checked against the weaker reading, which we do there.
 
+Both notions so far move one student. The last lets two matched students trade, the characteristic complaint when a single school offers several admission routes and each of two students holds the route the other wants.
+
+\begin{definition}[Swap stability]
+\label{def:swap}
+Let $\mu$ be feasible, $i\in\mu_c$ and $j\in\mu_{c'}$ with $c\neq c'$. The pair $(i,j)$ is a \emph{blocking swap} if (i) $c'\in V_i$ and $c\in V_j$, and (ii) $c'\succ_i c$ and $c\succ_j c'$. Then $\mu$ is \emph{swap stable} if it admits no blocking swap, and \emph{swap stable within reserves} if it admits none with $c,c'\in T$.
+\end{definition}
+
+As in Definition~\ref{def:nje} we impose no score-feasibility clause, which strengthens the positive results below; the one negative result, Example~\ref{ex:paodr-envy}, is checked against the weaker reading there. Within-category fairness never compares two matched students and so says nothing here, but Definition~\ref{def:nje} does.
+
+\begin{lemma}[No justified envy implies swap stability]
+\label{lem:nje-swap}
+Every feasible matching with no justified envy is swap stable.
+\end{lemma}
+
+\begin{proof}
+Let $(i,j)$ be a blocking swap with $i\in\mu_c$ and $j\in\mu_{c'}$. Since $c'\in V_i$ and $c'\succ_i c$, the pair $(i,c')$ satisfies clause (i) of Definition~\ref{def:nje}, so clause (ii) must fail: $|\mu_{c'}|=q^{c'}$ and $\sigma_{c'}(j')>\sigma_{c'}(i)$ for every $j'\in\mu_{c'}$, in particular for $j$. Both students carry the same bonus at $c'$---$k$ if $c'\in T$ and none if $c'=o$---so $\sigma(j)>\sigma(i)$. Exchanging the roles of $i$ and $j$ gives $\sigma(i)>\sigma(j)$, a contradiction.
+\end{proof}
+
+The common bonus does the work: it makes every category rank any two of its eligible students alike, so a blocking swap would need each to outrank the other. The implication fails under category-specific bonuses.
+
 A structural circularity underlies everything: feasible reserve assignments depend on the open cutoff, which depends on who is left after reserve assignment. Score-feasibility is thus not a static eligibility condition and greedy quota-filling is unreliable. SPSE keeps capacities fixed and uses deferred-acceptance logic; PA-ODR treats the cutoff rule as hard and de-reserves, following \cite{AyTu23a}.
 
 \section{\uppercase{Student-Proposing Score-Elevated Mechanism}}
@@ -217,11 +239,11 @@ Each category keeps at most its capacity at every step, no student is held twice
 
 \begin{proposition}[No justified envy]
 \label{prop:spse-nje}
-The output of SPSE has no justified envy, and is therefore fair within categories.
+The output of SPSE has no justified envy, and is therefore both fair within categories and swap stable.
 \end{proposition}
 
 \begin{proof}
-Let $\mu$ be the output and let $i,c\in V_i$ satisfy clause (i) of Definition~\ref{def:nje}. In either case $c$ is strictly better for $i$ than her final assignment; since she applies in $\succ_i$-order and is held by a category only until it rejects her, she can end unmatched or strictly worse off only after $c$ rejected her. At that rejection $c$ held $q^c$ students and rejected the lowest-$\sigma_c$ member of $\mu_c\cup\{i\}$, so, scores being distinct, every retained student has adjusted score strictly above $\sigma_c(i)$. Thereafter $c$ never drops below $q^c$ and only replaces held students by strictly better ones, so at termination $|\mu_c|=q^c$ and $\sigma_c(j)>\sigma_c(i)$ for all $j\in\mu_c$. Both alternatives of clause (ii) fail. The second statement follows from the implication after Definition~\ref{def:nje}.
+Let $\mu$ be the output and let $i,c\in V_i$ satisfy clause (i) of Definition~\ref{def:nje}. In either case $c$ is strictly better for $i$ than her final assignment; since she applies in $\succ_i$-order and is held by a category only until it rejects her, she can end unmatched or strictly worse off only after $c$ rejected her. At that rejection $c$ held $q^c$ students and rejected the lowest-$\sigma_c$ member of $\mu_c\cup\{i\}$, so, scores being distinct, every retained student has adjusted score strictly above $\sigma_c(i)$. Thereafter $c$ never drops below $q^c$ and only replaces held students by strictly better ones, so at termination $|\mu_c|=q^c$ and $\sigma_c(j)>\sigma_c(i)$ for all $j\in\mu_c$. Both alternatives of clause (ii) fail. The two consequences follow from the implication after Definition~\ref{def:nje} and from Lemma~\ref{lem:nje-swap}.
 \end{proof}
 
 Raw scores and eligibility are verifiable, so the only object a student can misreport is $\succ_i$.
@@ -232,7 +254,7 @@ No student can obtain a strictly $\succ_i$-better assignment under SPSE by repor
 \end{proposition}
 
 \begin{proof}
-Fix $\sigma$, $\T(\cdot)$, $k$ and $(q^c)_{c\in V}$. Treat each $c\in V$ as a college of capacity $q^c$ whose priority over its acceptable students---those $i$ with $c\in V_i$---is the strict ranking induced by $\sigma_c$, well defined as raw scores are distinct. These priorities are responsive to $q^c$, since $c$ always retains the $q^c$ highest-$\sigma_c$ applicants available. Each $i$ strictly ranks $V_i$, all of it acceptable. The economy is thus an instance of the college-admissions model of Gale and Shapley \cite{GaSh62a} and Algorithm~\ref{alg:spse} is student-proposing deferred acceptance on it; strategy-proofness for the proposing side is the theorem of Dubins and Freedman \cite{DuFr81a} and Roth \cite{Roth82a}.
+Fix $\sigma$, $\T(\cdot)$, $k$ and $(q^c)_{c\in V}$, and treat each $c\in V$ as a college of capacity $q^c$ whose priority over its acceptable students---those $i$ with $c\in V_i$---is the strict ranking induced by $\sigma_c$, well defined as raw scores are distinct and responsive to $q^c$ since $c$ retains the $q^c$ highest-$\sigma_c$ applicants available. Each $i$ strictly ranks all of $V_i$ as acceptable, so the economy is an instance of the college-admissions model of Gale and Shapley \cite{GaSh62a} and Algorithm~\ref{alg:spse} is student-proposing deferred acceptance on it; strategy-proofness for the proposing side is the theorem of Dubins and Freedman \cite{DuFr81a} and Roth \cite{Roth82a}.
 \end{proof}
 
 \begin{proposition}[SPSE does not guarantee score-feasibility]
@@ -284,7 +306,7 @@ Both axioms are institutional commitments rather than normative optima: the open
 
 \begin{nremark}[The obstruction is overlap, not weak candidates]
 \label{rem:hall}
-Individual completability rules out the shortage-of-candidates explanation; it is worth naming what replaces it. Let $G(e)$ be the feasibility graph of Section~\ref{sec:paodr} induced by $e=100$ and $N(S)$ the students adjacent to some category in $S\subseteq T$. Then $N(\{t_1,t_2\})=\{i_2\}$, so $|N(\{t_1,t_2\})|=1<2=q^{t_1}+q^{t_2}$ and the capacitated Hall condition $|N(S)|\ge\sum_{t\in S}q^t$ fails. The hypotheses sit in a clean relation: individual completability is Hall's condition on singletons, and the impossibility is that this does not imply it for larger $S$. The two coincide when the $N(\{t\})$ are pairwise disjoint, so the gap between them is exactly overlap. It also explains why PA-ODR is built around a bipartite matching rather than category-by-category quota filling: the obstruction lives on sets of categories, so it is invisible to a rule that processes them one at a time.
+Individual completability rules out the shortage-of-candidates explanation; what replaces it is worth naming. Let $G(e)$ be the feasibility graph of Section~\ref{sec:paodr} induced by $e=100$ and $N(S)$ the students adjacent to some category in $S\subseteq T$. Then $N(\{t_1,t_2\})=\{i_2\}$, so the capacitated Hall condition $|N(S)|\ge\sum_{t\in S}q^t$ fails at $S=T$. Individual completability is that condition on singletons, and the impossibility is that singletons do not imply larger $S$; the two coincide when the $N(\{t\})$ are pairwise disjoint, so the gap between them is exactly overlap. It also explains why PA-ODR is built around a bipartite matching rather than category-by-category quota filling: the obstruction lives on sets of categories, so it is invisible to a rule that processes them one at a time.
 \end{nremark}
 
 \section{\uppercase{Threshold-Adjusting Deferred Acceptance}}
@@ -323,13 +345,15 @@ Take $e=\bar\sigma:=\max_{i\in I}\sigma(i)$, a candidate threshold. Every $i\in\
 
 \begin{proposition}[Properties of TA-DA]
 \label{prop:tada-props}
-The output of TA-DA is feasible with respect to the original capacities $q$, score-feasible, and fair within categories in the sense of Definition~\ref{def:fair}. Moreover no unmatched student can be added to the open category.
+The output of TA-DA is feasible with respect to the original capacities $q$, score-feasible, fair within categories in the sense of Definition~\ref{def:fair}, and swap stable in the sense of Definition~\ref{def:swap}. Moreover no unmatched student can be added to the open category.
 \end{proposition}
 
 \begin{proof}
 \emph{Feasibility} is immediate: deferred acceptance never holds more than $q^c$ students at $c$ nor a student at two categories, and proposals run inside $A_i(e)\subseteq V_i$. \emph{Score-feasibility} holds because only score-feasible candidates enter $S$, and $S\neq\emptyset$ by Lemma~\ref{lem:tada-nonempty}.
 
 \emph{Within-category fairness.} Let $e$ be the selected threshold and suppose $t\in T$, $j\in\mu_t$, $i\notin M(\mu)$, $t\in\T(i)$ and $\sigma_t(i)>\sigma_t(j)$. Since $j$ proposed to $t$ we have $t\in A_j(e)$, i.e.\ $\sigma(j)+k\ge e-\delta$; the bonus being common, $\sigma_t(i)>\sigma_t(j)$ gives $\sigma(i)>\sigma(j)$ and hence $\sigma(i)+k\ge e-\delta$, so $t\in A_i(e)$. This is the same step as in Proposition~\ref{prop:paodr-fair}: a student outranking a matched student inside a category is automatically admissible at the prevailing threshold. Being unmatched at termination, $i$ proposed to every category of $A_i(e)$, in particular to $t$, and was rejected; a category rejects only when full and afterwards replaces a held student only by a strictly better one, so every $j'\in\mu_t$ has $\sigma_t(j')>\sigma_t(i)$, contradicting $j\in\mu_t$.
+
+\emph{Swap stability.} Let $(i,j)$ be a blocking swap, $i\in\mu_c$ and $j\in\mu_{c'}$. Suppose first $c'\in A_i(e)$ and $c\in A_j(e)$. As $c'\succ_i c$, student $i$ proposed to $c'$ and was rejected, so every member of $\mu_{c'}$ has adjusted score above $\sigma_{c'}(i)$; both students carry the same bonus at $c'$, so $\sigma(j)>\sigma(i)$, and symmetrically $\sigma(i)>\sigma(j)$, a contradiction. Otherwise, say $c'\notin A_i(e)$; then $c'\in T$ and $\sigma(i)+k<e-\delta$, and since $A_i(e)$ contains all of $\T(i)$ or none of it, $i$ could propose nowhere but $o$, so $c=o$. Now $o\in A_j(e)$ and $o\succ_j c'$, so $j$ proposed to $o$ and was rejected, giving $\sigma(i)>\sigma(j)$; but $j\in\mu_{c'}$ with $c'\in T$ forces $\sigma(j)+k\ge e-\delta>\sigma(i)+k$. The case $c\notin A_j(e)$ is symmetric.
 
 \emph{The open category.} $o\in A_i(e)$ for every $i$, so an unmatched $i$ proposed to $o$ and was rejected, giving $|\mu_o|=q^o$.
 \end{proof}
@@ -340,7 +364,7 @@ What TA-DA does not inherit is the rest of the deferred-acceptance package, and 
 \label{ex:tada-idle}
 Take the instance of Remark~\ref{rem:overlap-cause}: $T=\{t_1\}$, $q^o=q^{t_1}=1$, $k=5$, $\delta=10$, $i_1(100,\emptyset)$ and $i_2(80,\{t_1\})$ with $t_1\succ_{i_2}o$. At $e=100$, $80+5=85<90$, so $A_{i_2}(100)=\{o\}$; DA gives $\mu_o=\{i_1\}$, $\mu_{t_1}=\emptyset$, which is score-feasible and matches one student. At $e=80$, $A_{i_2}(80)=\{o,t_1\}$ and DA gives $\mu_o=\{i_1\}$, $\mu_{t_1}=\{i_2\}$ with $e_o-e_{t_1}^+=100-85=15>\delta$, so that candidate is discarded. TA-DA therefore returns $\mu_o=\{i_1\}$, $\mu_{t_1}=\emptyset$, leaving $t_1$ empty although $i_2$ is eligible for it and unmatched. The outcome is unchanged if $i_2$ instead ranks $o$ first.
 
-The empty seat is a plain waste: $|\mu_{t_1}|=0<q^{t_1}$ and $t_1\in V_{i_2}$. It is not a waste in the sense of Definition~\ref{def:nw}, because adding $i_2$ to $t_1$ produces exactly the discarded candidate, whose gap is $15>\delta$. The example thus separates the two readings of non-wastefulness and shows that the score-relative clause of Definition~\ref{def:nw} is not a bookkeeping convention: it is the difference between calling this outcome wasteful and calling it constrained. The same seat also witnesses justified envy, since $i_2\notin M(\mu)$, $t_1\in V_{i_2}$ and $|\mu_{t_1}|<q^{t_1}$ satisfy both clauses of Definition~\ref{def:nje}.
+The empty seat is a plain waste: $|\mu_{t_1}|=0<q^{t_1}$ and $t_1\in V_{i_2}$. It is not a waste in the sense of Definition~\ref{def:nw}, because adding $i_2$ to $t_1$ produces exactly the discarded candidate, whose gap is $15>\delta$. The example thus separates the two readings of non-wastefulness and shows that the score-relative clause of Definition~\ref{def:nw} is not a bookkeeping convention: it is the difference between calling this outcome wasteful and calling it constrained. The same seat also witnesses justified envy, since $i_2\notin M(\mu)$, $t_1\in V_{i_2}$ and $|\mu_{t_1}|<q^{t_1}$ satisfy both clauses of Definition~\ref{def:nje}. The complainant is unmatched, though, so no exchange between matched students answers her: TA-DA loses Definition~\ref{def:nje}, and with it Lemma~\ref{lem:nje-swap}, yet keeps swap stability by Proposition~\ref{prop:tada-props}.
 \end{example}
 
 \begin{nremark}[How far the non-wastefulness guarantee reaches]
@@ -412,7 +436,7 @@ Based on \textsc{PrefLexMaxMatching}, we propose the Preference-Aware Overlappin
 \label{sec:trigger}
 The stopping rule is stronger than score-feasibility alone requires: PA-ODR halts when $|\mu_t|=\hat q^t$ for every $t$, i.e.\ when the outcome is reserve-complete for the \emph{current} capacities. It therefore de-reserves whenever a reserve category cannot be filled, not merely when the score rule would otherwise fail. The difference can be revealed on the instance of Proposition~\ref{prop:spse-not-sf}. The first iteration gives $\mu_o=\{i_1\}$ and $e=100$; admissibility needs $\sigma(i)\ge85$, so only $i_2$ qualifies, and criterion 3 routes her to her top choice $t_1$, leaving $t_2$ short. PA-ODR de-reserves $t_2$, reaching $\hat q=(2,1,0)$. The second iteration gives $\mu_o=\{i_1,i_2\}$ and $e=95$, so $i_3$ becomes admissible---but $i_3$ is eligible only for $t_2$, whose capacity is now $0$, so $t_1$ is short and is de-reserved in turn. PA-ODR ends at $\hat q=(3,0,0)$ with $\mu_o=\{i_1,i_2,i_3\}$ and both quotas destroyed.
 
-Yet $\nu$ of that proposition is score-feasible, non-wasteful and fair \emph{under the original capacities}: an idle category would have sufficed. The design's defence is coverage---PA-ODR matches all three students, $\nu$ only two---and its cost is that here \emph{every} quota is retired rather than merely unmet. The idle-category alternative is not hypothetical: it is what TA-DA does in Section~\ref{sec:tada}, which on this instance returns $\mu_o=\{i_1\}$, $\mu_{t_1}=\{i_2\}$, $\mu_{t_2}=\emptyset$, a relabelling of $\nu$ that keeps both announced quotas and matches two students. The two mechanisms are thus the two sides of this remark, and Section~\ref{sec:experiments} measures the gap between them at scale. All results below, and \textsc{MinDeres}, are relative to the reserve-completeness rule.
+Yet $\nu$ of that proposition is score-feasible, non-wasteful and fair \emph{under the original capacities}: an idle category would have sufficed. The design's defence is coverage---PA-ODR matches all three students, $\nu$ only two---and its cost is that here \emph{every} quota is retired rather than merely unmet. The alternative is not hypothetical: TA-DA returns $\mu_o=\{i_1\}$, $\mu_{t_1}=\{i_2\}$, $\mu_{t_2}=\emptyset$ on this instance, a relabelling of $\nu$ keeping both announced quotas and matching two students, and Section~\ref{sec:experiments} measures the gap at scale. All results below, and \textsc{MinDeres}, are relative to the reserve-completeness rule.
 \end{nremark}
 
 \begin{lemma}[The open cutoff falls monotonically]
@@ -442,19 +466,14 @@ Let $T=\{t_1,t_2\}$, $q^o=q^{t_1}=q^{t_2}=1$, $k=5$, $\delta=10$, with $i_1(100,
 
 Both runs match all three students, so the difference is institutional rather than one of coverage: under one order a reserve quota survives and $i_3$ enters through $t_2$, under the other both quotas are destroyed and $i_3$ enters through $o$. Since admitting students by the reserve route is the point of a reserve system, this is substantive, and PA-ODR does not necessarily minimize de-reservation under any pre-defined order. Unlike Section~\ref{sec:spse}, this phenomenon is not overlap-driven and we do not present it as such: no student in Example~\ref{ex:order} is eligible for two categories. It is the cutoff feedback of Lemma~\ref{lem:monotone} and would arise under single eligibility too; overlap worsens rather than causes it, since an absorbed overlapping student can empty several categories at once.
 
-We therefore state PA-ODR's properties relative to the capacity vector it produces. The minimization problem need not be left open. Call $\hat q$ with $\hat q^t\le q^t$ and $\hat q^o=q^o+\sum_{t}(q^t-\hat q^t)$ \emph{realizable} if, on filling $o$ with the top $\min\{\hat q^o,|I|\}$ raw scores and inducing $G(e)$, that graph admits a capacitated matching saturating every $\hat q^t$; \textsc{MinDeres} asks for a realizable $\hat q$ minimizing $\sum_t(q^t-\hat q^t)$. It is always solvable, as $\hat q^t\equiv0$ is vacuously realizable. Realizability, like the stopping rule, demands every surviving quota be filled exactly, so Remark~\ref{sec:trigger} applies verbatim. The following is brute-force enumeration, of interest for what it says about PA-ODR rather than as an algorithm.
+We therefore state PA-ODR's properties relative to the capacity vector it produces. The minimization problem need not be left open. Call $\hat q$ with $\hat q^t\le q^t$ and $\hat q^o=q^o+\sum_{t}(q^t-\hat q^t)$ \emph{realizable} if, on filling $o$ with the top $\min\{\hat q^o,|I|\}$ raw scores and inducing $G(e)$, that graph admits a capacitated matching saturating every $\hat q^t$; \textsc{MinDeres} asks for a realizable $\hat q$ minimizing $\sum_t(q^t-\hat q^t)$. It is always solvable, as $\hat q^t\equiv0$ is vacuously realizable. Realizability, like the stopping rule, demands every surviving quota be filled exactly, so Remark~\ref{sec:trigger} applies verbatim. The following bound is brute-force enumeration, of interest for what it says about PA-ODR rather than as an algorithm.
 
-\begin{proposition}[Minimum de-reservation for a bounded number of categories]
-% [AI: 削減候補 2] 約2,000字。Remark 1段落に圧縮可（CsSu26a への応答は残すこと）。
+\begin{nremark}[Minimum de-reservation]
 \label{prop:minderes}
-\textsc{MinDeres} is solvable in time $O(\prod_{t\in T}(q^t+1)\cdot\Phi)$, where $\Phi$ is the cost of one capacitated bipartite matching, hence in polynomial time whenever $|T|$ is bounded by a constant.
-\end{proposition}
+\textsc{MinDeres} is solvable in time $O(\prod_{t\in T}(q^t+1)\cdot\Phi)$, with $\Phi$ the cost of one capacitated bipartite matching, hence in polynomial time for a constant number of categories: a candidate is determined by the numbers $q^t-\hat q^t\in\{0,\dots,q^t\}$, whence $\hat q^o$, the open assignment, the cutoff $e$ and $G(e)$ follow, and realizability is one maximum-cardinality computation; there are at most $(|I|+1)^{|T|}$ candidates to enumerate. We do not claim practicality for many categories; whether \textsc{MinDeres} is fixed-parameter tractable in $|T|$, or NP-hard for unbounded $|T|$, is open.
+\end{nremark}
 
-\begin{proof}
-A candidate is determined by the numbers $q^t-\hat q^t\in\{0,\dots,q^t\}$, so there are $\prod_t(q^t+1)$ of them and $\hat q^o$ follows. For each, the open assignment, cutoff $e$ and graph $G(e)$ are determined, and realizability is one maximum-cardinality computation. Enumerating and returning a realizable candidate of minimum total de-reservation is correct with the stated running time. Since $q^t\le|I|$ for every category that can ever be filled, there are at most $(|I|+1)^{|T|}$ candidates, polynomial for fixed $|T|$.
-\end{proof}
-
-We do not claim practicality for many categories; whether \textsc{MinDeres} is fixed-parameter tractable in $|T|$, or NP-hard for unbounded $|T|$, is open. Cs\'aji and Sun \cite{CsSu26a} minimize violation of overlapping quotas in polynomial time, but over the stable matchings of a fixed market, whereas reducing $\hat q^t$ here raises $\hat q^o$ and so moves the very cutoff that defines the feasibility graph (Lemma~\ref{lem:monotone}); the nearest hardness landmark is that stable matching with overlapping types and per-type quotas is $\Sigma_2^{\mathrm{P}}$-complete \cite{CGH20a}. What it establishes is that PA-ODR's order dependence is a property of the greedy schedule, not an intractability of the objective.
+Cs\'aji and Sun \cite{CsSu26a} minimize violation of overlapping quotas in polynomial time, but over the stable matchings of a fixed market, whereas reducing $\hat q^t$ here raises $\hat q^o$ and so moves the very cutoff that defines the feasibility graph (Lemma~\ref{lem:monotone}); the nearest hardness landmark is that stable matching with overlapping types and per-type quotas is $\Sigma_2^{\mathrm{P}}$-complete \cite{CGH20a}. What the bound establishes is that PA-ODR's order dependence is a property of the greedy schedule, not an intractability of the objective.
 
 \subsection{Properties of PA-ODR}
 
@@ -473,7 +492,7 @@ PA-ODR terminates; after replacing each $q^c$ by $\min\{q^c,|I|\}$ it runs in ti
 \begin{proof}
 \emph{Termination.} A non-terminating iteration sets $\hat q^{t^\ast}\gets\hat q^{t^\ast}-1$ and $\hat q^o\gets\hat q^o+1$, so the nonnegative integer $\sum_{t}\hat q^t$ falls by one each time and the loop stops after at most $\sum_t q^t$ iterations.
 
-\emph{Running time.} That bound is exponential in the input size if capacities are binary-encoded, so we assume, here and throughout, that $q^c\le|I|$ for every $c\in V$. Under it $\sum_t\hat q^t\le|I||T|$, so there are $O(|I||T|)$ iterations, each sorting by raw score, building $G(e)$ and solving one \textsc{PrefLexMaxMatching}, polynomial by Remark~\ref{rem:computation}.
+\emph{Running time.} That bound is exponential in the input size if capacities are binary-encoded, so we assume, here and throughout, that $q^c\le|I|$ for every $c\in V$.\footnote{The bound is an assumption, not a normalization: it leaves every matching computation untouched, but it changes how many de-reservation steps the loop takes and hence the final $\hat q$, so the de-reserved counts of Section~\ref{sec:experiments} are relative to announced capacities that are themselves at most $|I|$.} Under it $\sum_t\hat q^t\le|I||T|$, so there are $O(|I||T|)$ iterations, each sorting by raw score, building $G(e)$ and solving one \textsc{PrefLexMaxMatching}, polynomial by Remark~\ref{rem:computation}.
 
 \emph{Feasibility.} In every iteration $o$ receives the top $\min\{\hat q^o,|I|\}$ students, reserve assignment runs on the students not in $\mu_o$ with capacities $\hat q^t$, and edges of $G(e)$ join $i$ only to $t\in\T(i)$. So no student is assigned twice and no category is over capacity; the output is the final iteration's assignment.
 
@@ -481,12 +500,6 @@ PA-ODR terminates; after replacing each $q^c$ by $\min\{q^c,|I|\}$ it runs in ti
 
 \emph{Non-wastefulness.} $\mu_o$ holds the top $\min\{\hat q^o,|I|\}$ students, so either everyone is matched or $|\mu_o|=\hat q^o$ and nobody can be added to $o$. At termination $|\mu_t|=\hat q^t$ for every $t$, since otherwise another de-reservation would have occurred. So no unmatched student can be added anywhere within $\hat q$, and a fortiori none yields a matching both feasible for $\hat q$ and score-feasible.
 \end{proof}
-
-\begin{nremark}[The capacity bound is an assumption, not a normalization]
-% [AI: 削減候補 1] この Remark で約 1,300 字。脚注 1 つに落とせる。最も安全な削減。
-\label{rem:capbound}
-A capacity above $|I|$ is never usable, so bounding $q^c$ by $|I|$ costs nothing in modelling terms, but it is not innocuous for the accounting. Replacing $q^t$ by $\min\{q^t,|I|\}$ leaves every matching computation untouched, since no capacitated matching can place more than $|I|$ students in $t$; what it changes is how many de-reservation steps the loop takes before a category stops being underfilled, and hence the final $\hat q$. The de-reserved counts of Section~\ref{sec:experiments} are therefore counts relative to announced capacities that are themselves at most $|I|$, which is how quotas are stated in practice. We do not claim that the matching returned is invariant to dropping the assumption.
-\end{nremark}
 
 \begin{proposition}[Within-category fairness]
 \label{prop:paodr-fair}
@@ -499,6 +512,17 @@ Fix the final iteration, with cutoff $e$ and output $\mu$, and suppose for contr
 
 The qualifier ``with respect to the final capacity vector'' attaches to Proposition~\ref{prop:paodr-basic} but not to this one: PA-ODR satisfies the same unweakened within-category fairness as SPSE, needing no de-reservation-adjusted version. The reason is Lemma~\ref{lem:fair-sf} with the first step above---an upward within-category claim can neither break score-feasibility nor be blocked by the cutoff. Unlike SPSE, though, the property comes not from rejection monotonicity but from optimality of the chosen matching inside the final feasibility graph.
 
+\begin{proposition}[Swap stability within reserves]
+\label{prop:paodr-swap}
+The output of PA-ODR admits no blocking swap $(i,j)$ with $i\in\mu_c$, $j\in\mu_{c'}$ and $c,c'\in T$.
+\end{proposition}
+
+\begin{proof}
+Fix the final iteration, with cutoff $e$ and output $\mu$, and let $(i,j)$ be such a swap. Both are matched along edges of $G(e)$, so $\sigma(i)+k\ge e-\delta$ and $\sigma(j)+k\ge e-\delta$; as admissibility at $e$ does not depend on the category, $c'\in\T(i)$ makes $(i,c')$ an edge and $c\in\T(j)$ makes $(j,c)$ one. Exchanging the two assignments therefore yields a capacitated matching on $G(e)$ with the same matched students, hence the same cardinality and the same sorted score vector, so criteria 1 and 2 are indifferent between the two. Its rank multiset replaces $r_i(c)$ by $r_i(c')<r_i(c)$ and $r_j(c')$ by $r_j(c)<r_j(c')$ and leaves every other entry alone, so the weakly decreasingly sorted rank vector falls in every coordinate and strictly in one, hence is lexicographically strictly smaller---contradicting criterion 3.
+\end{proof}
+
+Criterion 3 buys exactly this property and nothing else supplies it: criteria 1 and 2 fix who is admitted (Lemma~\ref{lem:matroid}) and are blind to preferences, so an exchange between two reserve categories is invisible to them.
+
 \subsection{What PA-ODR Gives Up}
 \label{sec:paodr-limits}
 
@@ -509,6 +533,8 @@ Enforcing score-feasibility is not free; the price falls on the incentive and en
 Let $T=\{t_1\}$, $q^o=q^{t_1}=1$, $k=5$, $\delta=10$, with $i_1(100,\{t_1\})$ and $i_2(90,\{t_1\})$, both ranking $t_1$ above $o$. PA-ODR gives $o$ the top raw score, so $\mu_o=\{i_1\}$ and $e=100$; then $90+5=95\ge100-10$, so $(i_2,t_1)$ is an edge, $\mu_{t_1}=\{i_2\}$, every capacity is met, and the algorithm stops without de-reserving. The outcome is score-feasible, as $e_o-e_{t_1}^+=100-95=5\le\delta$. Yet $i_1$ sits in $o$ while strictly preferring $t_1$, whose occupant satisfies $\sigma_{t_1}(i_2)=95<105=\sigma_{t_1}(i_1)$, so $i_1$ has justified envy and Definition~\ref{def:nje} fails.
 
 The score rule does not excuse this failure, which matters because Definition~\ref{def:nje} was left unweakened. Honouring the claim gives $\mu_{t_1}=\{i_1\}$, $\mu_o=\{i_2\}$, with $e_o=90$ and $e_{t_1}^+=105$, a gap of $-15\le\delta$: the alternative is score-feasible, so the envy survives the score-relative reading discussed in Section~\ref{sec:model}. It is also exactly what SPSE returns here, both students applying to $t_1$, which retains $i_1$ and rejects $i_2$, who is then held by $o$. The mechanisms differ purely in whose claim they honour, with no feasibility excuse for either.
+
+The same run also breaks swap stability. Let $i_2$ instead rank $o\succ_{i_2}t_1$; nothing in the run changes, since PA-ODR fills $o$ by raw score and criterion 1 matches $i_2$ to the only category she has an edge to, so again $\mu_o=\{i_1\}$ and $\mu_{t_1}=\{i_2\}$. Now $i_1$ holds $o$ and prefers $t_1$, $i_2$ holds $t_1$ and prefers $o$, and each is eligible for the other's category, so $(i_1,i_2)$ is a blocking swap and Definition~\ref{def:swap} fails. The exchange $\mu_o=\{i_2\}$, $\mu_{t_1}=\{i_1\}$ gives $e_o-e_{t_1}^+=90-105\le\delta$, so here too the score rule offers no excuse. As Proposition~\ref{prop:paodr-swap} requires, the swap involves the open category---the one PA-ODR fills before consulting preferences at all.
 \end{example}
 
 \begin{proposition}[PA-ODR is not strategy-proof]
@@ -586,7 +612,7 @@ We coded the three mechanisms in Python and ran them on three families of $100$ 
 
 \begin{table*}[t]
 \centering
-\caption{Prototype outcomes over $100$ randomized instances per family. ``NW-plain'' is non-wastefulness without the score-feasibility clause of Definition~\ref{def:nw}; the score-relative version of Definition~\ref{def:nw}, and within-category fairness, hold in all $300$ instances for all three mechanisms and are omitted. Percentages are of the family's average reserve seats, which are themselves bounded by $|I|$ (Remark~\ref{rem:capbound}).}
+\caption{Prototype outcomes over $100$ randomized instances per family. ``NW-plain'' is non-wastefulness without the score-feasibility clause of Definition~\ref{def:nw}; the score-relative version of Definition~\ref{def:nw}, and within-category fairness, hold in all $300$ instances for all three mechanisms and are omitted. Percentages are of the family's average reserve seats, which are themselves bounded by $|I|$.}
 \label{tab:prototype}
 \small
 \begin{tabular}{|L{0.17\textwidth}|L{0.10\textwidth}|r|r|r|r|r|L{0.14\textwidth}|}
@@ -616,14 +642,13 @@ Second, the score-relative reading of non-wastefulness earns its keep. TA-DA sat
 
 Third, and this is what the capacity-poor families conceal, the two responses to Proposition~\ref{prop:impossibility} charge in different currencies. Where capacity binds, PA-ODR matches exactly as many students as SPSE and pays purely in quota, $39\%$ and $49\%$ of the reserve seats; TA-DA pays purely in coverage, $4.79$ and $15.25$ students, and keeps every announced seat. Where capacity is slack the gap widens sharply. PA-ODR then matches $56.61$ students, more than SPSE's $55.48$ and exactly the $\min\{\sum_c q^c,|I|\}$ bound it saturates by construction, so the coverage gain that Remark~\ref{sec:trigger} offers in defence of the reserve-completeness stopping rule is real. But it costs $94\%$ of the reserve seats to buy $1.13$ students, while TA-DA retires nothing and matches $46.83$. Whether that is a good bargain is a policy question and not one this paper should answer; what the model contributes is that the bargain must be struck.
 
-% [AI: 削減候補 3] 約600字。Table~\ref{tab:prototype} に1行足して吸収できる。
-Fourth, the price tracks $\delta$ rather than an indiscriminate appetite for de-reserving. On the first family, $\delta=2$ leaves SPSE score-feasible in $34$ instances and retires $30.32$ of the $47.99$ reserve seats, while $\delta=4,8,15,25$ give $43,54,79,97$ and $26.38,18.57,7.84,0.61$ respectively. At a permissive gap the constraint is close to slack and all three mechanisms nearly coincide.
+Fourth, the price tracks $\delta$ rather than an indiscriminate appetite for de-reserving: on the first family, $\delta=2,4,8,15,25$ leave SPSE score-feasible in $34,43,54,79,97$ instances and retire $30.32,26.38,18.57,7.84,0.61$ of the $47.99$ reserve seats, so at a permissive gap all three mechanisms nearly coincide.
 
 Two caveats. Running times are medians on one laptop and are reported only to show that nothing here is intractable; TA-DA's cost is dominated by the $|I|$-fold threshold scan of Algorithm~\ref{alg:tada}, which a binary search over thresholds would likely reduce, and we make no claim of an optimized implementation. And the breach rates mix the two causes of Remark~\ref{rem:overlap-cause}: lowering the overlap probability to $0.15$ leaves SPSE score-feasible in only $6$ of $100$ instances of the first family, worse rather than better, because thin eligibility strands weak candidates in reserve categories. The empirical breach rate is therefore not a measure of the overlap-specific cause we isolate in Proposition~\ref{prop:spse-not-sf}.
 
 \section{\uppercase{Conclusion}}
 
-Overlapping reserve categories create a genuine allocation problem because admitted students count toward exactly one category. Score constraints make feasibility depend on endogenous cutoffs, so non-wastefulness must be read relative to the constraint, and full capacity utilization can fail even when every quota is individually honourable. Proposition~\ref{prop:impossibility} makes that failure precise and forces a choice: score-feasibility, open-completeness and reserve-completeness cannot be had together. SPSE declines the choice and gives up score-feasibility, keeping the incentive and no-envy properties of deferred acceptance. TA-DA gives up reserve-completeness, keeping every announced seat on the books and leaving some of them empty. PA-ODR gives up the announced capacities, retiring the seats it cannot fill. Table~\ref{tab:comparison} records what each keeps and Table~\ref{tab:prototype} what each costs.
+Overlapping reserve categories create a genuine allocation problem because admitted students count toward exactly one category. Score constraints make feasibility depend on endogenous cutoffs, so non-wastefulness must be read relative to the constraint, and full capacity utilization can fail even when every quota is individually honourable. Proposition~\ref{prop:impossibility} makes that failure precise and forces a choice: score-feasibility, open-completeness and reserve-completeness cannot be had together. SPSE declines the choice and gives up score-feasibility, keeping the incentive and no-envy properties of deferred acceptance. TA-DA gives up reserve-completeness, keeping every announced seat on the books and leaving some of them empty. PA-ODR gives up the announced capacities, retiring the seats it cannot fill. Table~\ref{tab:comparison} records what each keeps and Table~\ref{tab:prototype} what each costs. Swap stability divides them differently from no justified envy: all three keep it between reserve categories, and PA-ODR loses it only at the open category, which it fills by raw score alone.
 
 We should not overstate what overlap explains: cutoff-gap breaches and order dependence can occur without it. The specifically overlapping content is the routing of multiply eligible students and the joint-versus-individual Hall obstruction of Proposition~\ref{prop:impossibility}, which Remark~\ref{rem:hall} identifies as the gap between Hall's condition on singleton category sets and on larger ones.
 

@@ -6,4 +6,5 @@ latexmkrc
 *.bbl
 *.bib
 .DS_Store
+
 *.pptx

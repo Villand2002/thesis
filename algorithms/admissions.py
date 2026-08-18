@@ -154,6 +154,60 @@ def within_category_fairness(problem: AdmissionProblem, result: AdmissionResult)
     return True
 
 
+def _preference_rank(student: Student, category: str) -> Optional[int]:
+    """Position of ``category`` in the student's ranking, or None if unranked."""
+    try:
+        return student.preferences.index(category)
+    except ValueError:
+        return None
+
+
+def blocking_swaps(
+    problem: AdmissionProblem,
+    result: AdmissionResult,
+    reserves_only: bool = False,
+) -> List[Tuple[str, str, str, str]]:
+    """Blocking swaps of Definition "Swap stability" in the paper.
+
+    A pair of matched students ``(i, j)`` assigned to distinct categories ``c != c'``
+    blocks if each is eligible for the other's category and each strictly prefers it.
+    With ``reserves_only`` the open category is excluded, giving the weaker notion
+    "swap stable within reserves".
+    """
+    student_map = problem.student_map()
+    placement = [
+        (sid, category)
+        for category in problem.categories
+        for sid in result.assignments.get(category, ())
+        if not (reserves_only and category == OPEN_CATEGORY)
+    ]
+
+    found: List[Tuple[str, str, str, str]] = []
+    for index, (sid_i, cat_i) in enumerate(placement):
+        student_i = student_map[sid_i]
+        for sid_j, cat_j in placement[index + 1 :]:
+            if cat_i == cat_j:
+                continue
+            student_j = student_map[sid_j]
+            if not (student_i.can_apply(cat_j) and student_j.can_apply(cat_i)):
+                continue
+            rank_i_own, rank_i_other = _preference_rank(student_i, cat_i), _preference_rank(student_i, cat_j)
+            rank_j_own, rank_j_other = _preference_rank(student_j, cat_j), _preference_rank(student_j, cat_i)
+            if None in (rank_i_own, rank_i_other, rank_j_own, rank_j_other):
+                continue
+            if rank_i_other < rank_i_own and rank_j_other < rank_j_own:
+                found.append((sid_i, cat_i, sid_j, cat_j))
+    return found
+
+
+def swap_stability(
+    problem: AdmissionProblem,
+    result: AdmissionResult,
+    reserves_only: bool = False,
+) -> bool:
+    return not blocking_swaps(problem, result, reserves_only=reserves_only)
+
+
 def shared_category_constrained_replacement_fairness(problem: AdmissionProblem, result: AdmissionResult) -> bool:
     student_map = problem.student_map()
     matched = set(result.matched_students())

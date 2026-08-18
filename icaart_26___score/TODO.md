@@ -57,23 +57,31 @@
 
 ---
 
-## 【最優先】分量が上限ぎりぎり
+## 【最優先】分量が上限を超過（swap stability 追加後）
 
-現状（推奨引用5件を追加後）:
+現状（2026-08-18, swap stability 反映後）:
 
-- 本文の非空白文字数（LaTeX コマンドを機械除去した概算）: **49,568 / 50,000字**
-  → 残り約430字。数式記号の展開分を考えると**実測では超過する可能性が高い**
-- 推定ページ数: **12.5〜13ページ** vs Full Paper 枠 12ページ
-  （全幅フロート: `table*` 2点・`algorithm*` 3点が効いている）
+- 本文の非空白文字数（同じ機械除去スクリプトによる概算）: **約53,100 / 50,000字**
+  → **約3,100字の超過**。swap stability の追加が正味 +3,100字（総量 +4,300字、既存圧縮 −1,200字）
+- 推定ページ数: 13〜13.5ページ vs Full Paper 枠 12ページ
 
-### 削減候補（論旨を壊さない順）
+### 実施済みの削減（本セッション）
 
-- [ ] `Remark~\ref{rem:capbound}`（容量上限は仮定であって正規化ではない）を脚注1つに落とす — 約1,300字
-- [ ] `Proposition~\ref{prop:minderes}`（MinDeres の全探索）と前後の議論を Remark 1段落に圧縮 — 約2,000字
-      ※本人も「アルゴリズムとしてではなく PA-ODR について言うことがあるから載せる」と書いている
-- [ ] Prototype 節の第4読み（δ を 2/4/8/15/25 で振った感度分析）を Table に1行足して吸収 — 約600字
+- [x] `Remark~\ref{rem:capbound}`（容量上限）を Prop.~\ref{prop:paodr-basic} の証明中の脚注に降格
+- [x] `Proposition[MinDeres]` を Remark に圧縮（主張・計算量の式・open question は保持）
+- [x] Prototype 第4読み（δ 感度）を1文に圧縮
+- [x] SPSE 戦略耐性の証明・`rem:hall`・`sec:trigger`・δ/k 議論を純圧縮
 
-3つ全部で約3,900字（1ページ弱）。**どれを削るかは主張の優先順位の問題なので著者判断。**
+### 残る削減候補（**著者判断**。いずれも主張を1つ落とす）
+
+| 候補 | 字数 | 失うもの |
+|---|---|---|
+| `\subsection{Order Dependence and Non-Minimality}` 全体（Ex.~order + 非最小性の議論 + MinDeres Remark） | 約3,170字 | PA-ODR の順序依存＝非最小性という限界の明示。Introduction からの `Example~\ref{ex:order}` 参照も要修正 |
+| Prototype の第2ファミリ（|I|=500）を落とす | 約900字 | スケール確認。第3ファミリ（capacity-rich）が論旨の核なので残す |
+| `Remark~\ref{sec:trigger}`（何が de-reservation を起こすか） | 1,245字 | PA-ODR と TA-DA の対比の要。削ると Prototype 第3読みの伏線が消える |
+| `Remark~\ref{rem:hall}`（Hall 条件による障害の同定） | 704字 | Conclusion が参照しているので同時修正が必要 |
+
+1つ目を採ると1回で解消する。**推奨は1つ目**（PA-ODR の非最小性は Conclusion の open question に1文で残せる）。
 
 - [ ] 投稿パッケージから `Example.tex` / `Example.pdf`（テンプレート付属の見本）を除外する
 - [ ] LaTeX 処理系のある環境でコンパイルし、実ページ数と実文字数を確認する
@@ -82,6 +90,30 @@
 ---
 
 ## 完了済み（2026-08-18）
+
+### swap stability（across category fairness）の反映 — `swap公平性追加.pptx` より
+
+スライド 21〜23 の内容を本文に取り込んだ。バックアップ: `main.tex.before_swap`
+
+- `Definition~\ref{def:swap}`（Blocking swap / swap stable / swap stable within reserves）を
+  Model 節の Def.~\ref{def:nje} の直後に追加。スライド通り「留保のみ」と「一般カテゴリ込み」の2版
+- `Lemma~\ref{lem:nje-swap}`：**共通加点の下では no justified envy ⇒ swap stability**。
+  スライドは SPSE について拒否連鎖で直接示していたが、SPSE は既に Prop.~\ref{prop:spse-nje} で
+  no justified envy を持つので、補題1本に集約して SPSE は系として得た（証明の重複を回避）
+- TA-DA（スライドの A-STDA）：`Prop.~\ref{prop:tada-props}` に swap stability を追加。
+  スライドの「SPSE と同じ拒否連鎖」だけでは不十分で、$c'\notin A_i(e)$（閾値で応募を止められた）
+  場合の場合分けが要る。共通加点により $A_i(e)$ が $\T(i)$ を全部含むか全く含まないかなので、
+  その場合は $c=o$ に限られ、相手の $o$ での拒否と点数の大小が矛盾する、という形で補完した
+- PA-ODR：`Prop.~\ref{prop:paodr-swap}`（留保カテゴリ間の swap stability）。
+  スライドの「順位ベクトルだけを改善 ⇒ 基準3の辞書式最小性に矛盾」を証明として整形
+- PA-ODR の広義不成立：スライドの反例（$i_1(100,\{t\})$ は $t\succ o$、$i_2(90,\{t\})$ は $o\succ t$）は
+  既存の `Example~\ref{ex:paodr-envy}` と数値が同一だったので、同例に「$i_2$ の選好だけ入れ替える」
+  段落として追加。交換後も score-feasible であることを確認済み（Def.~\ref{def:nje} の扱いに合わせた）
+- `Table~\ref{tab:comparison}` に2行追加（留保内 swap stability = 3機構とも Yes、
+  全カテゴリ = SPSE/TA-DA が Yes、PA-ODR が No）。Introduction の Contribution 1/4/5 と
+  Conclusion も更新
+- スライド24の「最大マッチング」行は未反映（swap 公平性の追加分ではなく、
+  かつ PA-ODR の飽和は Prototype 節に既述）
 
 ### 構成・フォーマット
 
