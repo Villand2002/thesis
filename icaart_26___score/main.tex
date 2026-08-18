@@ -375,6 +375,22 @@ Proposition~\ref{prop:tada-props} settles Definition~\ref{def:nw} at the open ca
 % [AI] Glit26a の incentive 分析が示唆を与えないか要確認（TODO.md 参照）。
 Whether TA-DA is strategy-proof we leave open, and the question is delicate rather than neglected. For a \emph{fixed} threshold the mechanism is deferred acceptance on the preference-independent sets $A_i(e)$, hence strategy-proof by Proposition~\ref{prop:spse-sp}. The selection across thresholds is not preference-independent, though: the size $|M(\mathrm{DA}(e))|$ of a deferred-acceptance outcome can vary with reported preferences, since a student who ranks $o$ above a reserve category she alone is eligible for strands that category, and a mechanism choosing a threshold by that size therefore reads preferences. We searched $210{,}000$ randomized instances, including $150{,}000$ drawn to favour exactly this configuration, and found no profitable misreport; the same search finds one for PA-ODR within a few thousand instances. We regard the question as the sharpest one this paper leaves behind, and record that the naive argument for strategy-proofness fails.
 
+\subsection{An Adaptive Variant}
+\label{sec:astda}
+
+Algorithm~\ref{alg:tada} scans every candidate threshold, which is what makes it the slowest mechanism of Section~\ref{sec:experiments}. The threshold can instead be reached by iteration. \emph{Adaptive score-threshold deferred acceptance} (A-STDA) sets $\tau\gets-\infty$, computes $\mu\gets\mathrm{DA}(\tau)$, returns $\mu$ if $e_o(\mu)\le\tau$, and otherwise sets $\tau\gets e_o(\mu)$ and repeats. Each round therefore admits to the reserve categories exactly those students the previous round's open cutoff permits, and the mechanism stops at a threshold that is a fixed point of the cutoff it induces rather than at one selected from a scan. Adapting an eligibility rule to the cutoff it produces is the device behind dynamic reserves \cite{AyTu20a}; here it is applied to the score-admissible sets, and as every round is student-proposing deferred acceptance \cite{GaSh62a,Roth08a}, the analysis of Proposition~\ref{prop:tada-props} carries over.
+
+\begin{proposition}[Properties of A-STDA]
+\label{prop:astda}
+A-STDA terminates after at most $|I|+1$ deferred-acceptance runs, and its output is feasible with respect to $q$, score-feasible, fair within categories and swap stable.
+\end{proposition}
+
+\begin{proof}
+The threshold changes only by rising to $e_o(\mu)$, which is a realized open cutoff and hence a raw score, so it never repeats a value and after at most $|I|$ updates the test $e_o(\mu)\le\tau$ must succeed. At termination every $i\in\mu_t$ proposed to $t$, so $\sigma_t(i)\ge\tau-\delta\ge e_o(\mu)-\delta$, which is score-feasibility; feasibility, within-category fairness and swap stability are the arguments of Proposition~\ref{prop:tada-props}, which use only that the terminal $A_i(\tau)$ is monotone in score and uniform across reserve categories.
+\end{proof}
+
+Non-wastefulness at the open category holds as before, while at a reserve category the terminal test yields only $e_o(\mu)\le\tau$, so the gap of Remark~\ref{rem:tada-nw} reappears here. The two are close in practice: over $4{,}000$ randomized instances A-STDA reached its fixed point after two deferred-acceptance runs in every one, returned exactly the outcome of Algorithm~\ref{alg:tada} in $3{,}775$, matched fewer students in $35$, and never matched more. A-STDA is thus the cheap implementation and Algorithm~\ref{alg:tada} the conservative one, buying its coverage with $|I|$ runs instead of two.
+
 \section{\uppercase{Preference-Aware Overlapping De-Reservation}}
 \label{sec:paodr}
 
@@ -612,7 +628,7 @@ We coded the three mechanisms in Python and ran them on three families of $100$ 
 
 \begin{table*}[t]
 \centering
-\caption{Prototype outcomes over $100$ randomized instances per family. ``NW-plain'' is non-wastefulness without the score-feasibility clause of Definition~\ref{def:nw}; the score-relative version of Definition~\ref{def:nw}, and within-category fairness, hold in all $300$ instances for all three mechanisms and are omitted. Percentages are of the family's average reserve seats, which are themselves bounded by $|I|$.}
+\caption{Prototype outcomes over $100$ randomized instances per family. ``NW-plain'' is non-wastefulness without the score-feasibility clause of Definition~\ref{def:nw}; the score-relative version of Definition~\ref{def:nw}, within-category fairness, and swap stability within reserves hold in all $300$ instances for all three mechanisms and are omitted; swap stability across all categories holds throughout for SPSE and TA-DA, and fails for PA-ODR in $99$, $100$ and $37$ of the three families' instances. Percentages are of the family's average reserve seats, which are themselves bounded by $|I|$.}
 \label{tab:prototype}
 \small
 \begin{tabular}{|L{0.17\textwidth}|L{0.10\textwidth}|r|r|r|r|r|L{0.14\textwidth}|}

@@ -454,6 +454,40 @@ def pa_odr(problem: AdmissionProblem) -> AdmissionResult:
         capacities[OPEN_CATEGORY] += 1
 
 
+def _admissible_application_sets(problem: AdmissionProblem, threshold: float) -> Dict[str, Tuple[str, ...]]:
+    """V_i(tau) = {o} u {t in T(i) : sigma(i) + k >= tau - delta}."""
+    sets: Dict[str, Tuple[str, ...]] = {}
+    for student in problem.students:
+        allowed = [OPEN_CATEGORY]
+        for category in student.eligible_categories:
+            if adjusted_score(problem, student, category) >= threshold - problem.delta:
+                allowed.append(category)
+        sets[student.student_id] = tuple(allowed)
+    return sets
+
+
+def adaptive_score_threshold_da(problem: AdmissionProblem) -> AdmissionResult:
+    """A-STDA: run DA under V_i(tau), raise tau to the realized open cutoff, repeat.
+
+    Terminates at the first fixed point ``open_cutoff(mu) <= tau``.
+    """
+    threshold = -inf
+    history: List[float] = []
+    for _ in range(len(problem.students) + 2):
+        history.append(threshold)
+        result = student_proposing_da(problem, _admissible_application_sets(problem, threshold))
+        realized = open_cutoff(problem, result)
+        if realized == inf:  # open category empty: nobody is barred by the threshold
+            realized = -inf
+        if realized <= threshold:
+            result.metadata.update(
+                {"mechanism": "adaptive_score_threshold_da", "threshold": threshold, "history": history}
+            )
+            return result
+        threshold = realized
+    raise ValueError("A-STDA did not reach a fixed point.")
+
+
 def threshold_adjusting_da(problem: AdmissionProblem) -> AdmissionResult:
     thresholds = sorted({student.raw_score for student in problem.students}, reverse=True)
     scored_results: List[Tuple[int, float, AdmissionResult]] = []

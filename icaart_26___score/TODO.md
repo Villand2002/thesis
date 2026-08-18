@@ -91,6 +91,55 @@
 
 ## 完了済み（2026-08-18）
 
+### A-STDA（adaptive 版）の追加 — `swap公平性追加.pptx` スライド 16〜20 より
+
+- 本文: `\subsection{An Adaptive Variant}`（`sec:astda`）を TA-DA 節末に追加。
+  τ←−∞ → DA(τ) → e_o(μ)≤τ なら停止、そうでなければ τ←e_o(μ) という不動点反復。
+  `Proposition~\ref{prop:astda}`（停止は高々 |I|+1 回の DA、score-feasible、
+  within-category fair、swap stable）を証明付きで追加
+- 参考文献: スライドの文献リストのうち本文未引用だったのは **Roth (2008)** のみだったので
+  `\cite{GaSh62a,Roth08a}`（DA の標準）と `\cite{AyTu20a}`（dynamic reserves = 閾値を
+  自分が生む cutoff に合わせる発想の出所）として A-STDA 節に引用した。他は既に引用済み
+- 実装: `algorithms/admissions.py` の `adaptive_score_threshold_da`。
+  スライド20の動作例（A=100,B=92,C=80,D=78）を再現することを確認済み
+- 検証スクリプト: `scripts/check_astda.py`。ランダム4,000件で
+  停止までの DA 実行回数は常に2回、score-feasible 4000/4000、
+  TA-DA と出力一致 3,775/4,000、A-STDA の方が少なくマッチ 35件、多いことは0件
+
+### 【要判断】Remark~\ref{rem:tada-nw} の open question に反例が見つかった
+
+本文は「TA-DA が Def.~\ref{def:nw}（score-relative 非浪費性）を一般に満たすかは未解決、
+実験では全インスタンスで成立」としているが、**3人インスタンスで反例が出た**:
+
+    T={t1,t2}, q^o=2, q^{t1}=q^{t2}=1, k=5, δ=10
+    i1(96, ∅) は o のみ、i2(74, {t1}) は t1≻o、i3(72, {t2}) は t2≻o
+
+- e=96: A_{i2}=A_{i3}={o}（79<86, 77<86）→ μ_o={i1,i2}、留保は空、i3 は未割当。
+  留保が空なので score-feasible。マッチ2人
+- e=74, 72: μ_o={i1}, μ_{t1}={i2}, μ_{t2}={i3} で e_o−e_{t1}^+=96−79=17>δ → 棄却
+- よって TA-DA の出力は μ_o={i1,i2}。ところが i3 を t2 に入れると
+  e_o=74, e_{t2}^+=77 で gap=−3≤δ、容量も空いている → **Def.~\ref{def:nw} 違反**
+- Remark~\ref{rem:tada-nw} が「未解決」としていた $e>e_o(\mu)$ のケースそのもの
+  （e=96 > e_o(μ)=74）。同じ例で A-STDA も違反する
+- ランダム4,000件では TA-DA 11件・A-STDA 12件の違反率（Prototype の3ファミリ300件では
+  両者とも違反なし ＝ Table~\ref{tab:prototype} の記載は有効）
+
+反映するなら Table~\ref{tab:comparison} の TA-DA 行、Remark~\ref{rem:tada-nw}、
+Conclusion の第2 open question、Contribution 4 の4箇所を同時に直す必要がある。
+**主張を変える修正なので未実施。**
+
+### 【要修正】`is_score_feasible()` が Definition~\ref{def:scorefeas} と食い違う
+
+`algorithms/admissions.py` の `is_score_feasible` は
+`len(μ_o) < q^o` のとき無条件に True を返す。Definition~\ref{def:scorefeas} は
+μ_o が**空**のときだけ vacuous なので、「非空だが定員割れ」の場合に食い違う。
+上の3人インスタンスでは、この分岐のせいで実装版 TA-DA が
+e=74 の候補（gap 17 > δ=10）を score-feasible と誤判定して出力してしまう。
+
+- Prototype の3ファミリ300件では実装版と Definition 準拠版の出力は**全件一致**し、
+  Table~\ref{tab:prototype} の数値に影響はない（定員割れは |I|=60 の12件で発生したが結果は同じ）
+- ただし実装としては誤りなので投稿用コード公開前に要修正
+
 ### swap stability（across category fairness）の反映 — `swap公平性追加.pptx` より
 
 スライド 21〜23 の内容を本文に取り込んだ。バックアップ: `main.tex.before_swap`
@@ -109,6 +158,9 @@
 - PA-ODR の広義不成立：スライドの反例（$i_1(100,\{t\})$ は $t\succ o$、$i_2(90,\{t\})$ は $o\succ t$）は
   既存の `Example~\ref{ex:paodr-envy}` と数値が同一だったので、同例に「$i_2$ の選好だけ入れ替える」
   段落として追加。交換後も score-feasible であることを確認済み（Def.~\ref{def:nje} の扱いに合わせた）
+- Prototype: Table~\ref{tab:prototype} のキャプションに実測を追記
+  （狭義は全300件で3機構とも成立、広義は SPSE・TA-DA が全件成立、
+  PA-ODR は 99/100・100/100・37/100 で違反。`scripts/check_swap_stability.py`）
 - `Table~\ref{tab:comparison}` に2行追加（留保内 swap stability = 3機構とも Yes、
   全カテゴリ = SPSE/TA-DA が Yes、PA-ODR が No）。Introduction の Contribution 1/4/5 と
   Conclusion も更新
