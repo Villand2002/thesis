@@ -251,17 +251,17 @@
 		「誰を合格させるか」だけでなく「重複適格な学生をどのカテゴリに計上するか」という
 		割り当て（routing）まで決定しなければならない．ここに，一般カテゴリのカットオフと
 		各留保カテゴリのカットオフの差を上界で抑える\emph{スコア制約}を課す．
-		この制約のもとでは，非浪費性（non-wastefulness）はスコア制約に相対化して
-		述べ直す必要がある一方，カテゴリ内公平性（within-category fairness）は
+		この制約のもとでは，non-wastefulness はスコア制約に相対化して
+		述べ直す必要がある一方，within-category fairness は
 		弱める必要がないことを示す．
 
 		まず，Deferred Acceptance（DA）をスコア加点済みカテゴリへ拡張した
 		SPSE（Student-Proposing Score-Elevated Mechanism）を定式化する．
-		SPSE はfeasibility・非浪費性・耐戦略性・正当な羨望の不在を満たすが，
-		score feasibleは保証しない．さらに，スコア実行不能の原因が2つあり，
+		SPSE は feasibility・non-wastefulness・耐戦略性・正当な羨望の不在を満たすが，
+		score-feasibility は保証しない．さらに，score-feasibility 失敗の原因が2つあり，
 		そのうち重複に固有の原因，すなわち「割当の選択そのものがスコア制約の
 		成否を決める」という原因が既存研究にない新しいものであることを分離して示す．
-		次に，score feasible・一般カテゴリ充足性・留保充足性の3つが同時には
+		次に，score-feasibility・一般カテゴリ充足性・留保充足性の3つが同時には
 		達成不能となる事例が，各留保カテゴリが\emph{個別には}充足可能な場合にも存在することを
 		証明する．この不可能性はカテゴリの集合上の Hall 型障害に由来し，
 		スコア制約を強制するメカニズムは3つのうち1つを必ず放棄せざるをえない．
@@ -269,9 +269,10 @@
 		この選択に対する2つの応答を検討する．TA-DA（Threshold-Adjusting Deferred Acceptance）は
 		公示された定員を保ったまま留保充足性を諦め，留保席を空席のまま残す．
 		PA-ODR（Preference-Aware Overlapping De-Reservation）は逆に，残った席をすべて埋める代わりに
-		固定定員のほうを諦め，埋められない留保定員を一般カテゴリへ振り替える（留保解除）．
-		前者はscore feasibleかつカテゴリ内公平であり，後者はカテゴリ内公平性と
-		留保カテゴリ間のacross category fairnessを保つが，耐戦略性と正当な羨望の不在を失う．
+		固定定員のほうを諦め，埋められない留保定員を一般カテゴリへde-reserveする．
+		前者の出力は score-feasible かつ fair within categories であり，後者は
+		within-category fairness と留保カテゴリ間の across-category fairness を保つが，
+		耐戦略性と正当な羨望の不在を失う．
 		最後に，3つのメカニズムを実装し，無作為生成した300事例上で
 		両応答の代価を定量的に比較する．
 	\end{abstract}
@@ -326,9 +327,9 @@ One-to-one Counting のもとでは，そうした学生が埋められる留保
 その枠が\emph{事実上使えない}という事態が起こる．
 
 これら2つの要素は，標準的な望ましさの基準 \citep{EHYY14a,KHIY17a,GKK+17a} に
-非対称な影響を及ぼす．非浪費性については，定義を改める必要がある．
+非対称な影響を及ぼす．non-wastefulnessについては，定義を改める必要がある．
 空席のある留保カテゴリが，スコア制約のもとでは使えないことがあるからである．
-一方，カテゴリ内公平性には手を加えずに済む．
+一方，within-category fairnessには手を加えずに済む．
 すでにマッチした学生をより高スコアの適格者で置き換えても，
 そのカテゴリのカットオフは上がりこそすれ下がらないからである（\reflemma{lem:fair-sf}）．
 さらに重複があると，複数のカテゴリに適格な高スコアの学生は1回しか計上されないため，
@@ -353,7 +354,7 @@ One-to-one Counting のもとでは，そうした学生が埋められる留保
 学生が複数のカテゴリに適格でありながら1回しか計上されない場合，
 その学生をどのカテゴリに割り当てるかという判断自体が，スコア制約の成否を左右する．
 本人にとって最も望ましい割当が，別の割当であれば保たれたはずの
-score feasibleを壊してしまうことがあるからである．
+score-feasibility を壊してしまうことがあるからである．
 \refpropositional{prop:spse-not-sf}でこの原因を示し，
 \refremark{rem:overlap-cause}で第1の原因と切り分ける．
 さらに\refpropositional{prop:impossibility}では，同じ切り分けを仮定の形で存在問題に持ち込む．
@@ -364,16 +365,16 @@ score feasibleを壊してしまうことがあるからである．
 
 \begin{enumerate}
 \item スコア制約を伴う重複留保枠の設定に合わせて，標準的な性質を定義し直す．
-      非浪費性はスコア制約に相対化する必要がある一方，
-      カテゴリ内公平性とacross category fairnessは弱めずに済む（\refchapter{cha:model}）．
+      non-wastefulness はスコア制約に相対化する必要がある一方，
+      within-category fairness と across-category fairness は弱めずに済む（\refchapter{cha:model}）．
       この緩和は形式上の言い換えにとどまらない．
-      後述の TA-DA はスコア制約に相対化した非浪費性を満たしながら，
-      score feasibleの条件を外した非浪費性には違反しており，
+      後述の TA-DA はスコア制約に相対化した non-wastefulness を満たしながら，
+      score-feasibility の条件を外した non-wastefulness には違反しており，
       無作為生成した100事例のうち46事例で実際にその差が現れる（\refchapter{cha:experiments}）．
 \item DA をスコア加点付きのカテゴリ向けに修正した SPSE を定式化する．
-      SPSE はfeasibility・非浪費性・耐戦略性・正当な羨望の不在を満たすが，
-      DA をこの形で用いても，score feasibleまでは保証されない（\refchapter{cha:spse}）．
-\item score feasible・一般カテゴリ充足性・留保充足性の3つが同時には成立しえない場合があることを，
+      SPSE は feasibility・non-wastefulness・耐戦略性・正当な羨望の不在を満たすが，
+      DA をこの形で用いても，score-feasibility までは保証されない（\refchapter{cha:spse}）．
+\item score-feasibility・一般カテゴリ充足性・留保充足性の3つが同時には成立しえない場合があることを，
       各留保カテゴリがスコア制約のもとで個別には充足できる場合についてさえ証明する
       （\refpropositional{prop:impossibility}，\refchapter{cha:impossibility}）．
       これが本論文の要となる結果である．
@@ -381,24 +382,24 @@ score feasibleを壊してしまうことがあるからである．
       続く2つの章は，その諦め方の2通りに対応する．
 \item TA-DA を分析する．TA-DA は公示した定員をそのまま保ち，
       出願先をスコア制約を満たす組に限ることで留保充足性を諦める．
-      score feasible・カテゴリ内公平性・across category fairnessは満たすが，
-      非浪費性はスコア制約に相対化した意味にとどまる．
+      score-feasibility・within-category fairness・across-category fairness は満たすが，
+      non-wastefulness はスコア制約に相対化した意味にとどまる．
       すなわち，スコア制約を守る代償を定員ではなく合格者数の形で払う（\refchapter{cha:tada}）．
 \item PA-ODR を提案する．こちらは固定定員のほうを諦め，
       埋まらない留保定員を意図的に解除するメカニズムである．
-      score feasibleを必ず満たし，最終定員に対する非浪費性，カテゴリ内公平性，
-      留保カテゴリ間のacross category fairnessを保つ一方で，耐戦略性と正当な羨望の不在，
-      および一般カテゴリを含めたacross category fairnessを失う（\refchapter{cha:paodr}）．
-\item 留保側の選択を最大重み二部マッチングとして実装し，最小留保解除問題を定式化した上で，
+      score-feasibility を必ず満たし，最終定員に対する non-wastefulness，within-category fairness，
+      留保カテゴリ間の across-category fairness を保つ一方で，耐戦略性と正当な羨望の不在，
+      および一般カテゴリを含めた across-category fairness を失う（\refchapter{cha:paodr}）．
+\item 留保側の選択を最大重み二部マッチングとして実装し，最小de-reserve問題を定式化した上で，
       定員条件を変えながら3つのメカニズムを比較するプロトタイプを報告する
       （\refremark{rem:computation}，\refremark{rem:minderes}，\refchapter{cha:experiments}）．
 \end{enumerate}
 
 \begin{table}[htbp]
 \caption{3つのメカニズムの比較．\refpropositional{prop:impossibility}により
-score feasible・一般カテゴリ充足性・留保充足性は同時には成り立たない．
+score-feasibility・一般カテゴリ充足性・留保充足性は同時には成り立たない．
 そこで下段の各行は，各メカニズムがこの3つのどれを諦めているかを示す．
-SPSE はscore feasibleを諦め，TA-DA は留保充足性を諦めて席を空けたまま残し，
+SPSE は score-feasibility を諦め，TA-DA は留保充足性を諦めて席を空けたまま残し，
 PA-ODR は公示定員を諦めて席そのものを廃止する．}
 \label{tab:comparison}
 \centering
@@ -408,17 +409,17 @@ PA-ODR は公示定員を諦めて席そのものを廃止する．}
 \hline
 \textbf{性質} & \textbf{SPSE} & \textbf{TA-DA} & \textbf{PA-ODR} \\
 \hline
-feasibility & $q$ に対して可 & $q$ に対して可 & 最終定員 $\hat q$ に対して可 \\
-カテゴリ内公平性（\refdefinition{def:fair}） & 満たす & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-fair}） \\
-非浪費性（スコア相対，\refdefinition{def:nw}） & 満たす & 一般には未解決；$o$ では成立（\refpropositional{prop:tada-props}），実験した全事例で成立 & $\hat q$ に関して満たす \\
-留保カテゴリ間のacross category fairness（\refdefinition{def:swap}） & 満たす & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-swap}） \\
+Feasibility & $q$ に対して可 & $q$ に対して可 & 最終定員 $\hat q$ に対して可 \\
+within-category fairness（\refdefinition{def:fair}） & 満たす & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-fair}） \\
+non-wastefulness（スコア相対，\refdefinition{def:nw}） & 満たす & 一般には未解決；$o$ では成立（\refpropositional{prop:tada-props}），実験した全事例で成立 & $\hat q$ に関して満たす \\
+留保カテゴリ間のacross-category fairness（\refdefinition{def:swap}） & 満たす & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-swap}） \\
 \hline
-Score Feasibility & 満たさない（\refpropositional{prop:spse-not-sf}） & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-basic}） \\
-非浪費性（score feasibleの条件なし） & 満たす & 満たさない（\refexample{ex:tada-idle}） & $\hat q$ に関して満たす \\
+Score-feasibility & 満たさない（\refpropositional{prop:spse-not-sf}） & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-basic}） \\
+non-wastefulness（score-feasibility の条件なし） & 満たす & 満たさない（\refexample{ex:tada-idle}） & $\hat q$ に関して満たす \\
 across-category fairness（\refdefinition{def:swap}） & 満たす（\reflemma{lem:nje-swap}） & 満たす（\refpropositional{prop:tada-props}） & 満たさない（\refexample{ex:paodr-envy}） \\
 正当な羨望の不在（\refdefinition{def:nje}） & 満たす & 満たさない（\refexample{ex:tada-idle}） & 満たさない（\refexample{ex:paodr-envy}） \\
 耐戦略性 & 満たす（\refpropositional{prop:spse-sp}） & 未解決（\refchapter{cha:tada}） & 満たさない（\refpropositional{prop:paodr-notsp}） \\
-留保定員 & $q$ に固定 & $q$ に固定，空席が残りうる & 意図的な留保解除．最小とは限らない \\
+留保定員 & $q$ に固定 & $q$ に固定，空席が残りうる & 意図的なde-reserve．最小とは限らない \\
 \hline
 \end{tabular}
 \end{table}
@@ -477,13 +478,13 @@ $\mu$ が\emph{feasible}であるとは，
 違いは適格性・定員・選好だけにある．
 すべてのカテゴリが素点で順序付ける $k=0$ の場合も，以下の議論にそのまま含まれる．
 
-\begin{definition}[カットオフとscore feasible]
+\begin{definition}[カットオフと score-feasibility]
 \label{def:scorefeas}
 マッチング $\mu$ に対して $e_o(\mu):=\min_{i\in\mu_o}\sigma(i)$ とし，
 $\mu_o=\emptyset$ のときは $e_o(\mu)=-\infty$ とする．
 また $t\in T$ に対して $e_t^+(\mu):=\min_{i\in\mu_t}\sigma_t(i)$ とし，
 $\mu_t=\emptyset$ のときは $e_t^+(\mu)=+\infty$ とする．
-feasibleな $\mu$ が\emph{score feasible}であるとは，
+feasible な $\mu$ が\emph{score-feasible}であるとは，
 すべての $t\in T$ について $e_o(\mu)-e_t^+(\mu)\le\delta$ が成り立つことをいう．
 \end{definition}
 
@@ -497,7 +498,7 @@ $e_o(\mu)-e_t^+(\mu)$ を $-\infty$ と定める．
 素点に直すと2つの緩和は重なり合い，留保枠の合格者は
 一般カットオフより最大で $\delta+k$ 下まで許されることになる．
 $k=0$ のときは $\delta$ だけが素点差を抑え，これが \citet{AyTu23b} の10点ルールにあたる．
-なお，score feasibleは実現したカットオフに課される事後的な要件であって，
+なお，score-feasibility は実現したカットオフに課される事後的な要件であって，
 カテゴリ内の順序付け規則から自動的に従うものではない．
 \refchapter{cha:tada}と\refchapter{cha:paodr}で，これを直接強制するメカニズムを
 用意しなければならないのはそのためである．
@@ -505,30 +506,30 @@ $k=0$ のときは $\delta$ だけが素点差を抑え，これが \citet{AyTu2
 \section{望ましさの基準}
 \label{sec:desiderata}
 
-非浪費性（non-wastefulness）は通常，未マッチの学生が入れる空席の不在によって定義される．
+Non-wastefulness は通常，未マッチの学生が入れる空席の不在によって定義される．
 しかし本モデルではこれでは足りない．
-空席があっても，そこに学生を入れられるのはscore feasibleが保たれる場合に限られるからである．
+空席があっても，そこに学生を入れられるのは score-feasibility が保たれる場合に限られるからである．
 
-\begin{definition}[非浪費性]
+\begin{definition}[non-wastefulness]
 \label{def:nw}
-feasibleなマッチング $\mu$ が\emph{非浪費性を満たす}とは，
+feasible なマッチング $\mu$ が\emph{non-wasteful}であるとは，
 未マッチの学生 $i\in I\setminus M(\mu)$ と $c\in V_i$ であって，
-$i$ を $c$ に加えた結果がfeasibleかつscore feasibleとなるものが存在しないことをいう．
+$i$ を $c$ に加えた結果が feasible かつ score-feasible となるものが存在しないことをいう．
 \end{definition}
 
-この定義のもとでは，空席のある留保カテゴリが残っても非浪費性を満たす場合がある．
+この定義のもとでは，空席のある留保カテゴリが残っても non-wasteful である場合がある．
 定義の読み方について2点補足しておく．
-第1に，適用対象はscore feasibleなマッチングに限らず，feasibleなマッチング全般である．
-後述の SPSE は，score feasibleでないまま非浪費性を満たすからである．
-第2に，この定義が要求するのは「score feasibleが保たれること」ではなく，
-\emph{学生を加えた後の}マッチングがscore feasibleであることである．
+第1に，適用対象は score-feasible なマッチングに限らず，feasible なマッチング全般である．
+後述の SPSE は，score-feasible でないまま non-wasteful だからである．
+第2に，この定義が要求するのは「score-feasibility が保たれること」ではなく，
+\emph{学生を加えた後の}マッチングが score-feasible であることである．
 前者の読み方をすると，もとからスコア実行不能なマッチングでは制約が働かず，
-非浪費的であると自明に判定されてしまう．
+non-wastefulであると自明に判定されてしまう．
 \refdefinition{def:nw-hat}も同じ読み方をする．
 
-\begin{definition}[カテゴリ内公平性]
+\begin{definition}[within-category fairness]
 \label{def:fair}
-feasibleなマッチング $\mu$ が\emph{カテゴリ内で公平}であるとは，
+feasible なマッチング $\mu$ が\emph{fair within categories}であるとは，
 (i) $t\in\T(i)\cap\T(j)$，(ii) $\sigma_t(i)>\sigma_t(j)$，
 (iii) $j\in\mu_t$，(iv) $i\notin M(\mu)$
 を満たす $t\in T$ と学生 $i,j$ が存在しないことをいう．
@@ -543,16 +544,16 @@ feasibleなマッチング $\mu$ が\emph{カテゴリ内で公平}であると�
 そちらはより強い公平性概念だが，後述のトレードオフのため，
 2つのメカニズムがともに満たすことはできない．
 
-% \begin{lemma}[カテゴリ内公平性はスコア相対的な弱化を要しない]
-% \label{lem:fair-sf}
-% $\mu$ をfeasibleとし，$t\in T$，$j\in\mu_t$，
-% $i\notin M(\mu)$ が $t\in\T(i)$ かつ $\sigma_t(i)>\sigma_t(j)$ を満たすとする．
-% $\mu'$ を，$\mu_t$ において $j$ を $i$ で置き換えたものとする．
-% このとき $\mu'$ はfeasibleであり，$\mu$ がscore feasibleならば $\mu'$ もそうである．
-% \end{lemma}
+\begin{lemma}[within-category fairness はスコア相対的な弱化を要しない]
+\label{lem:fair-sf}
+$\mu$ を feasible とし，$t\in T$，$j\in\mu_t$，
+$i\notin M(\mu)$ が $t\in\T(i)$ かつ $\sigma_t(i)>\sigma_t(j)$ を満たすとする．
+$\mu'$ を，$\mu_t$ において $j$ を $i$ で置き換えたものとする．
+このとき $\mu'$ は feasible であり，$\mu$ が score-feasible ならば $\mu'$ もそうである．
+\end{lemma}
 
 \begin{proof}
-feasibilityは直ちに従う．$|\mu'_t|=|\mu_t|\le q^t$ であり，
+Feasibility は直ちに従う．$|\mu'_t|=|\mu_t|\le q^t$ であり，
 $i$ はどこにも割り当てられていなかったので二重計上は生じず，
 $t\in\T(i)\subseteq V_i$ である．
 この置換は他のカテゴリを変えず $\mu_o$ にも触れないので，
@@ -566,7 +567,7 @@ $e_o(\mu')-e_t^+(\mu')\le e_o(\mu)-e_t^+(\mu)\le\delta$ が成り立つ．
 \refdefinition{def:nw}との非対称性は見かけ上のものではない．
 留保カテゴリに\emph{新たな}学生を加えればそのカットオフは下がりうるが，
 すでにいる学生をより高スコアの学生で\emph{置き換える}分には下がらない．
-\refdefinition{def:nw}にだけscore feasibleの条件が付くのは，この差による．
+\refdefinition{def:nw}にだけ score-feasibility の条件が付くのは，この差による．
 
 次の要請は，標準的な「正当な羨望の不在」をカテゴリに移したものである．
 こちらは\emph{マッチ済みの}学生が，自分がより上位に置くカテゴリについて
@@ -574,24 +575,24 @@ $e_o(\mu')-e_t^+(\mu')\le e_o(\mu)-e_t^+(\mu)\le\delta$ が成り立つ．
 
 \begin{definition}[正当な羨望の不在]
 \label{def:nje}
-feasibleなマッチング $\mu$ が\emph{正当な羨望を持たない}とは，
+feasible なマッチング $\mu$ が\emph{正当な羨望を持たない}とは，
 次を満たす学生 $i$ とカテゴリ $c\in V_i$ が存在しないことをいう．
 (i) $i\notin M(\mu)$ であるか，$c\succ_i c'$ なる $c'\in V_i$ について $i\in\mu_{c'}$ である；
 かつ (ii) $|\mu_c|<q^c$ であるか，ある $j\in\mu_c$ が $\sigma_c(j)<\sigma_c(i)$ を満たす．
 \end{definition}
 
-正当な羨望の不在は，カテゴリ内公平性を含意する．
+正当な羨望の不在は，within-category fairness を含意する．
 $i\notin M(\mu)$，$j\in\mu_t$，$t\in\T(i)$，$\sigma_t(i)>\sigma_t(j)$ であれば，
 $c=t$ をとれば正当な羨望の例が得られるからである．
 逆が成り立たないことは\refexample{ex:paodr-envy}が示す．
 
-\refdefinition{def:fair}と違って，ここでscore feasibleの条件を付けないことには
+\refdefinition{def:fair}と違って，ここで score-feasibility の条件を付けないことには
 実質的な意味がある．\reflemma{lem:fair-sf}がここには及ばないからである．
 条件 (ii) は $i$ が\emph{空席の}カテゴリを主張することも許すが，
 これはそのカテゴリのカットオフを下げてしまう．
 条件 (i) はマッチ済みの学生が $c'$ を離れることを許すが，
 $c'=o$ ならば一般カットオフが\emph{上がる}ので，
-別のカテゴリでscore feasibleが壊れることがある．
+別のカテゴリで score-feasibility が壊れることがある．
 つまり，ここではスコア制約に相対化した弱い定義にも実質的な内容がある．
 本論文があえて弱めない定義を採るのは，そのほうが\refpropositional{prop:spse-nje}が
 強い主張になるからである．
@@ -603,26 +604,26 @@ $c'=o$ ならば一般カットオフが\emph{上がる}ので，
 1つの学校が複数の入学経路を用意しているとき，
 2人がそれぞれ相手の望む経路を占めているという状況は典型的に起こる．
 
-\begin{definition}[across category fairness]
+\begin{definition}[across-category fairness]
 \label{def:swap}
-$\mu$ をfeasibleとし，$c\neq c'$ について $i\in\mu_c$，$j\in\mu_{c'}$ とする．
+$\mu$ を feasible とし，$c\neq c'$ について $i\in\mu_c$，$j\in\mu_{c'}$ とする．
 組 $(i,j)$ が\emph{ブロッキング交換}であるとは，
 (i) $c'\in V_i$ かつ $c\in V_j$，(ii) $c'\succ_i c$ かつ $c\succ_j c'$
 が成り立つことをいう．
-$\mu$ がブロッキング交換を許さないとき\emph{across category fair}であるといい，
-$c,c'\in T$ なるブロッキング交換を許さないとき\emph{留保カテゴリ間でacross category fair}であるという．
+$\mu$ がブロッキング交換を許さないとき\emph{across-category fair}であるといい，
+$c,c'\in T$ なるブロッキング交換を許さないとき\emph{留保カテゴリ間でacross-category fair}であるという．
 \end{definition}
 
-\refdefinition{def:nje}と同様，ここでもscore feasibleの条件は付けない．
+\refdefinition{def:nje}と同様，ここでも score-feasibility の条件は付けない．
 そのほうが以下の肯定的結果が強くなるからである．
 唯一の否定的結果である\refexample{ex:paodr-envy}については，
 同例中で弱い定義に照らした確認も行う．
-なお，カテゴリ内公平性はマッチ済みの学生どうしを比較しないため，
+なお，within-category fairness はマッチ済みの学生どうしを比較しないため，
 交換については何も述べない．これを扱うのは\refdefinition{def:nje}である．
 
-\begin{lemma}[正当な羨望の不在はacross category fairnessを含意する]
+\begin{lemma}[正当な羨望の不在は across-category fairness を含意する]
 \label{lem:nje-swap}
-正当な羨望を持たないfeasibleなマッチングはすべてacross category fairである．
+正当な羨望を持たない feasible なマッチングはすべて across-category fair である．
 \end{lemma}
 
 \begin{proof}
@@ -641,13 +642,13 @@ $i$ と $j$ の役割を入れ替えると $\sigma(i)>\sigma(j)$ となり矛盾
 カテゴリごとに加点が異なる場合，この含意は成り立たない．
 
 最後に，本モデル全体を貫く循環構造を指摘しておく．
-feasibleな留保割当は一般カットオフに依存する一方，
+feasible な留保割当は一般カットオフに依存する一方，
 その一般カットオフは留保割当の後に誰が残るかで決まる．
-score feasibleは静的な適格性条件ではないので，
+score-feasibility は静的な適格性条件ではないので，
 定員を順に埋めていく素朴な手続きでは正しく扱えない．
 SPSE は定員を固定したまま DA の論理で対処し，
 PA-ODR はスコア制約を絶対の要件とみなし，
-\citet{AyTu23a} に倣って留保解除を行う．
+\citet{AyTu23a} に倣ってde-reserveを行う．
 
 \chapter{Student-Proposing Score-Elevated Mechanism}
 \label{cha:spse}
@@ -656,9 +657,9 @@ PA-ODR はスコア制約を絶対の要件とみなし，
 学生は適格なカテゴリに出願し，各カテゴリは調整済みスコアの高い出願者を暫定的に保持する．
 このメカニズムを\emph{Student-Proposing Score-Elevated Mechanism}
 （以下 SPSE）と呼ぶ．
-SPSE は DA が本来もつ利点，すなわちfeasibility・非浪費性・
+SPSE は DA が本来もつ利点，すなわち feasibility・non-wastefulness・
 正当な羨望の不在・耐戦略性をそのまま受け継ぐ．
-しかしscore feasibleについては保証がなく，違反しうる．
+しかし score-feasibility については保証がなく，違反しうる．
 
 \begin{algorithm}[htbp]
 \caption{Student-Proposing Score-Elevated Mechanism（SPSE）}
@@ -685,17 +686,17 @@ One-to-one Counting が保たれる．
 各学生が $V_i$ の各カテゴリに出願する回数はたかだか1回なので，
 ループは $|I|(|T|+1)$ 回以内で停止する．
 
-\begin{proposition}[feasibilityと非浪費性]
+\begin{proposition}[feasibility と non-wastefulness]
 \label{prop:spse-basic}
-SPSE の出力はfeasibleであり，\refdefinition{def:nw}の意味で非浪費性を満たす．
+SPSE の出力は feasible であり，\refdefinition{def:nw}の意味で non-wasteful である．
 \end{proposition}
 
 \begin{proof}
 各カテゴリはどの時点でも定員以下しか保持せず，どの学生も二重に保持されず，
-$i$ は $V_i$ の内部にしか出願しないのでfeasibilityが従う．
-非浪費性について，未マッチの $i$ を $c\in V_i$ に加えた結果が
-feasibleかつscore feasibleになると仮定する．
-拡大後のfeasibilityより $|\mu_c|<q^c$ が必要である．
+$i$ は $V_i$ の内部にしか出願しないので feasibility が従う．
+non-wastefulness について，未マッチの $i$ を $c\in V_i$ に加えた結果が
+feasible かつ score-feasible になると仮定する．
+拡大後の feasibility より $|\mu_c|<q^c$ が必要である．
 $i$ は停止時に未マッチなので，ループの継続条件より $V_i$ のすべてのカテゴリ，
 とくに $c$ に出願し，$c$ に拒否されている．
 しかしカテゴリが拒否を行うのは満員のときだけであり，
@@ -707,7 +708,7 @@ $i$ は停止時に未マッチなので，ループの継続条件より $V_i$ 
 
 \begin{proposition}[正当な羨望の不在]
 \label{prop:spse-nje}
-SPSE の出力は正当な羨望を持たず，したがってカテゴリ内で公平かつacross category fairである．
+SPSE の出力は正当な羨望を持たず，したがって fair within categories かつ across-category fair である．
 \end{proposition}
 
 \begin{proof}
@@ -747,10 +748,10 @@ $c$ は利用可能な出願者のうち $\sigma_c$ 上位 $q^c$ 人を保持す
 \qed
 \end{proof}
 
-\begin{proposition}[SPSE はscore feasibleを保証しない]
+\begin{proposition}[SPSE は score-feasibility を保証しない]
 \label{prop:spse-not-sf}
-SPSE の出力はscore feasibleとは限らない．
-このことは，score feasibleかつ非浪費性を満たしカテゴリ内で公平なマッチングが
+SPSE の出力は score-feasible とは限らない．
+このことは，score-feasible かつ non-wasteful であり fair within categories なマッチングが
 同時に存在する場合にさえ成り立つ．
 \end{proposition}
 
@@ -764,14 +765,14 @@ $T=\{t_1,t_2\}$，$q^o=q^{t_1}=q^{t_2}=1$，$k=5$，$\delta=10$ とし，
 各カテゴリは出願者を1人ずつ受け取って保持するので，SPSE は
 $\mu_o=\{i_1\}$，$\mu_{t_1}=\{i_2\}$，$\mu_{t_2}=\{i_3\}$ で停止する．
 このとき $e_o(\mu)-e_{t_2}^+(\mu)=100-87=13>10=\delta$ となり，
-score feasibleが破れる．
+score-feasibility が破れる．
 
 代わりに $\nu_o=\{i_1\}$，$\nu_{t_2}=\{i_2\}$，$\nu_{t_1}=\emptyset$ を考える．
 ここでは $e_o(\nu)=e_{t_2}^+(\nu)=100$ なので差は $0$ であり，
-空の $t_1$ に対する条件は自明に満たされる．よって $\nu$ はscore feasibleである．
-また $\nu$ は非浪費的である．唯一の未マッチ学生 $i_3$ は $V_{i_3}=\{t_2,o\}$ を持つが，
+空の $t_1$ に対する条件は自明に満たされる．よって $\nu$ は score-feasible である．
+また $\nu$ は non-wasteful である．唯一の未マッチ学生 $i_3$ は $V_{i_3}=\{t_2,o\}$ を持つが，
 その双方が定員に達しているからである．
-さらにカテゴリ内で公平である．$t_2$ の唯一の構成員は
+さらに fair within categories である．$t_2$ の唯一の構成員は
 $\sigma_{t_2}(i_2)=100>87=\sigma_{t_2}(i_3)$ を満たすからである．
 \qed
 \end{proof}
@@ -779,8 +780,8 @@ $\sigma_{t_2}(i_2)=100>87=\sigma_{t_2}(i_3)$ を満たすからである．
 ここで $\nu$ が $\mu$ より望ましいと主張しているわけではない．
 SPSE が3人全員をマッチさせるのに対し $\nu$ は2人しかマッチさせず，
 $\nu$ 自身にも正当な羨望がある（$i_2$ は $t_1$ を選好するが $|\nu_{t_1}|=0<q^{t_1}$ である）．
-この命題が示すのは，先に挙げた他の性質を満たしてもscore feasibleは導かれない，
-すなわちscore feasibleが独立した要請だということである．
+この命題が示すのは，先に挙げた他の性質を満たしても score-feasibility は導かれない，
+すなわち score-feasibility が独立した要請だということである．
 そしてここでは，その代償が1席分の空きとして現れている．
 同じ代償を，\refchapter{cha:tada}では合格者数の形で，
 \refchapter{cha:paodr}では留保定員の形で払うことになる．
@@ -796,7 +797,7 @@ $i_1(100,\emptyset)$，$i_2(80,\{t_1\})$ で $t_1\succ_{i_2}o$ とする．
 SPSE は $\mu_o=\{i_1\}$，$\mu_{t_1}=\{i_2\}$ を返し，
 $e_o-e_{t_1}^+=100-85=15>\delta$ となる．
 この場合，唯一の適格者のスコアが単に低すぎるだけで，割当の決め方に問題はない．
-$t_1$ を空のままにするマッチングはscore feasible・非浪費的・公平なので，
+$t_1$ を空のままにするマッチングは score-feasible・non-wasteful・fair within categories なので，
 \refpropositional{prop:spse-not-sf}の主張自体は重複がなくても成り立つ．
 
 重複は，これとは論理的に独立な第2の原因を付け加える．
@@ -807,7 +808,7 @@ $i_2$ はどちらのカテゴリに入っても，単独ではスコア制約�
 それにもかかわらず SPSE は，この選択を $i_2$ 自身の選好だけで決め，
 $i_2$ を $t_1$ に送って $t_2$ をはるかにスコアの低い $i_3$ に委ねてしまう．
 One-to-one Counting のもとで制約を破っているのは，出願者の顔ぶれではなく
-この割当の決め方である．同じ顔ぶれでも，score feasibleな割当は存在する．
+この割当の決め方である．同じ顔ぶれでも，score-feasible な割当は存在する．
 この原因は単一適格のもとでは起こりえない．割り当て先を選ぶ余地がないからである．
 以降の章はこの原因を扱う．
 さらに\refpropositional{prop:impossibility}では，第1の原因を排除した不可能性を示す．
@@ -824,20 +825,20 @@ One-to-one Counting のもとで制約を破っているのは，出願者の顔
 % \begin{definition}[個別充足可能性]
 % \label{def:indcomp}
 % 事例が\emph{個別充足可能}であるとは，すべての $t\in T$ に対して，
-% score feasibleであり，一般カテゴリ充足性を満たし，
+% score-feasibleであり，一般カテゴリ充足性を満たし，
 % かつ $|\mu_t|=q^t$ となるfeasibleなマッチングが存在することをいう．
 % ここで\emph{一般カテゴリ充足性}とは，$\mu_o$ が $I$ の素点上位 $q^o$ 人から
 % なることを要求する条件である．
 % \end{definition}
 
-% つまり，公示された定員は，それ単独で見れば，score feasibleな形で，
+% つまり，公示された定員は，それ単独で見れば，score-feasibleな形で，
 % かつ一般カテゴリを乱すことなく満額まで満たせる．
 % 本節の不可能性は，これらの約束を\emph{同時には}守れないというものである．
 
 % \begin{proposition}[定員完全利用のもとでの不可能性]
 % \label{prop:impossibility}
 % 個別充足可能（\refdefinition{def:indcomp}）でありながら，
-% score feasible・一般カテゴリ充足性・\emph{留保充足性}を同時に満たす
+% score-feasible・一般カテゴリ充足性・\emph{留保充足性}を同時に満たす
 % feasibleなマッチングが存在しない事例がある．
 % ここで\emph{留保充足性}とは，適格な学生が $q^t$ 人以上いるすべての $t$ について
 % $|\mu_t|=q^t$ を要求する条件である．
@@ -847,7 +848,7 @@ One-to-one Counting のもとで制約を破っているのは，出願者の顔
 % $T=\{t_1,t_2\}$，$q^o=q^{t_1}=q^{t_2}=1$，$k=5$，$\delta=10$ とし，
 % $i_1(100,\emptyset)$，$i_2(95,\{t_1,t_2\})$，$i_3(80,\{t_1\})$，$i_4(78,\{t_2\})$ とする．
 % 一般カテゴリ充足性は $\mu_o=\{i_1\}$ を強制するので $e_o(\mu)=100$ となり，
-% score feasibleは，留保枠に入るすべての学生に $\sigma_t(i)\ge90$ を要求する．
+% score-feasibleは，留保枠に入るすべての学生に $\sigma_t(i)\ge90$ を要求する．
 % ここで $\sigma_{t_1}(i_2)=\sigma_{t_2}(i_2)=100\ge90$ である一方，
 % $\sigma_{t_1}(i_3)=85<90$ かつ $\sigma_{t_2}(i_4)=83<90$ であるから，
 % どの留保カテゴリにも配置できるのは $i_2$ だけである．
@@ -863,7 +864,7 @@ One-to-one Counting のもとで制約を破っているのは，出願者の顔
 % これには相異なる2つの留保配置が必要だが，
 % One-to-one Counting のもとで $i_2$ はたかだか1つにしか計上されない．
 % したがっていずれかの留保カテゴリが $i_3$ または $i_4$ を受け入れねばならず，
-% score feasibleが破れる．
+% score-feasibleが破れる．
 % \qed
 % \end{proof}
 
@@ -876,7 +877,7 @@ One-to-one Counting のもとで制約を破っているのは，出願者の顔
 % 留保充足性を\emph{同時に}満たせる範囲まで弱めれば整合性は回復するが，
 % それは「重複が公示定員の実効を目立たないうちに減らしている」という
 % 本論文の指摘を認めることにほかならない．
-% PA-ODR は，この譲歩を留保解除という形で明示的に行うメカニズムである．
+% PA-ODR は，この譲歩をde-reserveという形で明示的に行うメカニズムである．
 
 % \begin{remark}[障害は重複であって候補者の弱さではない]
 % \label{rem:hall}
@@ -930,7 +931,7 @@ TA-DA は候補となる閾値を順に調べ，スコア制約に違反する�
 \ForAll{$e\in\{\sigma(i):i\in I\}$（降順）}
     \State すべての $i$ について $A_i(e)\gets\{o\}\cup\{t\in\T(i):\sigma(i)+k\ge e-\delta\}$
     \State $\mu^{(e)}\gets$ $(A_i(e))_{i\in I}$ 上，定員 $q$ での DA の結果
-    \If{$\mu^{(e)}$ がscore feasible}
+    \If{$\mu^{(e)}$ がscore-feasible}
         \State $S\gets S\cup\{(|M(\mu^{(e)})|,e,\mu^{(e)})\}$
     \EndIf
 \EndFor
@@ -952,39 +953,41 @@ $e_t^+(\mu^{(\bar\sigma)})\ge\bar\sigma-\delta$ である．
 すべての素点は $\bar\sigma$ 以下なので $e_o(\mu^{(\bar\sigma)})\le\bar\sigma$ であり，
 空でないすべての $t$ について $e_o-e_t^+\le\delta$ を得る．
 空のカテゴリについては，\refdefinition{def:scorefeas}により条件が自明に満たされる．
-よって $\mu^{(\bar\sigma)}$ はscore feasibleである．
+よって $\mu^{(\bar\sigma)}$ は score-feasible である．
 \qed
 \end{proof}
 
 \begin{proposition}[TA-DA の性質]
 \label{prop:tada-props}
-TA-DA の出力は元の定員 $q$ に関してfeasibleであり，score feasibleであり，
-\refdefinition{def:fair}の意味でカテゴリ内公平であり，
-\refdefinition{def:swap}の意味でacross category fairである．
+TA-DA の出力は元の定員 $q$ に関して feasible であり，score-feasible であり，
+\refdefinition{def:fair}の意味で fair within categories であり，
+\refdefinition{def:swap}の意味で across-category fair である．
 さらに，未マッチの学生を一般カテゴリに加えることはできない．
 \end{proposition}
 
 \begin{proof}
-\emph{feasibility}は直ちに従う．DA は $c$ に $q^c$ 人を超えて保持することも
+\emph{Feasibility.}
+DA は $c$ に $q^c$ 人を超えて保持することも
 1人の学生を2つのカテゴリに保持することもなく，出願は $A_i(e)\subseteq V_i$ の内部で行われる．
-\emph{score feasible}は，score feasibleな候補だけが $S$ に入ること，
+\emph{Score-feasibility.}
+score-feasible な候補だけが $S$ に入ること，
 および\reflemma{lem:tada-nonempty}により $S\neq\emptyset$ であることから従う．
 
-\emph{カテゴリ内公平性．}
+\emph{within-category fairness．}
 $e$ を選ばれた閾値とし，$t\in T$，$j\in\mu_t$，$i\notin M(\mu)$，
 $t\in\T(i)$，$\sigma_t(i)>\sigma_t(j)$ と仮定する．
 $j$ は $t$ に出願したので $t\in A_j(e)$，すなわち $\sigma(j)+k\ge e-\delta$ である．
 加点が共通であるから $\sigma_t(i)>\sigma_t(j)$ は $\sigma(i)>\sigma(j)$ を与え，
 したがって $\sigma(i)+k\ge e-\delta$ すなわち $t\in A_i(e)$ を得る．
 ここは\refpropositional{prop:paodr-fair}と同じ論法である．
-カテゴリ内でマッチ済みの学生を上回る学生は，
+同じカテゴリでマッチ済みの学生を上回る学生は，
 その時点の閾値のもとで自動的に出願可能になる．
 $i$ は停止時に未マッチなので $A_i(e)$ のすべてのカテゴリ，とくに $t$ に出願して拒否された．
 カテゴリは満員のときにしか拒否せず，以後は保持中の学生を
 厳密により良い者としか入れ替えないので，すべての $j'\in\mu_t$ について
 $\sigma_t(j')>\sigma_t(i)$ となり，$j\in\mu_t$ に矛盾する．
 
-\emph{across category fairness．}
+\emph{across-category fairness．}
 $(i,j)$ をブロッキング交換とし，$i\in\mu_c$，$j\in\mu_{c'}$ とする．
 まず $c'\in A_i(e)$ かつ $c\in A_j(e)$ の場合を考える．
 $c'\succ_i c$ より $i$ は $c'$ に出願して拒否されたので，
@@ -1009,14 +1012,14 @@ $c\notin A_j(e)$ の場合も対称である．
 TA-DA が受け継がないのは，DA がもつ残りの性質である．
 その原因は，「規則に反してまで席を埋めない」という方針そのものにある．
 
-\begin{example}[TA-DA が残す空席と非浪費性の相対化]
+\begin{example}[TA-DA が残す空席と non-wastefulness の相対化]
 \label{ex:tada-idle}
 \refremark{rem:overlap-cause}と同じ事例を考える．
 $T=\{t_1\}$，$q^o=q^{t_1}=1$，$k=5$，$\delta=10$，
 $i_1(100,\emptyset)$，$i_2(80,\{t_1\})$，$t_1\succ_{i_2}o$．
 $e=100$ では $80+5=85<90$ なので $A_{i_2}(100)=\{o\}$ となり，
 DA の結果は $\mu_o=\{i_1\}$，$\mu_{t_1}=\emptyset$ となる．
-これはscore feasibleで，1人がマッチする．
+これは score-feasible で，1人がマッチする．
 $e=80$ では $A_{i_2}(80)=\{o,t_1\}$ となり，
 DA の結果は $\mu_o=\{i_1\}$，$\mu_{t_1}=\{i_2\}$ となるが，
 $e_o-e_{t_1}^+=100-85=15>\delta$ なので，この候補は除外される．
@@ -1024,13 +1027,13 @@ $e_o-e_{t_1}^+=100-85=15>\delta$ なので，この候補は除外される．
 $i_2$ は $t_1$ に適格で，しかも未マッチであるのに，$t_1$ は空のまま残る．
 $i_2$ が $o$ を第1希望にしても結果は変わらない．
 
-この空いたままの留保枠は，score feasibleの条件を外した非浪費性には違反する．
+この空いたままの留保枠は，score-feasibility の条件を外した non-wastefulness には違反する．
 $|\mu_{t_1}|=0<q^{t_1}$ かつ $t_1\in V_{i_2}$ だからである．
-しかし\refdefinition{def:nw}の意味では非浪費性を満たす．
+しかし\refdefinition{def:nw}の意味では non-wasteful である．
 $i_2$ を $t_1$ に加えると，先ほど除外した候補そのものになり，差が $15>\delta$ となるからである．
-この例は，非浪費性をスコア制約に相対化するかどうかを切り分けるものであり，
+この例は，non-wastefulness をスコア制約に相対化するかどうかを切り分けるものであり，
 \refdefinition{def:nw}のスコア相対的な条件が形式上の便宜ではないことを示している．
-すなわちこの条件は，空席を非浪費性違反と判定するか，スコア制約の帰結として許容するかを分けている．
+すなわちこの条件は，空席を non-wastefulness 違反と判定するか，スコア制約の帰結として許容するかを分けている．
 同じ空席は，正当な羨望の例にもなっている．
 $i_2\notin M(\mu)$，$t_1\in V_{i_2}$，$|\mu_{t_1}|<q^{t_1}$ が
 \refdefinition{def:nje}の2つの条件をともに満たすからである．
@@ -1038,8 +1041,21 @@ $i_2\notin M(\mu)$，$t_1\in V_{i_2}$，$|\mu_{t_1}|<q^{t_1}$ が
 マッチ済みの学生どうしの交換では，その不満に応えようがない．
 つまり TA-DA は\refdefinition{def:nje}を失い，
 同時に\reflemma{lem:nje-swap}による含意も使えなくなるが，
-across category fairnessそのものは\refpropositional{prop:tada-props}により保たれる．
+across-category fairness そのものは\refpropositional{prop:tada-props}により保たれる．
 \end{example}
+
+\begin{remark}[non-wastefulness の保証が及ぶ範囲]
+\label{rem:tada-nw}
+\refpropositional{prop:tada-props}は\refdefinition{def:nw}を一般カテゴリについては
+解決するが，$i$ が出願を禁じられていた留保カテゴリ $t\notin A_i(e)$ については解決しない．
+そのような $i$ を $t$ に加えると $e_t^+\le\sigma(i)+k<e-\delta$ となるので，
+拡大後のマッチングが score-feasible となるのは $e_o(\mu)<e$ のとき，
+すなわち実現した一般カットオフが選ばれた閾値を下回るときに限られる．
+したがって\refdefinition{def:nw}は $e\le e_o(\mu)$ である限り無条件に成立する．
+逆の場合が起こりうるかどうかは未解決だが，\refchapter{cha:experiments}の事例では一度も生じなかった．
+PA-ODR と対比しておくと，PA-ODR のカットオフは構成上つねに実現値と一致するので，
+そちらではこの問題自体が生じない．
+\end{remark}
 
 
 \section{Adaptive Score-Threshold Deferred Acceptance}
@@ -1064,7 +1080,7 @@ $e_o(\mu)\le\tau$ ならば $\mu$ を返し，そうでなければ $\tau\gets e
 \begin{proposition}[A-STDA の性質]
 \label{prop:astda}
 A-STDA はたかだか $|I|+1$ 回の DA の実行で停止し，
-その出力は $q$ に関してfeasible，score feasible，カテゴリ内公平，かつacross category fairである．
+その出力は $q$ に関して feasible，score-feasible，fair within categories，かつ across-category fair である．
 \end{proposition}
 
 \begin{proof}
@@ -1072,14 +1088,14 @@ A-STDA はたかだか $|I|+1$ 回の DA の実行で停止し，
 $e_o(\mu)$ は実現した一般カットオフであるから素点の1つであり，
 同じ値を繰り返すことはないので，たかだか $|I|$ 回の更新で判定 $e_o(\mu)\le\tau$ が成立する．
 停止時，$\mu_t$ の各 $i$ は $t$ に出願しているので
-$\sigma_t(i)\ge\tau-\delta\ge e_o(\mu)-\delta$ となり，これがscore feasibleである．
-feasibility・カテゴリ内公平性・across category fairnessは\refpropositional{prop:tada-props}と同じ議論で示せる．
+$\sigma_t(i)\ge\tau-\delta\ge e_o(\mu)-\delta$ となり，これが score-feasibility である．
+Feasibility・within-category fairness・across-category fairness は\refpropositional{prop:tada-props}と同じ議論で示せる．
 そこで用いているのは，停止時の $A_i(\tau)$ がスコアについて単調であることと，
 留保カテゴリ間で共通であることの2点だけだからである．
 \qed
 \end{proof}
 
-一般カテゴリにおける非浪費性は，先ほどと同様に成り立つ．
+一般カテゴリにおける non-wastefulness は，先ほどと同様に成り立つ．
 一方，留保カテゴリについては停止判定から $e_o(\mu)\le\tau$ しか得られないため，
 \refremark{rem:tada-nw}で述べた隙間がここでも残る．
 とはいえ，2つのアルゴリズムの結果は実際にはほとんど変わらない．
@@ -1096,9 +1112,9 @@ $35$ 事例でより少ない学生をマッチさせ，より多くマッチさ
 本章は構成的な応答を与える．
 \emph{Preference-Aware Overlapping De-Reservation}
 （以下 PA-ODR）は，
-一般カットオフを先に固定し，score feasibleな組にのみ沿って予約を割り当て，
-埋められない留保定員を意図的に一般カテゴリへ振り替える（留保解除する）．
-PA-ODR はscore feasibleとカテゴリ内公平性を満たすが，
+一般カットオフを先に固定し，score-feasible な組にのみ沿って予約を割り当て，
+埋められない留保定員を意図的に一般カテゴリへde-reserveする．
+PA-ODR は score-feasibility と within-category fairness を満たすが，
 そのために定員を変化させるので，DA がもつ誘因面の保証と
 羨望の不在は失われる．
 公示定員を修正して解の存在を回復するという発想は near-feasibility の枠組みに属し，
@@ -1213,14 +1229,14 @@ $w$ のもとでの最大重み定員付き二部マッチングは，4つの基
 
 \textsc{PrefLexMaxMatching} に基づき，
 \refalgorithm{alg:paodr}に示す PA-ODR を提案する．
-PA-ODR はscore feasibleを，制度上絶対に譲れない要件として扱う．
+PA-ODR は score-feasibility を，制度上絶対に譲れない要件として扱う．
 したがってこれは定員を保つ留保規則ではなく，
 定員を保ったままでは解が得られないときの代替手段として位置づけられる．
 手順としては，まず一般カテゴリを素点順に埋め，
-次に，そこで定まったカットオフのもとでfeasibleな組だけを使って留保割当を行い，
-埋められない留保定員を一般カテゴリへ振り替える．
+次に，そこで定まったカットオフのもとで feasible な組だけを使って留保割当を行い，
+埋められない留保定員を一般カテゴリへde-reserveする．
 この結果，一般カテゴリでは素点の順序がそのまま保たれ，
-選好はfeasibleな留保配置どうしの同点処理にしか使われないが，
+選好は feasible な留保配置どうしの同点処理にしか使われないが，
 実効的な定員は変化しうる．
 順序 $\prec$ はメカニズムの仕様の一部であり，これによって出力が一意に定まる
 （\refsection{sec:order}）．
@@ -1229,13 +1245,13 @@ PA-ODR はscore feasibleを，制度上絶対に譲れない要件として扱�
 \refsection{sec:paodr-limits}で示すように，これが羨望の不在と耐戦略性の
 両方を失う原因となる．
 
-% \begin{remark}[何が留保解除を引き起こすか]
+% \begin{remark}[何がde-reserveを引き起こすか]
 % \label{rem:trigger}
-% この停止規則は，score feasibleだけを要求する場合よりも強い．
+% この停止規則は，score-feasibleだけを要求する場合よりも強い．
 % PA-ODR が停止するのは，すべての $t$ について $|\mu_t|=\hat q^t$ となったとき，
 % すなわち\emph{その時点の}定員に関して留保充足性が成り立ったときである．
 % したがって，スコア制約が破れる場合だけでなく，
-% 留保カテゴリが単に埋まらない場合にも留保解除が起こる．
+% 留保カテゴリが単に埋まらない場合にもde-reserveが起こる．
 % この違いは\refpropositional{prop:spse-not-sf}の事例で確認できる．
 % 第1反復は $\mu_o=\{i_1\}$，$e=100$ を与える．
 % 許容されるには $\sigma(i)\ge85$ が必要なので該当するのは $i_2$ だけであり，
@@ -1247,7 +1263,7 @@ PA-ODR はscore feasibleを，制度上絶対に譲れない要件として扱�
 % 最終的に PA-ODR は $\hat q=(3,0,0)$，$\mu_o=\{i_1,i_2,i_3\}$ で停止し，
 % 2つの留保定員がともに失われる．
 
-% しかし同じ命題の $\nu$ は，\emph{元の定員のままで}score feasible・非浪費的・公平であった．
+% しかし同じ命題の $\nu$ は，\emph{元の定員のままで}score-feasible・non-wasteful・公平であった．
 % 1つの留保枠を空席のまま残しておけば済んだのである．
 % この設計を擁護できるとすれば合格者数の点で，
 % PA-ODR は3人全員をマッチさせるのに対し $\nu$ は2人しかマッチさせない．
@@ -1277,13 +1293,13 @@ $e$ はその最小値なので，集合が広がるにつれて下がる一方�
 $e$ が下がると $\sigma(i)+k\ge e-\delta$ が緩むので，$G(e)$ には辺が増える．
 しかし同じ操作によって学生が1人 $\mu_o$ に移るため，左側の頂点は減る．
 どちらの効果が勝つかは一般には決まらない．
-そのため，1回の留保解除がまったく役に立たないこともある．
+そのため，1回のde-reserveがまったく役に立たないこともある．
 これは\refexample{ex:order}の2つ目の場合が示すとおりである．
 
 \section{順序依存性と非最小性}
 \label{sec:order}
 
-留保解除は，そのままでは実行不能な留保割当を可能にする一方で，留保定員を失わせる．
+de-reserveは，そのままでは実行不能な留保割当を可能にする一方で，留保定員を失わせる．
 したがって，解除する席はできるだけ少なくしたいと考えるのが自然である．
 しかし PA-ODR はこの最小性を保証しない．
 解除されるカテゴリの数が，順序 $\prec$ によって変わりうるからである．
@@ -1336,7 +1352,7 @@ $\hat q^t\equiv0$ は自明に実現可能なので，この問題は必ず解�
 次に示す計算量の上界は総当たり列挙によるものである．
 実用的なアルゴリズムとしてではなく，PA-ODR について何が言えるかという点に意味がある．
 
-\begin{remark}[最小留保解除]
+\begin{remark}[最小de-reserve]
 \label{rem:minderes}
 $\Phi$ を1回の定員付き二部マッチングの計算費用とすると，
 \textsc{MinDeres} は時間 $O(\prod_{t\in T}(q^t+1)\cdot\Phi)$ で解け，
@@ -1362,25 +1378,25 @@ $\Sigma_2^{\mathrm{P}}$ 完全であることが知られている \citep{CGH20a
 \section{PA-ODR の性質}
 \label{sec:paodr-props}
 
-留保解除をモデルに含めた以上，feasibilityと非浪費性は，
+de-reserveをモデルに含めた以上，feasibility と non-wastefulness は，
 初期の $q$ ではなく最終的なベクトル $\hat q$ に対して判定しなければならない．
 \refexample{ex:order}が示すとおり，この限定は形式上の便宜ではなく実質的な弱化である．
 
-\begin{definition}[最終定員に相対的な非浪費性]
+\begin{definition}[最終定員に相対的な non-wastefulness]
 \label{def:nw-hat}
 $\hat q$ を PA-ODR が生成する最終定員ベクトルとする．
-マッチング $\mu$ が\emph{$\hat q$ に相対的に非浪費的である}とは，
+マッチング $\mu$ が\emph{$\hat q$ に相対的に non-wasteful である}とは，
 未マッチの学生 $i$ と $c\in V_i$ であって，
-$i$ を $c$ に加えた結果が $\hat q$ に関してfeasibleかつscore feasibleとなるものが
+$i$ を $c$ に加えた結果が $\hat q$ に関して feasible かつ score-feasible となるものが
 存在しないことをいう．
 \end{definition}
 
-\begin{proposition}[停止性・計算時間・feasibility・score feasible・非浪費性]
+\begin{proposition}[停止性・計算時間・feasibility・score-feasibility・non-wastefulness]
 \label{prop:paodr-basic}
 PA-ODR は停止する．各 $q^c$ を $\min\{q^c,|I|\}$ で置き換えれば，
 入力サイズの多項式時間で実行される．
-その出力は最終実効定員に関してfeasibleであり，score feasibleであり，
-かつそれに相対的に非浪費的である．
+その出力は最終実効定員に関して feasible であり，score-feasible であり，
+かつそれに相対的に non-wasteful である．
 \end{proposition}
 
 \begin{proof}
@@ -1394,7 +1410,7 @@ $\hat q^o\gets\hat q^o+1$ となるので，非負整数 $\sum_{t}\hat q^t$ が�
 そこで以下ではつねに，すべての $c\in V$ について $q^c\le|I|$ を仮定する\footnote{%
 この限界は正規化ではなく仮定である．
 マッチングの計算そのものには影響しないが，
-ループが留保解除を何回行うか，ひいては最終的な $\hat q$ を変えるので，
+ループがde-reserveを何回行うか，ひいては最終的な $\hat q$ を変えるので，
 \refchapter{cha:experiments}の解除席数は，
 それ自体 $|I|$ 以下である公示定員を基準とした数値である．}．
 この仮定のもとで $\sum_t\hat q^t\le|I||T|$ なので反復回数は $O(|I||T|)$ であり，
@@ -1402,33 +1418,33 @@ $\hat q^o\gets\hat q^o+1$ となるので，非負整数 $\sum_{t}\hat q^t$ が�
 および\refremark{rem:computation}により多項式である
 \textsc{PrefLexMaxMatching} を1回解くだけである．
 
-\emph{feasibility．}
+\emph{Feasibility.}
 各反復で $o$ は上位 $\min\{\hat q^o,|I|\}$ 人を受け取る．
 留保割当は $\mu_o$ に属さない学生を対象に，定員 $\hat q^t$ のもとで行われ，
 $G(e)$ の辺は $i$ を $t\in\T(i)$ としか結ばない．
 したがって，どの学生も二重に割り当てられず，どのカテゴリも定員を超えない．
 出力は最終反復の割当である．
 
-\emph{score feasible．}
+\emph{Score-feasibility.}
 $e$ を最終カットオフとすると $e_o(\mu)=e$ である．
 留保枠に入る学生はすべて $G(e)$ の辺に沿って選ばれるので $\sigma(i)+k\ge e-\delta$ を満たし，
 空でない $t$ について $e_t^+(\mu)\ge e-\delta=e_o(\mu)-\delta$，
 すなわち $e_o(\mu)-e_t^+(\mu)\le\delta$ を得る．
 空のカテゴリについては，\refdefinition{def:scorefeas}により条件が自明に満たされる．
 
-\emph{非浪費性．}
+\emph{Non-wastefulness.}
 $\mu_o$ は上位 $\min\{\hat q^o,|I|\}$ 人を保持するので，
 全員がマッチしているか，$|\mu_o|=\hat q^o$ で $o$ にはもう誰も加えられないかのいずれかである．
 また停止時にはすべての $t$ について $|\mu_t|=\hat q^t$ が成り立つ．
-そうでなければ，さらに留保解除が行われていたはずだからである．
+そうでなければ，さらにde-reserveが行われていたはずだからである．
 よって $\hat q$ の範囲で未マッチの学生を加えられる場所はどこにもなく，
-feasibleかつscore feasibleとなる追加も当然存在しない．
+feasible かつ score-feasible となる追加も当然存在しない．
 \qed
 \end{proof}
 
-\begin{proposition}[カテゴリ内公平性]
+\begin{proposition}[within-category fairness]
 \label{prop:paodr-fair}
-PA-ODR の出力は\refdefinition{def:fair}の意味でカテゴリ内公平である．
+PA-ODR の出力は\refdefinition{def:fair}の意味で fair within categories である．
 \end{proposition}
 
 \begin{proof}
@@ -1442,7 +1458,7 @@ $j\in\mu_t$ より $(j,t)$ は辺なので $\sigma(j)+k\ge e-\delta$ であり�
 $\sigma_t(i)>\sigma_t(j)$ から $\sigma(i)+k\ge e-\delta$ を得る．
 $t\in\T(i)$ は仮定である．
 ここが証明の要である．
-カテゴリ内でマッチ済みの学生を上回る学生は，
+同じカテゴリでマッチ済みの学生を上回る学生は，
 その時点のカットオフのもとで自動的に許容される．
 つまりカットオフが，より高スコアの適格者からマッチ済みの学生を守る働きをすることはない．
 そこで $\mu_t$ において $j$ を $i$ で置き換える．
@@ -1455,15 +1471,15 @@ $t\in\T(i)$ は仮定である．
 
 「最終定員ベクトルに関して」という限定は\refpropositional{prop:paodr-basic}には必要だが，
 この命題には必要ない．
-PA-ODR は SPSE と同じ，弱めないままのカテゴリ内公平性を満たしており，
-留保解除に合わせて定義を修正する必要がない．
+PA-ODR は SPSE と同じ，弱めないままの within-category fairness を満たしており，
+de-reserveに合わせて定義を修正する必要がない．
 理由は\reflemma{lem:fair-sf}と，上の証明の第1段階にある．
-カテゴリ内でより上位を主張する動きは，score feasibleを壊すこともなく，
+同じカテゴリでより上位を主張する動きは，score-feasibility を壊すこともなく，
 カットオフに阻まれることもないからである．
 ただし SPSE と違い，この性質は拒否の単調性からではなく，
-最終的なfeasibleグラフの中で選ばれたマッチングの最適性から導かれる．
+最終的な feasible graph の中で選ばれたマッチングの最適性から導かれる．
 
-\begin{proposition}[留保カテゴリ間のacross category fairness]
+\begin{proposition}[留保カテゴリ間のacross-category fairness]
 \label{prop:paodr-swap}
 PA-ODR の出力は，$i\in\mu_c$，$j\in\mu_{c'}$ かつ $c,c'\in T$ なる
 ブロッキング交換 $(i,j)$ を許さない．
@@ -1493,7 +1509,7 @@ $r_j(c')$ を $r_j(c)<r_j(c')$ に置き換え，他の成分は変えない．
 \section{PA-ODR が失うもの}
 \label{sec:paodr-limits}
 
-score feasibleを強制する代償は，誘因と羨望の側に現れる．
+score-feasibility を強制する代償は，誘因と羨望の側に現れる．
 以下の2つの失敗はいずれも同じ原因による．
 PA-ODR は一般カテゴリを選好によらず素点だけで埋めており，
 選好は同点処理としてしか働かないからである．
@@ -1504,8 +1520,8 @@ $T=\{t_1\}$，$q^o=q^{t_1}=1$，$k=5$，$\delta=10$ とし，
 $i_1(100,\{t_1\})$，$i_2(90,\{t_1\})$ で，両者とも $t_1$ を $o$ より上位に置くとする．
 PA-ODR は $o$ に素点最上位の学生を入れるので $\mu_o=\{i_1\}$，$e=100$ となる．
 このとき $90+5=95\ge100-10$ なので $(i_2,t_1)$ は辺であり，$\mu_{t_1}=\{i_2\}$ となる．
-すべての定員が満たされるため，アルゴリズムは留保解除を行わずに停止する．
-$e_o-e_{t_1}^+=100-95=5\le\delta$ なので，結果はscore feasibleである．
+すべての定員が満たされるため，アルゴリズムはde-reserveを行わずに停止する．
+$e_o-e_{t_1}^+=100-95=5\le\delta$ なので，結果は score-feasible である．
 しかし $i_1$ は $t_1$ を厳密に選好しているのに $o$ に配置されており，
 $t_1$ にいる $i_2$ のスコアは $\sigma_{t_1}(i_2)=95<105=\sigma_{t_1}(i_1)$ である．
 したがって $i_1$ には正当な羨望があり，\refdefinition{def:nje}は成り立たない．
@@ -1514,14 +1530,14 @@ $t_1$ にいる $i_2$ のスコアは $\sigma_{t_1}(i_2)=95<105=\sigma_{t_1}(i_1
 \refdefinition{def:nje}を弱めずに定義したので，この点の確認は重要である．
 $i_1$ の主張を認めれば $\mu_{t_1}=\{i_1\}$，$\mu_o=\{i_2\}$ となり，
 $e_o=90$，$e_{t_1}^+=105$ で差は $-15\le\delta$ となる．
-代替案もscore feasibleなので，この羨望は
+代替案も score-feasible なので，この羨望は
 \refchapter{cha:model}で述べたスコア相対的な読み方のもとでも残る．
 なお，この代替案は同じ事例で SPSE が返す結果そのものでもある．
 2人とも $t_1$ に出願し，$t_1$ は $i_1$ を保持して $i_2$ を拒否し，$i_2$ が $o$ に収まる．
 2つのメカニズムの違いは，どちらの主張を認めるかだけであり，
 feasibilityを理由にどちらかを正当化することはできない．
 
-同じ実行はacross category fairnessも破る．
+同じ実行はacross-category fairnessも破る．
 $i_2$ の選好を $o\succ_{i_2}t_1$ に変えても，PA-ODR は $o$ を素点で埋め，
 基準1は $i_2$ を辺の張られた唯一のカテゴリにマッチさせる．
 したがって実行の内容は変わらず，やはり $\mu_o=\{i_1\}$，$\mu_{t_1}=\{i_2\}$ となる．
@@ -1586,16 +1602,16 @@ $(|I|,|T|,q^o_{\max},q^t_{\max})=(200,6,30,15)$，$(500,8,70,35)$，$(60,6,30,15
 第3の設定はこの関係を逆転させており，平均総定員 $64.25$ に対して $|I|=60$ である．
 PA-ODR の実装はマッチングの列挙ではなく\refremark{rem:computation}に従い，
 合格者集合をマトロイド貪欲法で求めた後，基準3--4 のために最小費用割当を1回解く．
-score feasibleは\refdefinition{def:scorefeas}に照らして直接検証した．
+score-feasibility は\refdefinition{def:scorefeas}に照らして直接検証した．
 
 \begin{table}[htbp]
 \centering
 \caption{各設定100事例におけるプロトタイプの結果．
-「時間」は実行時間の中央値，「SF」はscore feasible，「NW条件なし」は\refdefinition{def:nw}からscore feasibleの条件を外した非浪費性，「羨望なし」は正当な羨望の不在，「解除席」は解除された留保席数を表す．
-\refdefinition{def:nw}のスコア制約に相対化した非浪費性，カテゴリ内公平性，
-および留保カテゴリ間のacross category fairnessは，
+「時間」は実行時間の中央値，「SF」は score-feasibility，「NW条件なし」は\refdefinition{def:nw}から score-feasibility の条件を外した non-wastefulness，「羨望なし」は正当な羨望の不在，「解除席」は解除された留保席数を表す．
+\refdefinition{def:nw}のスコア制約に相対化したnon-wastefulness，within-category fairness，
+および留保カテゴリ間の across-category fairness は，
 3メカニズム・全300事例で成立したため省略した．
-全カテゴリでのacross category fairnessは SPSE と TA-DA では全事例で成立し，
+全カテゴリでの across-category fairness は SPSE と TA-DA では全事例で成立し，
 PA-ODR では3つの設定でそれぞれ $99$，$100$，$37$ 事例で成立しなかった．
 括弧内の百分率は，その設定の平均留保席数（それ自体 $|I|$ 以下）に対する比である．}
 \label{tab:prototype}
@@ -1627,9 +1643,9 @@ $|I|=60$, $|T|=6$ & SPSE & 0.15 & 45/100 & 100/100 & 100/100 & 55.48 & 0.00 \\
 第1に，SPSE はどの設定でも，約半数の事例でスコア制約に違反している．
 
 
-第2に，非浪費性をスコア制約に相対化した定義には，導入するだけの意味がある．
+第2に，non-wastefulness をスコア制約に相対化した定義には，導入するだけの意味がある．
 TA-DA は全300事例で\refdefinition{def:nw}を満たす一方，
-score feasibleの条件を外した非浪費性には各設定で $54$，$52$，$46$ 事例違反している．
+score-feasibility の条件を外した non-wastefulness には各設定で $54$，$52$，$46$ 事例違反している．
 SPSE と PA-ODR はいずれも2つの定義を区別しないので，
 TA-DA を含めなければ，\refdefinition{def:nw}の緩和が効いていることを示す事例は得られない．
 またこの違反数は SPSE の違反率とほぼ一致するが，これは偶然ではない．
@@ -1654,7 +1670,7 @@ PA-ODR がマッチさせるのは $56.61$ 人で，SPSE の $55.48$ 人を上�
 第4に，この代償の大きさは $\delta$ に応じて変化しており，
 手当たり次第に留保を解除しているわけではない．
 第1の設定で $\delta=2,4,8,15,25$ と変えると，
-SPSE がscore feasibleに留まる事例数は $34,43,54,79,97$ と増え，
+SPSE が score-feasible に留まる事例数は $34,43,54,79,97$ と増え，
 廃止される留保席は $47.99$ 席のうち $30.32,26.38,18.57,7.84,0.61$ と減る．
 つまり許容差が緩ければ，3つのメカニズムの結果はほぼ一致する．
 
@@ -1665,19 +1681,19 @@ SPSE がscore feasibleに留まる事例数は $34,43,54,79,97$ と増え，
 留保カテゴリが重複すると，合格した学生がちょうど1つのカテゴリにしか計上されないため，
 実質的な配分問題が生じる．
 さらにスコア制約のもとではfeasibilityが内生的なカットオフに依存するので，
-非浪費性を制約に相対化して定義し直す必要がある．
+non-wastefulness を制約に相対化して定義し直す必要がある．
 そして各定員が個別には満額まで満たせる場合でさえ，定員を完全に使い切れないことがある．
 \refpropositional{prop:impossibility}はこのことを正確に述べたものであり，
-score feasible・一般カテゴリ充足性・留保充足性を同時に満たすことはできない．
+score-feasible・一般カテゴリ充足性・留保充足性を同時に満たすことはできない．
 
 3つのメカニズムは，この選択に対する異なる立場を表している．
-SPSE はscore feasibleを諦め，DA がもつ誘因面の性質と羨望の不在を保つ．
+SPSE は score-feasibility を諦め，DA がもつ誘因面の性質と羨望の不在を保つ．
 TA-DA は留保充足性を諦め，公示した席をすべて定員表に残したまま，一部を空席にする．
 PA-ODR は公示定員を諦め，埋められない席そのものを廃止する．
 各メカニズムが何を保つかは\reftable{tab:comparison}に，
 何を代償として払うかは\reftable{tab:prototype}にまとめた．
-なおacross category fairnessは，正当な羨望の不在とは異なる形で3者を分ける．
-留保カテゴリ間のacross category fairnessは3つとも満たしており，
+なお across-category fairness は，正当な羨望の不在とは異なる形で3者を分ける．
+留保カテゴリ間の across-category fairness は3つとも満たしており，
 これを失うのは PA-ODR が一般カテゴリを素点だけで埋めるところだけである．
 
 ただし，重複によって説明できる範囲を誇張すべきではない．
@@ -1689,9 +1705,9 @@ PA-ODR は公示定員を諦め，埋められない席そのものを廃止す�
 
 最後に，残された課題を挙げる．
 最も重要なのは，TA-DA が耐戦略的かどうかである．
-肯定的に解決すれば，score feasibleで定員を保ちながら耐戦略的なメカニズムが
+肯定的に解決すれば，score-feasible で定員を保ちながら耐戦略的なメカニズムが
 存在することになり，\refpropositional{prop:paodr-notsp}が示す誘因面の損失は，
-score feasibleの代償ではなく留保充足性の代償として位置づけられる．
+score-feasibility の代償ではなく留保充足性の代償として位置づけられる．
 否定的に解決すれば，\refpropositional{prop:impossibility}に
 誘因面の対応物があることが示唆される．
 $210{,}000$ 事例の探索でも，\refpropositional{prop:spse-sp}の DA による議論でも
