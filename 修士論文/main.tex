@@ -1,0 +1,269 @@
+\documentclass[
+    12pt,          % 文字サイズ
+    a4paper,       % 用紙サイズ
+    oneside,       % 片面印刷指定
+    onecolumn,     % 段組なし
+    titlepage,     % タイトルに1ページ使う
+    final          % 版面からはみ出しても気にしない
+]{jreport} % または jsarticle, ujreport など
+
+% パッケージの読み込み
+\usepackage{ascmac}
+\usepackage{here}
+\usepackage{subcaption}
+\usepackage[dvipdfmx]{graphicx}
+
+% \documentclass[dvipdfmx]{jsarticle}
+\usepackage{tikz}
+\usetikzlibrary{intersections, calc, arrows.meta}
+ 
+
+\usepackage{fancyhdr}
+% \usepackage[dvipdfmx]{color}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage{tikz-cd} 
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shadows}
+\usepackage{listings,jvlisting} %python用パッケージ
+\usepackage{diagbox} % 表の左上の斜め分割
+\usepackage{color, xcolor}
+\usepackage{colortbl}
+\usepackage{tabularx} % セル内改行
+\usepackage{comment}  % 複数行のコメント
+\usepackage{multirow} % セル縦結合
+ \usepackage{natbib} % 引用
+\usepackage{lscape}
+\usepackage{paralist}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{natbib}
+\bibliographystyle{unsrt}
+\columnseprule=0.5pt % 段間のルール幅
+
+
+% 数学関連のパッケージ
+\usepackage{amsmath, amssymb, latexsym, bm}
+\usepackage{theorem} % 定理環境
+
+% アルゴリズム関連のパッケージ
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\newcommand{\zh}[1]{\textcolor{cyan}{#1}}
+
+% 定理環境の文字スタイル変更
+\theorembodyfont{\upshape} % 定理中の半角文字が italic になるのを防ぐ
+
+% ページレイアウト設定
+\setlength{\oddsidemargin}{10pt}   % 左端マージン (奇数ページ)
+\setlength{\evensidemargin}{10pt}  % 左端マージン (偶数ページ)
+\setlength{\topmargin}{0pt}        % ヘッダ領域までのマージン
+\setlength{\headheight}{20pt}      % ヘッダ領域縦幅
+\setlength{\headsep}{20pt}         % ヘッダ領域から本文領域へのマージン
+\setlength{\topskip}{12pt}         % 本文領域トップから1行目文字の下端まで
+\setlength{\textheight}{623.5pt}   % 本文領域高さ
+\setlength{\textwidth}{432.5pt}    % 本文領域幅
+\setlength{\footskip}{25pt}        % 本文領域下端からページ終端までのマージン
+
+% 参考文献のセクション名を変更
+\renewcommand{\bibname}{参考文献}
+
+% キャプションと数式のレイアウト
+\setlength{\abovecaptionskip}{0pt} % キャプション上部のマージン
+\allowdisplaybreaks               % 数式の縦揃えがページをまたいでもよい
+
+% ヘッダ・フッタのレイアウト
+\makeatletter
+% 章のページにも通常ページと同じレイアウトを使用
+\renewcommand{\chapter}{
+    \if@openright\cleardoublepage\else\clearpage\fi
+    \global\@topnum\z@
+    \secdef\@chapter\@schapter
+}
+\makeatother
+
+\pagestyle{fancy}
+\renewcommand{\headwidth}{432.5pt}         % ヘッダ・フッタの横幅
+\renewcommand{\headrulewidth}{0.4pt}      % ヘッダの下線の太さ
+\renewcommand{\footrulewidth}{0.4pt}      % フッタの上線の太さ
+\renewcommand{\plainheadrulewidth}{0.4pt} % プレインページのヘッダの下線の太さ
+\renewcommand{\plainfootrulewidth}{0.4pt} % プレインページのフッタの上線の太さ
+
+% ヘッダ・フッタの内容
+\lhead{\leftmark}         % ヘッダ左端
+\chead{}                  % ヘッダ中央
+\rhead{\thepage}          % ヘッダ右端
+\lfoot{}                  % フッタ左端
+\cfoot{}                  % フッタ中央
+\rfoot{九州大学工学部電気情報工学科} % フッタ右端
+
+% ヘッダの章題形式修正
+\makeatletter
+\def\chaptermark#1{
+    \markboth {\ifnum \c@secnumdepth>\m@ne
+        \@chapapp\ \thechapter \@chappos\ \fi #1}{}
+}
+\makeatother
+
+
+%参照コマンド設定
+\newcommand{\refchapter}[1]{第 $\ref{#1}$ 章}
+\newcommand{\refsection}[1]{節 $\ref{#1}$}
+\newcommand{\refsubsection}[1]{項 $\ref{#1}$}
+\newcommand{\refexample}[1]{例 $\ref{#1}$}
+\newcommand{\reffigure}[1]{図 $\ref{#1}$}
+\newcommand{\reftable}[1]{表 $\ref{#1}$}
+\newcommand{\refeqnarray}[1]{式 $\ref{#1}$}
+
+%参照コマンド追加
+\newcommand{\refdefinition}[1]{定義 $\ref{#1}$}
+\newcommand{\reftheorem}[1]{定理 $\ref{#1}$}
+\newcommand{\refformalization}[1]{定式化 $\ref{#1}$}
+\newcommand{\refpropositional}[1]{命題 $\ref{#1}$}
+\newcommand{\reflemma}[1]{補題 $\ref{#1}$}
+\newcommand{\refalgorithm}[1]{Algorithm $\ref{#1}$}
+\renewcommand{\lstlistingname}{図}
+
+%各種コマンド追加
+\newtheorem{definition}{定義}[chapter]
+\newtheorem{example}{例}[chapter]
+\newtheorem{theorem}{定理}[chapter]
+\newtheorem{formalization}{定式化}[chapter]
+\newtheorem{lemma}{補題}[chapter]
+\newtheorem{proof}{証明}[chapter]
+\newtheorem{corollary}{系}[chapter]
+\newtheorem{proposition}{命題}[chapter]
+\newtheorem{problem}{問題}[chapter]
+
+
+%証明に関する設定追加
+\renewcommand{\theproof}{}
+\newcommand{\qed}{\hfill $\Box$ \par}
+
+
+%ベクトル表記命令追加
+\def\vec#1{\boldsymbol #1}
+\def\subfigcapskip{0pt}
+
+
+%追加記号
+\newcommand{\Max}{\mathop{\rm max}\limits}
+\newcommand{\Min}{\mathop{\rm min}\limits}
+
+\newcommand{\Argmax}{\mathop{\rm arg~max}\limits}
+\newcommand{\Argmin}{\mathop{\rm arg~min}\limits}
+
+\newcommand{\Sum}{\sum\limits}
+
+\newcommand{\lb}{\textit{lb}}
+\newcommand{\ub}{\textit{ub}}
+
+
+%インスタンス
+\newcommand{\OptimizationProblem}[3]{
+	%\text{}\\
+	%\hrulefill\text{}\\
+	({\textbf{#1}})
+	\begin{description}
+		\item[Instance :] #2
+		\item[Goal :] #3
+	\end{description}
+	%\hrulefill
+}
+
+\newcommand{\myComment}[1]{%
+\textcolor{blue}{#1}%
+}%
+
+\newcommand{\mySupplement}[1]{%
+\textcolor{purple}{#1}%
+}%
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+	%\title{R-MaxSAT : 敵対者が存在するMaxSAT}
+	%\author{　\\ ~ \\ ~ \\ ~ \\ ~ \\　島村友大 \ \ \ \ }
+	%\date{令和4年2月 \\ ~ \\ 電気情報工学科}
+	%上のコマンドは入力しなかったら今日の日付になる
+	%\maketitle				%表題を出力
+
+	\begin{titlepage}
+    \begin{center}
+        % 空行
+        \text{}\\
+        \vspace{100pt}
+
+        % タイトル部分
+        \LARGE{
+            \text{ニューラルネットワークを用いた}\\
+            \text{両方向メニューアルゴリズムの提案}\\
+        }
+
+        \vspace{300pt}
+
+        % 著者名
+        \text{\LARGE 島村友大}\\
+
+        \vspace{10pt}
+
+        % 発行年月と所属
+        \text{\large 令和 9年 2月}\\
+        \text{\large 情報理工学専攻}\\
+			\end{center}
+	\end{titlepage}
+
+	%カウンタには親子関係を持つものがあります．
+	%これは親カウンタが1つ増えると子カウンタがクリアされる関係にあるもので，
+	%章立てコマンドによって振られる番号やネストしたenumerate環境のラベル番号などがこれにあたります．
+	%例えばsubsectionカウンタは，それよりも1つ上のレベルのsectionカウンタを親カウンタに持つカウンタです．
+	%このため，\sectionコマンドを用いるとsubsection以下のカウンタがすべてクリアされます．
+	%章立てコマンドのとる階層構造は，このような親子関係にあるカウンタによって制御されています．
+	%\subsectionコマンドはsubsectionカウンタの番号を，\sectionコマンドはsectionカウンタの番号を出力するコマンドであるとみることもできます．
+
+	\pagenumbering{roman}		%ページ番号をローマ数字で出力	%概要（目次含む）と本論部分はページ番号のフォントが異なる
+
+	\begin{abstract}
+
+
+
+	\end{abstract}
+
+
+	%目次の出力
+	\tableofcontents
+	\newpage
+
+	\pagenumbering{arabic}		%ページ番号をアラビア数字で出力
+
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%\clearpage
+	% 参考文献
+	%\chapter*{参考文献}
+	% 別途bibファイルを作るのが便利
+	% https://qiita.com/takahyon/items/7d08a7cc6df96e266d95
+	% .bst
+	%\bibliographystyle{jplain}
+	%\bibliographystyle{junsrt}
+	% .bib
+	%\bibliography{bunken2}
+
+	% \bibliographystyle{junsrt}	%引用する順番で番号をつける
+
+\bibliography{thesis.bib}
+\bibliographystyle{plainnat}
+
+\end{document}
+
