@@ -271,7 +271,7 @@
 		PA-ODR（Preference-Aware Overlapping De-Reservation）は逆に，残った席をすべて埋める代わりに
 		固定定員のほうを諦め，埋められない留保定員を一般カテゴリへ振り替える（留保解除）．
 		前者はscore feasibleかつカテゴリ内公平であり，後者はカテゴリ内公平性と
-		留保カテゴリ間の交換安定性を保つが，耐戦略性と正当な羨望の不在を失う．
+		留保カテゴリ間のacross category fairnessを保つが，耐戦略性と正当な羨望の不在を失う．
 		最後に，3つのメカニズムを実装し，無作為生成した300事例上で
 		両応答の代価を定量的に比較する．
 	\end{abstract}
@@ -365,7 +365,7 @@ score feasibleを壊してしまうことがあるからである．
 \begin{enumerate}
 \item スコア制約を伴う重複留保枠の設定に合わせて，標準的な性質を定義し直す．
       非浪費性はスコア制約に相対化する必要がある一方，
-      カテゴリ内公平性と交換安定性は弱めずに済む（\refchapter{cha:model}）．
+      カテゴリ内公平性とacross category fairnessは弱めずに済む（\refchapter{cha:model}）．
       この緩和は形式上の言い換えにとどまらない．
       後述の TA-DA はスコア制約に相対化した非浪費性を満たしながら，
       score feasibleの条件を外した非浪費性には違反しており，
@@ -381,14 +381,14 @@ score feasibleを壊してしまうことがあるからである．
       続く2つの章は，その諦め方の2通りに対応する．
 \item TA-DA を分析する．TA-DA は公示した定員をそのまま保ち，
       出願先をスコア制約を満たす組に限ることで留保充足性を諦める．
-      score feasible・カテゴリ内公平性・交換安定性は満たすが，
+      score feasible・カテゴリ内公平性・across category fairnessは満たすが，
       非浪費性はスコア制約に相対化した意味にとどまる．
       すなわち，スコア制約を守る代償を定員ではなく合格者数の形で払う（\refchapter{cha:tada}）．
 \item PA-ODR を提案する．こちらは固定定員のほうを諦め，
       埋まらない留保定員を意図的に解除するメカニズムである．
       score feasibleを必ず満たし，最終定員に対する非浪費性，カテゴリ内公平性，
-      留保カテゴリ間の交換安定性を保つ一方で，耐戦略性と正当な羨望の不在，
-      および一般カテゴリを含めた交換安定性を失う（\refchapter{cha:paodr}）．
+      留保カテゴリ間のacross category fairnessを保つ一方で，耐戦略性と正当な羨望の不在，
+      および一般カテゴリを含めたacross category fairnessを失う（\refchapter{cha:paodr}）．
 \item 留保側の選択を最大重み二部マッチングとして実装し，最小留保解除問題を定式化した上で，
       定員条件を変えながら3つのメカニズムを比較するプロトタイプを報告する
       （\refremark{rem:computation}，\refremark{rem:minderes}，\refchapter{cha:experiments}）．
@@ -411,7 +411,7 @@ PA-ODR は公示定員を諦めて席そのものを廃止する．}
 feasibility & $q$ に対して可 & $q$ に対して可 & 最終定員 $\hat q$ に対して可 \\
 カテゴリ内公平性（\refdefinition{def:fair}） & 満たす & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-fair}） \\
 非浪費性（スコア相対，\refdefinition{def:nw}） & 満たす & 一般には未解決；$o$ では成立（\refpropositional{prop:tada-props}），実験した全事例で成立 & $\hat q$ に関して満たす \\
-留保カテゴリ間の交換安定性（\refdefinition{def:swap}） & 満たす & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-swap}） \\
+留保カテゴリ間のacross category fairness（\refdefinition{def:swap}） & 満たす & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-swap}） \\
 \hline
 Score Feasibility & 満たさない（\refpropositional{prop:spse-not-sf}） & 満たす（\refpropositional{prop:tada-props}） & 満たす（\refpropositional{prop:paodr-basic}） \\
 非浪費性（score feasibleの条件なし） & 満たす & 満たさない（\refexample{ex:tada-idle}） & $\hat q$ に関して満たす \\
@@ -603,14 +603,14 @@ $c'=o$ ならば一般カットオフが\emph{上がる}ので，
 1つの学校が複数の入学経路を用意しているとき，
 2人がそれぞれ相手の望む経路を占めているという状況は典型的に起こる．
 
-\begin{definition}[交換安定性]
+\begin{definition}[across category fairness]
 \label{def:swap}
 $\mu$ をfeasibleとし，$c\neq c'$ について $i\in\mu_c$，$j\in\mu_{c'}$ とする．
 組 $(i,j)$ が\emph{ブロッキング交換}であるとは，
 (i) $c'\in V_i$ かつ $c\in V_j$，(ii) $c'\succ_i c$ かつ $c\succ_j c'$
 が成り立つことをいう．
-$\mu$ がブロッキング交換を許さないとき\emph{交換安定}であるといい，
-$c,c'\in T$ なるブロッキング交換を許さないとき\emph{留保カテゴリ間で交換安定}であるという．
+$\mu$ がブロッキング交換を許さないとき\emph{across category fair}であるといい，
+$c,c'\in T$ なるブロッキング交換を許さないとき\emph{留保カテゴリ間でacross category fair}であるという．
 \end{definition}
 
 \refdefinition{def:nje}と同様，ここでもscore feasibleの条件は付けない．
@@ -620,9 +620,9 @@ $c,c'\in T$ なるブロッキング交換を許さないとき\emph{留保カ�
 なお，カテゴリ内公平性はマッチ済みの学生どうしを比較しないため，
 交換については何も述べない．これを扱うのは\refdefinition{def:nje}である．
 
-\begin{lemma}[正当な羨望の不在は交換安定性を含意する]
+\begin{lemma}[正当な羨望の不在はacross category fairnessを含意する]
 \label{lem:nje-swap}
-正当な羨望を持たないfeasibleなマッチングはすべて交換安定である．
+正当な羨望を持たないfeasibleなマッチングはすべてacross category fairである．
 \end{lemma}
 
 \begin{proof}
@@ -707,7 +707,7 @@ $i$ は停止時に未マッチなので，ループの継続条件より $V_i$ 
 
 \begin{proposition}[正当な羨望の不在]
 \label{prop:spse-nje}
-SPSE の出力は正当な羨望を持たず，したがってカテゴリ内で公平かつ交換安定である．
+SPSE の出力は正当な羨望を持たず，したがってカテゴリ内で公平かつacross category fairである．
 \end{proposition}
 
 \begin{proof}
@@ -960,7 +960,7 @@ $e_t^+(\mu^{(\bar\sigma)})\ge\bar\sigma-\delta$ である．
 \label{prop:tada-props}
 TA-DA の出力は元の定員 $q$ に関してfeasibleであり，score feasibleであり，
 \refdefinition{def:fair}の意味でカテゴリ内公平であり，
-\refdefinition{def:swap}の意味で交換安定である．
+\refdefinition{def:swap}の意味でacross category fairである．
 さらに，未マッチの学生を一般カテゴリに加えることはできない．
 \end{proposition}
 
@@ -984,7 +984,7 @@ $i$ は停止時に未マッチなので $A_i(e)$ のすべてのカテゴリ，
 厳密により良い者としか入れ替えないので，すべての $j'\in\mu_t$ について
 $\sigma_t(j')>\sigma_t(i)$ となり，$j\in\mu_t$ に矛盾する．
 
-\emph{交換安定性．}
+\emph{across category fairness．}
 $(i,j)$ をブロッキング交換とし，$i\in\mu_c$，$j\in\mu_{c'}$ とする．
 まず $c'\in A_i(e)$ かつ $c\in A_j(e)$ の場合を考える．
 $c'\succ_i c$ より $i$ は $c'$ に出願して拒否されたので，
@@ -1038,7 +1038,7 @@ $i_2\notin M(\mu)$，$t_1\in V_{i_2}$，$|\mu_{t_1}|<q^{t_1}$ が
 マッチ済みの学生どうしの交換では，その不満に応えようがない．
 つまり TA-DA は\refdefinition{def:nje}を失い，
 同時に\reflemma{lem:nje-swap}による含意も使えなくなるが，
-交換安定性そのものは\refpropositional{prop:tada-props}により保たれる．
+across category fairnessそのものは\refpropositional{prop:tada-props}により保たれる．
 \end{example}
 
 
@@ -1064,7 +1064,7 @@ $e_o(\mu)\le\tau$ ならば $\mu$ を返し，そうでなければ $\tau\gets e
 \begin{proposition}[A-STDA の性質]
 \label{prop:astda}
 A-STDA はたかだか $|I|+1$ 回の DA の実行で停止し，
-その出力は $q$ に関してfeasible，score feasible，カテゴリ内公平，かつ交換安定である．
+その出力は $q$ に関してfeasible，score feasible，カテゴリ内公平，かつacross category fairである．
 \end{proposition}
 
 \begin{proof}
@@ -1073,7 +1073,7 @@ $e_o(\mu)$ は実現した一般カットオフであるから素点の1つで�
 同じ値を繰り返すことはないので，たかだか $|I|$ 回の更新で判定 $e_o(\mu)\le\tau$ が成立する．
 停止時，$\mu_t$ の各 $i$ は $t$ に出願しているので
 $\sigma_t(i)\ge\tau-\delta\ge e_o(\mu)-\delta$ となり，これがscore feasibleである．
-feasibility・カテゴリ内公平性・交換安定性は\refpropositional{prop:tada-props}と同じ議論で示せる．
+feasibility・カテゴリ内公平性・across category fairnessは\refpropositional{prop:tada-props}と同じ議論で示せる．
 そこで用いているのは，停止時の $A_i(\tau)$ がスコアについて単調であることと，
 留保カテゴリ間で共通であることの2点だけだからである．
 \qed
@@ -1463,7 +1463,7 @@ PA-ODR は SPSE と同じ，弱めないままのカテゴリ内公平性を満�
 ただし SPSE と違い，この性質は拒否の単調性からではなく，
 最終的なfeasibleグラフの中で選ばれたマッチングの最適性から導かれる．
 
-\begin{proposition}[留保カテゴリ間の交換安定性]
+\begin{proposition}[留保カテゴリ間のacross category fairness]
 \label{prop:paodr-swap}
 PA-ODR の出力は，$i\in\mu_c$，$j\in\mu_{c'}$ かつ $c,c'\in T$ なる
 ブロッキング交換 $(i,j)$ を許さない．
@@ -1521,7 +1521,7 @@ $e_o=90$，$e_{t_1}^+=105$ で差は $-15\le\delta$ となる．
 2つのメカニズムの違いは，どちらの主張を認めるかだけであり，
 feasibilityを理由にどちらかを正当化することはできない．
 
-同じ実行は交換安定性も破る．
+同じ実行はacross category fairnessも破る．
 $i_2$ の選好を $o\succ_{i_2}t_1$ に変えても，PA-ODR は $o$ を素点で埋め，
 基準1は $i_2$ を辺の張られた唯一のカテゴリにマッチさせる．
 したがって実行の内容は変わらず，やはり $\mu_o=\{i_1\}$，$\mu_{t_1}=\{i_2\}$ となる．
@@ -1593,9 +1593,9 @@ score feasibleは\refdefinition{def:scorefeas}に照らして直接検証した�
 \caption{各設定100事例におけるプロトタイプの結果．
 「時間」は実行時間の中央値，「SF」はscore feasible，「NW条件なし」は\refdefinition{def:nw}からscore feasibleの条件を外した非浪費性，「羨望なし」は正当な羨望の不在，「解除席」は解除された留保席数を表す．
 \refdefinition{def:nw}のスコア制約に相対化した非浪費性，カテゴリ内公平性，
-および留保カテゴリ間の交換安定性は，
+および留保カテゴリ間のacross category fairnessは，
 3メカニズム・全300事例で成立したため省略した．
-全カテゴリでの交換安定性は SPSE と TA-DA では全事例で成立し，
+全カテゴリでのacross category fairnessは SPSE と TA-DA では全事例で成立し，
 PA-ODR では3つの設定でそれぞれ $99$，$100$，$37$ 事例で成立しなかった．
 括弧内の百分率は，その設定の平均留保席数（それ自体 $|I|$ 以下）に対する比である．}
 \label{tab:prototype}
@@ -1676,8 +1676,8 @@ TA-DA は留保充足性を諦め，公示した席をすべて定員表に残�
 PA-ODR は公示定員を諦め，埋められない席そのものを廃止する．
 各メカニズムが何を保つかは\reftable{tab:comparison}に，
 何を代償として払うかは\reftable{tab:prototype}にまとめた．
-なお交換安定性は，正当な羨望の不在とは異なる形で3者を分ける．
-留保カテゴリ間の交換安定性は3つとも満たしており，
+なおacross category fairnessは，正当な羨望の不在とは異なる形で3者を分ける．
+留保カテゴリ間のacross category fairnessは3つとも満たしており，
 これを失うのは PA-ODR が一般カテゴリを素点だけで埋めるところだけである．
 
 ただし，重複によって説明できる範囲を誇張すべきではない．
