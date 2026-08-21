@@ -130,7 +130,6 @@
 \newcommand{\refpropositional}[1]{命題 $\ref{#1}$}
 \newcommand{\reflemma}[1]{補題 $\ref{#1}$}
 \newcommand{\refalgorithm}[1]{アルゴリズム $\ref{#1}$}
-\newcommand{\refremark}[1]{注意 $\ref{#1}$}
 \renewcommand{\lstlistingname}{図}
 
 %各種コマンド追加
@@ -143,7 +142,6 @@
 \newtheorem{corollary}{系}[chapter]
 \newtheorem{proposition}{命題}[chapter]
 \newtheorem{problem}{問題}[chapter]
-\newtheorem{remark}{注意}[chapter]
 
 
 %証明に関する設定追加
@@ -356,8 +354,8 @@ One-to-one Counting のもとでは，そうした学生が埋められる留保
 本人にとって最も望ましい割当が，別の割当であれば保たれたはずの
 score-feasibility を壊してしまうことがあるからである．
 \refpropositional{prop:spse-not-sf}でこの原因を示し，
-\refremark{rem:overlap-cause}で第1の原因と切り分ける．
-さらに\refpropositional{prop:impossibility}では，同じ切り分けを仮定の形で存在問題に持ち込む．
+第1の原因と切り分ける．
+さらに，同じ切り分けを仮定の形で存在問題に持ち込む．
 留保カテゴリの解放は \citet{AyTu23a} でとられた方式をもとにしている．
 
 \section{本論文の貢献}
@@ -375,8 +373,7 @@ score-feasibility を壊してしまうことがあるからである．
       SPSE は feasibility・non-wastefulness・耐戦略性・正当な羨望の不在を満たすが，
       DA をこの形で用いても，score-feasibility までは保証されない（\refchapter{cha:spse}）．
 \item score-feasibility・一般カテゴリ充足性・留保充足性の3つが同時には成立しえない場合があることを，
-      各留保カテゴリがスコア制約のもとで個別には充足できる場合についてさえ証明する
-      （\refpropositional{prop:impossibility}，\refchapter{cha:impossibility}）．
+      各留保カテゴリがスコア制約のもとで個別には充足できる場合についてさえ証明する．
       これが本論文の要となる結果である．
       スコア制約を守るメカニズムは，3つのうちどれか1つを諦めるほかない．
       続く2つの章は，その諦め方の2通りに対応する．
@@ -392,11 +389,11 @@ score-feasibility を壊してしまうことがあるからである．
       および一般カテゴリを含めた across-category fairness を失う（\refchapter{cha:paodr}）．
 \item 留保側の選択を最大重み二部マッチングとして実装し，最小de-reserve問題を定式化した上で，
       定員条件を変えながら3つのメカニズムを比較するプロトタイプを報告する
-      （\refremark{rem:computation}，\refremark{rem:minderes}，\refchapter{cha:experiments}）．
+      （\refchapter{cha:paodr}，\refchapter{cha:experiments}）．
 \end{enumerate}
 
 \begin{table}[htbp]
-\caption{3つのメカニズムの比較．\refpropositional{prop:impossibility}により
+\caption{3つのメカニズムの比較．本論文の不可能性結果により
 score-feasibility・一般カテゴリ充足性・留保充足性は同時には成り立たない．
 そこで下段の各行は，各メカニズムがこの3つのどれを諦めているかを示す．
 SPSE は score-feasibility を諦め，TA-DA は留保充足性を諦めて席を空けたまま残し，
@@ -665,15 +662,15 @@ SPSE は DA が本来もつ利点，すなわち feasibility・non-wastefulness�
 \caption{Student-Proposing Score-Elevated Mechanism（SPSE）}
 \label{alg:spse}
 \begin{algorithmic}[1]
-\Require $I$，$V=T\cup\{o\}$，定員 $(q^c)_{c\in V}$，選好 $(\succ_i)_{i\in I}$，
-         素点 $\sigma$，適格性 $\T(\cdot)$，加点 $k$
-\Ensure マッチング $\mu=(\mu_c)_{c\in V}$
-\State すべての $c\in V$ について $\mu_c\gets\emptyset$ とし，全学生を未マッチとする
-\State すべての $i$ と $c\in V_i$ について $V_i:=\{o\}\cup\T(i)$ と $\sigma_c(i)$ を計算する
-\While{未出願のカテゴリが $V_i$ に残る未マッチ学生 $i$ が存在する}
-    \State $i$ は $V_i$ のうち未出願で最も選好順位の高い $c$ に出願する
-    \State $c$ は $\mu_c\cup\{i\}$ を考え，$\sigma_c$ の高い順にたかだか $q^c$ 人を保持する
-    \State 拒否された学生は未マッチとなる
+\Require $I$, $V=T\cup\{o\}$, capacities $(q^c)_{c\in V}$, preferences $(\succ_i)_{i\in I}$,
+         raw score $\sigma$, eligibility $\T(\cdot)$, bonus $k$
+\Ensure matching $\mu=(\mu_c)_{c\in V}$
+\State Set $\mu_c\gets\emptyset$ for every $c\in V$, and mark every student as unmatched
+\State Compute $V_i:=\{o\}\cup\T(i)$ and $\sigma_c(i)$ for every $i$ and $c\in V_i$
+\While{there exists an unmatched student $i$ with an unapplied category in $V_i$}
+    \State $i$ applies to her most preferred unapplied category $c\in V_i$
+    \State $c$ considers $\mu_c\cup\{i\}$ and keeps at most $q^c$ students with highest $\sigma_c$
+    \State Rejected students become unmatched
 \EndWhile
 \State \Return $\mu$
 \end{algorithmic}
@@ -788,37 +785,11 @@ $\nu$ 自身にも正当な羨望がある（$i_2$ は $t_1$ を選好するが 
 なお，この命題はスコア加点メカニズムが重複のもとで\emph{のみ}
 スコア制約に違反する，と述べているのではない．
 
-\begin{remark}[スコア実行不能の2つの原因，うち1つが新しい]
-\label{rem:overlap-cause}
-スコア加点政策は，重複がまったくなくてもスコア制約に違反しうる．
-これは \citet{AyTu23b} が指摘した不整合である．
-$T=\{t_1\}$，$q^o=q^{t_1}=1$，$k=5$，$\delta=10$ とし，
-$i_1(100,\emptyset)$，$i_2(80,\{t_1\})$ で $t_1\succ_{i_2}o$ とする．
-SPSE は $\mu_o=\{i_1\}$，$\mu_{t_1}=\{i_2\}$ を返し，
-$e_o-e_{t_1}^+=100-85=15>\delta$ となる．
-この場合，唯一の適格者のスコアが単に低すぎるだけで，割当の決め方に問題はない．
-$t_1$ を空のままにするマッチングは score-feasible・non-wasteful・fair within categories なので，
-\refpropositional{prop:spse-not-sf}の主張自体は重複がなくても成り立つ．
-
-重複は，これとは論理的に独立な第2の原因を付け加える．
-\refpropositional{prop:spse-not-sf}の事例では，$t_1$ と $t_2$ のどちらも $i_2$ にとって
-受入可能であり，調整済みスコアも同じである．
-つまり，スコアが低すぎて入れない候補者はいない．
-$i_2$ はどちらのカテゴリに入っても，単独ではスコア制約を満たす．
-それにもかかわらず SPSE は，この選択を $i_2$ 自身の選好だけで決め，
-$i_2$ を $t_1$ に送って $t_2$ をはるかにスコアの低い $i_3$ に委ねてしまう．
-One-to-one Counting のもとで制約を破っているのは，出願者の顔ぶれではなく
-この割当の決め方である．同じ顔ぶれでも，score-feasible な割当は存在する．
-この原因は単一適格のもとでは起こりえない．割り当て先を選ぶ余地がないからである．
-以降の章はこの原因を扱う．
-さらに\refpropositional{prop:impossibility}では，第1の原因を排除した不可能性を示す．
-\end{remark}
-
 % \chapter{重複に起因する不可能性}
 % \label{cha:impossibility}
 
 % 本モデルで不可能性を示すこと自体は，先に述べたごく単純な理由によって容易である．
-% \refremark{rem:overlap-cause}の2人の事例では，一般カテゴリ充足性が $e_o=100$ を強制し，
+% 2人の事例では，一般カテゴリ充足性が $e_o=100$ を強制し，
 % その水準に届く適格者が誰もいないため，留保充足性は初めから成り立たない．
 % そこで以下では，この理由を仮定によってあらかじめ排除しておく．
 
@@ -879,28 +850,10 @@ One-to-one Counting のもとで制約を破っているのは，出願者の顔
 % 本論文の指摘を認めることにほかならない．
 % PA-ODR は，この譲歩をde-reserveという形で明示的に行うメカニズムである．
 
-% \begin{remark}[障害は重複であって候補者の弱さではない]
-% \label{rem:hall}
-% 個別充足可能性を仮定したことで，「適格者が足りない」という説明は排除されている．
-% そこで，これに代わる説明が何であるかを述べておく．
-% $G(e)$ を\refchapter{cha:paodr}で定義する $e=100$ に誘導されるfeasibleグラフ，
-% $N(S)$ を $S\subseteq T$ のいずれかのカテゴリに隣接する学生の集合とする．
-% このとき $N(\{t_1,t_2\})=\{i_2\}$ であるから，
-% 定員付き Hall 条件 $|N(S)|\ge\sum_{t\in S}q^t$ が $S=T$ で成り立たない．
-% 個別充足可能性とは，この条件を1点集合に限って課したものである．
-% そして不可能性とは，1点集合で成り立つことがより大きな $S$ での成立を導かない，
-% ということにほかならない．
-% $N(\{t\})$ が互いに素であれば両者は一致するので，
-% この隔たりを生んでいるのはまさに重複である．
-% 以上は，PA-ODR がカテゴリごとの定員充足ではなく二部マッチングを中核に据えている
-% 理由の説明にもなっている．障害はカテゴリの\emph{集合}に対して現れるので，
-% カテゴリを1つずつ処理する規則ではそもそも検出できないのである．
-% \end{remark}
-
 \chapter{Threshold-Adjusting Deferred Acceptance}
 \label{cha:tada}
 
-\refpropositional{prop:impossibility}が残す逃げ道はちょうど3つであり，
+不可能性結果が残す逃げ道はちょうど3つであり，
 スコア制約を守るメカニズムは，一般カテゴリ充足性・留保充足性・公示定員の
 いずれか1つを諦めなければならない．
 本章では2番目を，次章では3番目を諦める道を検討する．
@@ -921,21 +874,21 @@ TA-DA は候補となる閾値を順に調べ，スコア制約に違反する�
 残ったもののうち合格者数が最大のものを返す．
 
 \begin{algorithm}[htbp]
-\caption{閾値調整型受入保留メカニズム（TA-DA）}
+\caption{Threshold-Adjusting Deferred Acceptance（TA-DA）}
 \label{alg:tada}
 \begin{algorithmic}[1]
-\Require $I$，$V=T\cup\{o\}$，定員 $(q^c)_{c\in V}$，選好 $(\succ_i)_{i\in I}$，
-         素点 $\sigma$，適格性 $\T(\cdot)$，加点 $k$，許容差 $\delta$
-\Ensure マッチング $\mu=(\mu_c)_{c\in V}$
+\Require $I$, $V=T\cup\{o\}$, capacities $(q^c)_{c\in V}$, preferences $(\succ_i)_{i\in I}$,
+         raw score $\sigma$, eligibility $\T(\cdot)$, bonus $k$, tolerance $\delta$
+\Ensure matching $\mu=(\mu_c)_{c\in V}$
 \State $S\gets\emptyset$
-\ForAll{$e\in\{\sigma(i):i\in I\}$（降順）}
-    \State すべての $i$ について $A_i(e)\gets\{o\}\cup\{t\in\T(i):\sigma(i)+k\ge e-\delta\}$
-    \State $\mu^{(e)}\gets$ $(A_i(e))_{i\in I}$ 上，定員 $q$ での DA の結果
-    \If{$\mu^{(e)}$ がscore-feasible}
+\ForAll{$e\in\{\sigma(i):i\in I\}$ in decreasing order}
+    \State $A_i(e)\gets\{o\}\cup\{t\in\T(i):\sigma(i)+k\ge e-\delta\}$ for every $i$
+    \State $\mu^{(e)}\gets$ the DA outcome on $(A_i(e))_{i\in I}$ with capacities $q$
+\If{$\mu^{(e)}$ is score-feasible}
         \State $S\gets S\cup\{(|M(\mu^{(e)})|,e,\mu^{(e)})\}$
     \EndIf
 \EndFor
-\State \Return $(|M(\mu^{(e)})|,e)$ を辞書式に最大化する $S$ の要素の $\mu^{(e)}$
+\State \Return $\mu^{(e)}$ from an element of $S$ that lexicographically maximizes $(|M(\mu^{(e)})|,e)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -1014,9 +967,8 @@ TA-DA が受け継がないのは，DA がもつ残りの性質である．
 
 \begin{example}[TA-DA が残す空席と non-wastefulness の相対化]
 \label{ex:tada-idle}
-\refremark{rem:overlap-cause}と同じ事例を考える．
 $T=\{t_1\}$，$q^o=q^{t_1}=1$，$k=5$，$\delta=10$，
-$i_1(100,\emptyset)$，$i_2(80,\{t_1\})$，$t_1\succ_{i_2}o$．
+$i_1(100,\emptyset)$，$i_2(80,\{t_1\})$，$t_1\succ_{i_2}o$ の事例を考える．
 $e=100$ では $80+5=85<90$ なので $A_{i_2}(100)=\{o\}$ となり，
 DA の結果は $\mu_o=\{i_1\}$，$\mu_{t_1}=\emptyset$ となる．
 これは score-feasible で，1人がマッチする．
@@ -1043,20 +995,6 @@ $i_2\notin M(\mu)$，$t_1\in V_{i_2}$，$|\mu_{t_1}|<q^{t_1}$ が
 同時に\reflemma{lem:nje-swap}による含意も使えなくなるが，
 across-category fairness そのものは\refpropositional{prop:tada-props}により保たれる．
 \end{example}
-
-\begin{remark}[non-wastefulness の保証が及ぶ範囲]
-\label{rem:tada-nw}
-\refpropositional{prop:tada-props}は\refdefinition{def:nw}を一般カテゴリについては
-解決するが，$i$ が出願を禁じられていた留保カテゴリ $t\notin A_i(e)$ については解決しない．
-そのような $i$ を $t$ に加えると $e_t^+\le\sigma(i)+k<e-\delta$ となるので，
-拡大後のマッチングが score-feasible となるのは $e_o(\mu)<e$ のとき，
-すなわち実現した一般カットオフが選ばれた閾値を下回るときに限られる．
-したがって\refdefinition{def:nw}は $e\le e_o(\mu)$ である限り無条件に成立する．
-逆の場合が起こりうるかどうかは未解決だが，\refchapter{cha:experiments}の事例では一度も生じなかった．
-PA-ODR と対比しておくと，PA-ODR のカットオフは構成上つねに実現値と一致するので，
-そちらではこの問題自体が生じない．
-\end{remark}
-
 
 \section{Adaptive Score-Threshold Deferred Acceptance}
 \label{sec:astda}
@@ -1097,7 +1035,7 @@ Feasibility・within-category fairness・across-category fairness は\refproposi
 
 一般カテゴリにおける non-wastefulness は，先ほどと同様に成り立つ．
 一方，留保カテゴリについては停止判定から $e_o(\mu)\le\tau$ しか得られないため，
-\refremark{rem:tada-nw}で述べた隙間がここでも残る．
+TA-DA と同じ隙間がここでも残る．
 とはいえ，2つのアルゴリズムの結果は実際にはほとんど変わらない．
 無作為生成した $4{,}000$ 事例では，A-STDA はすべての事例で
 2回の DA の実行で不動点に到達し，
@@ -1181,45 +1119,23 @@ $e$ と右側定員 $(\hat q^t)_{t\in T}$ を固定する．
 \citet{GKK+17a}，\citet{KoSo16a} の代替的選択関数の背後にあるものと同じである．
 本論文に固有なのは，台集合が内生的なカットオフによって定まる点にある．
 
-\begin{remark}[計算]
-\label{rem:computation}
-\textsc{PrefLexMaxMatching} は多項式時間で計算可能である．
-共通加点により $\sigma_t(i)$ は $t$ に依存しないので，
-$s(i)$ を $P(e)$ に接続する相異なる加点済みスコアの中での $\sigma(i)+k$ の昇順位とし，
-$n:=|P(e)|\le|I||T|$，$B:=n+1$ とおいて，各許容組に重み
-\[
-w(i,t) := C_1 + C_2\cdot 2^{\,s(i)} - C_3\cdot B^{\,r_i(t)} - 2^{\,p(i,t)}
-\]
-を与える．ただし $C_3>\sum_{P(e)}2^{p(i,t)}$，
-$C_2>\sum_{P(e)}(C_3B^{r_i(t)}+2^{p(i,t)})$，
-$C_1>\sum_{P(e)}|C_2 2^{s(i)}-C_3B^{r_i(t)}-2^{p(i,t)}|$ とする．
-$w$ のもとでの最大重み定員付き二部マッチングは，4つの基準を順に実現する．
-
-この重みの表現に必要なビット数は $O(|I||T|)$ なので，部分問題は多項式時間で解け，
-たとえば最小費用流を用いればよい．
-ただし，この単一の重みにまとめる定式化は多項式性の保証には十分だが，計算量的には重い．
-\reflemma{lem:matroid}を使えば，実装上は合格者集合をまず貪欲法で求め，
-その後に規模の小さい最小費用割当問題を解けば済む．
-本論文のプロトタイプはこの方針をとっている．
-\end{remark}
-
 \begin{algorithm}[htbp]
 \caption{Preference-Aware Overlapping De-Reservation（PA-ODR）}
 \label{alg:paodr}
 \begin{algorithmic}[1]
-\Require $I$，素点 $\sigma$，適格性 $\T(\cdot)$，選好 $(\succ_i)_{i\in I}$，
-         定員 $q^o,(q^t)_{t\in T}$，加点 $k$，許容差 $\delta$，$T$ 上の固定線形順序 $\prec$
-\Ensure マッチング $\mu=(\mu_o,(\mu_t)_{t\in T})$
-\State $\hat q^o\gets q^o$，すべての $t\in T$ について $\hat q^t\gets q^t$
+\Require $I$, raw score $\sigma$, eligibility $\T(\cdot)$, preferences $(\succ_i)_{i\in I}$,
+         capacities $q^o,(q^t)_{t\in T}$, bonus $k$, tolerance $\delta$, fixed order $\prec$ on $T$
+\Ensure matching $\mu=(\mu_o,(\mu_t)_{t\in T})$
+\State $\hat q^o\gets q^o$ and $\hat q^t\gets q^t$ for every $t\in T$
 \While{true}
-    \State 素点上位 $\min\{\hat q^o,|I|\}$ 人を $o$ に割り当て，その集合を $\mu_o$ とする
-    \State $\mu_o\neq\emptyset$ ならば $e\gets\min_{i\in\mu_o}\sigma(i)$，さもなくば $e\gets-\infty$
-    \State $t\in\T(i)$ かつ $\sigma(i)+k\ge e-\delta$ のとき辺 $(i,t)$ を張って $G(e)$ を構成し，
-           $t$ の定員を $\hat q^t$ とする
-    \State \textsc{PrefLexMaxMatching} により $(\mu_t)_{t\in T}$ を計算する
-    \If{$|\mu_t|<\hat q^t$ なる $t$ が存在する}
-        \State $t^\ast\gets$ そのような $t$ のうち $\prec$ で最初のもの
-        \State $\hat q^{t^\ast}\gets\hat q^{t^\ast}-1$，$\hat q^o\gets\hat q^o+1$
+    \State Assign the top $\min\{\hat q^o,|I|\}$ students by raw score to $o$, and call the set $\mu_o$
+    \State If $\mu_o\neq\emptyset$, set $e\gets\min_{i\in\mu_o}\sigma(i)$; otherwise set $e\gets-\infty$
+    \State Build $G(e)$ with edge $(i,t)$ iff $t\in\T(i)$ and $\sigma(i)+k\ge e-\delta$,
+           and give category $t$ capacity $\hat q^t$
+    \State Compute $(\mu_t)_{t\in T}$ by \textsc{PrefLexMaxMatching}
+    \If{there exists $t$ such that $|\mu_t|<\hat q^t$}
+        \State $t^\ast\gets$ the first such category under $\prec$
+        \State $\hat q^{t^\ast}\gets\hat q^{t^\ast}-1$, $\hat q^o\gets\hat q^o+1$
     \Else
         \State \Return $\mu=(\mu_o,(\mu_t)_{t\in T})$
     \EndIf
@@ -1244,36 +1160,6 @@ PA-ODR は score-feasibility を，制度上絶対に譲れない要件として
 そのため，$o$ より留保カテゴリを厳密に選好する学生が $o$ に配置されることがある．
 \refsection{sec:paodr-limits}で示すように，これが羨望の不在と耐戦略性の
 両方を失う原因となる．
-
-% \begin{remark}[何がde-reserveを引き起こすか]
-% \label{rem:trigger}
-% この停止規則は，score-feasibleだけを要求する場合よりも強い．
-% PA-ODR が停止するのは，すべての $t$ について $|\mu_t|=\hat q^t$ となったとき，
-% すなわち\emph{その時点の}定員に関して留保充足性が成り立ったときである．
-% したがって，スコア制約が破れる場合だけでなく，
-% 留保カテゴリが単に埋まらない場合にもde-reserveが起こる．
-% この違いは\refpropositional{prop:spse-not-sf}の事例で確認できる．
-% 第1反復は $\mu_o=\{i_1\}$，$e=100$ を与える．
-% 許容されるには $\sigma(i)\ge85$ が必要なので該当するのは $i_2$ だけであり，
-% 基準3は $i_2$ を第1希望の $t_1$ に送るので，$t_2$ が埋まらない．
-% そこで PA-ODR は $t_2$ を解除し，$\hat q=(2,1,0)$ となる．
-% 第2反復では $\mu_o=\{i_1,i_2\}$，$e=95$ となるので $i_3$ が許容されるが，
-% $i_3$ は $t_2$ にしか適格でなく，その定員はすでに $0$ である．
-% そのため今度は $t_1$ が埋まらず，これも解除される．
-% 最終的に PA-ODR は $\hat q=(3,0,0)$，$\mu_o=\{i_1,i_2,i_3\}$ で停止し，
-% 2つの留保定員がともに失われる．
-
-% しかし同じ命題の $\nu$ は，\emph{元の定員のままで}score-feasible・non-wasteful・公平であった．
-% 1つの留保枠を空席のまま残しておけば済んだのである．
-% この設計を擁護できるとすれば合格者数の点で，
-% PA-ODR は3人全員をマッチさせるのに対し $\nu$ は2人しかマッチさせない．
-% その代償として，ここでは定員が未充足のまま残るのではなく\emph{すべて}失われている．
-% しかも比較対象は仮想のものではない．
-% TA-DA はこの事例で $\mu_o=\{i_1\}$，$\mu_{t_1}=\{i_2\}$，$\mu_{t_2}=\emptyset$ を返す．
-% これは $\nu$ と実質的に同じ結果であり，2つの公示定員を保ったまま2人をマッチさせている．
-% この差が規模を大きくしたときにどうなるかは\refchapter{cha:experiments}で測る．
-% 以下の結果および \textsc{MinDeres} は，すべてこの留保充足性の規則を前提としている．
-% \end{remark}
 
 \begin{lemma}[一般カットオフは単調に下がる]
 \label{lem:monotone}
@@ -1348,23 +1234,9 @@ $o$ を素点上位 $\min\{\hat q^o,|I|\}$ 人で埋めて $G(e)$ を誘導し�
 \textsc{MinDeres} とは，$\sum_t(q^t-\hat q^t)$ を最小にする実現可能な $\hat q$ を求める問題である．
 $\hat q^t\equiv0$ は自明に実現可能なので，この問題は必ず解を持つ．
 実現可能性も停止規則と同様に，残った定員がすべてちょうど埋まることを要求するので，
-\refremark{rem:trigger}の議論がそのまま当てはまる．
+残った定員がすべてちょうど埋まることを要求する．
 次に示す計算量の上界は総当たり列挙によるものである．
 実用的なアルゴリズムとしてではなく，PA-ODR について何が言えるかという点に意味がある．
-
-\begin{remark}[最小de-reserve]
-\label{rem:minderes}
-$\Phi$ を1回の定員付き二部マッチングの計算費用とすると，
-\textsc{MinDeres} は時間 $O(\prod_{t\in T}(q^t+1)\cdot\Phi)$ で解け，
-カテゴリ数が定数ならば多項式時間で解ける．
-実際，候補は数 $q^t-\hat q^t\in\{0,\dots,q^t\}$ によって定まり，
-そこから $\hat q^o$，一般カテゴリの割当，カットオフ $e$，$G(e)$ が順に定まり，
-実現可能性は1回の最大基数マッチングの計算で判定できる．
-列挙すべき候補はたかだか $(|I|+1)^{|T|}$ 個である．
-ただし，カテゴリ数が多い場合に実用的だと主張するものではない．
-\textsc{MinDeres} が $|T|$ に関して固定パラメータ容易であるか，
-あるいは $|T|$ が非有界のとき NP 困難であるかは未解決である．
-\end{remark}
 
 \citet{CsSu26a} は重複する定員の違反量を多項式時間で最小化しているが，
 これは市場が固定された下での安定マッチングを対象とした結果である．
@@ -1415,8 +1287,7 @@ $\hat q^o\gets\hat q^o+1$ となるので，非負整数 $\sum_{t}\hat q^t$ が�
 それ自体 $|I|$ 以下である公示定員を基準とした数値である．}．
 この仮定のもとで $\sum_t\hat q^t\le|I||T|$ なので反復回数は $O(|I||T|)$ であり，
 各反復は素点によるソート，$G(e)$ の構成，
-および\refremark{rem:computation}により多項式である
-\textsc{PrefLexMaxMatching} を1回解くだけである．
+および \textsc{PrefLexMaxMatching} を1回解くだけである．
 
 \emph{Feasibility.}
 各反復で $o$ は上位 $\min\{\hat q^o,|I|\}$ 人を受け取る．
@@ -1600,7 +1471,7 @@ $(|I|,|T|,q^o_{\max},q^t_{\max})=(200,6,30,15)$，$(500,8,70,35)$，$(60,6,30,15
 最初の2つでは総定員が $|I|$ を大きく下回るため席はすべて埋められる余地があり，
 メカニズム間で合格者数に差がつかない．
 第3の設定はこの関係を逆転させており，平均総定員 $64.25$ に対して $|I|=60$ である．
-PA-ODR の実装はマッチングの列挙ではなく\refremark{rem:computation}に従い，
+PA-ODR の実装はマッチングの列挙ではなく，
 合格者集合をマトロイド貪欲法で求めた後，基準3--4 のために最小費用割当を1回解く．
 score-feasibility は\refdefinition{def:scorefeas}に照らして直接検証した．
 
@@ -1637,7 +1508,7 @@ $|I|=60$, $|T|=6$ & SPSE & 0.15 & 45/100 & 100/100 & 100/100 & 55.48 & 0.00 \\
 \end{table}
 
 この実験は平均的な性能を示すためのものではなく，
-\refpropositional{prop:impossibility}が強いるトレードオフの大きさを定量化するためのものである．
+不可能性結果が強いるトレードオフの大きさを定量化するためのものである．
 \reftable{tab:prototype}からは，次の4点が読み取れる．
 
 第1に，SPSE はどの設定でも，約半数の事例でスコア制約に違反している．
@@ -1653,7 +1524,7 @@ TA-DA が席を空けざるをえないのは，
 おおむね SPSE がその席を規則に反して使っていた場合だからである．
 
 第3に，これは定員が希少な設定では見えない点だが，
-\refpropositional{prop:impossibility}に対する2つの応答は，異なる形で代償を払っている．
+不可能性結果に対する2つの応答は，異なる形で代償を払っている．
 定員が制約となる場合，PA-ODR は SPSE と同数の学生をマッチさせ，
 代償はもっぱら定員の側，すなわち留保席の $39\%$ と $49\%$ という形で現れる．
 一方 TA-DA は公示席をすべて保ったまま，代償を合格者数の側，
@@ -1683,7 +1554,7 @@ SPSE が score-feasible に留まる事例数は $34,43,54,79,97$ と増え，
 さらにスコア制約のもとではfeasibilityが内生的なカットオフに依存するので，
 non-wastefulness を制約に相対化して定義し直す必要がある．
 そして各定員が個別には満額まで満たせる場合でさえ，定員を完全に使い切れないことがある．
-\refpropositional{prop:impossibility}はこのことを正確に述べたものであり，
+本論文の不可能性結果はこのことを正確に述べたものであり，
 score-feasible・一般カテゴリ充足性・留保充足性を同時に満たすことはできない．
 
 3つのメカニズムは，この選択に対する異なる立場を表している．
@@ -1699,21 +1570,20 @@ PA-ODR は公示定員を諦め，埋められない席そのものを廃止す�
 ただし，重複によって説明できる範囲を誇張すべきではない．
 カットオフ差の違反も順序依存性も，重複がなくても起こる．
 重複に固有なのは，複数のカテゴリに適格な学生をどこに割り当てるかという問題と，
-\refpropositional{prop:impossibility}に現れる個別条件と同時条件の隔たりである．
-\refremark{rem:hall}では，この隔たりが
-1点集合に対する Hall 条件と，より大きな集合に対する Hall 条件の差であることを示した．
+個別条件と同時条件の隔たりである．
+この隔たりは，1点集合に対する Hall 条件と，
+より大きな集合に対する Hall 条件の差である．
 
 最後に，残された課題を挙げる．
 最も重要なのは，TA-DA が耐戦略的かどうかである．
 肯定的に解決すれば，score-feasible で定員を保ちながら耐戦略的なメカニズムが
 存在することになり，\refpropositional{prop:paodr-notsp}が示す誘因面の損失は，
 score-feasibility の代償ではなく留保充足性の代償として位置づけられる．
-否定的に解決すれば，\refpropositional{prop:impossibility}に
+否定的に解決すれば，不可能性結果に
 誘因面の対応物があることが示唆される．
 $210{,}000$ 事例の探索でも，\refpropositional{prop:spse-sp}の DA による議論でも
 この問いは解決しない．閾値の選択規則が選好に依存するからである．
-第2に，TA-DA が一般に\refdefinition{def:nw}を満たすかどうかも未解決である
-（\refremark{rem:tada-nw}）．
+第2に，TA-DA が一般に\refdefinition{def:nw}を満たすかどうかも未解決である．
 
 
 
