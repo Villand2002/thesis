@@ -88,16 +88,16 @@ S\"onmez and Yenmez \cite{SoYe22a} take reserve capacities as given and impose n
 % \textcolor{red}{Contribution needs to say: adapt the properties to this setting; use DA/SPSE and show it does not guarantee score-feasibility; state the impossibility result; make PA-ODR/de-reservation the main constructive contribution; include the small simulation/prototype check.}
 
 \begin{enumerate}
-\item We adapt the standard properties to overlapping reserves with a cutoff-gap rule: non-wastefulness must be score-relative, while within-category fairness and swap stability remain unweakened (Section~\ref{sec:model}). The weakening is not idle bookkeeping: TA-DA below satisfies the score-relative notion and violates the plain one, in $46$ of $100$ randomized instances (Section~\ref{sec:experiments}).
+\item We adapt the standard properties to overlapping reserves with a cutoff-gap rule: non-wastefulness must be score-relative, while within-category fairness and swap stability remain unweakened (Section~\ref{sec:model}). We also fix what capacity change and an unfilled quota mean, requiring only that de-reservation conserve the total number of seats and reading the cutoff of an undersubscribed category as zero (Definitions~\ref{def:dereserve} and~\ref{def:effcutoff}). The weakening is not idle bookkeeping: TA-DA below satisfies the score-relative notion and violates the plain one, in $46$ of $100$ randomized instances (Section~\ref{sec:experiments}).
 \item We modify student-proposing deferred acceptance for score-elevated categories (SPSE). SPSE is feasible, non-wasteful, strategy-proof and free of justified envy, but using DA this way does not guarantee score-feasibility (Section~\ref{sec:spse}).
 \item We prove that score-feasibility, open-completeness and reserve-completeness may be jointly unattainable, even when each reserve category is individually fulfillable under the cutoff rule (Proposition~\ref{prop:impossibility}, Section~\ref{sec:impossibility}). This is the pivot of the paper: a mechanism enforcing the cutoff rule must give up one of the three, and the last two sections are the two ways of doing so.
 \item We study TA-DA, which keeps the announced capacities and gives up reserve-completeness by restricting proposals to score-admissible pairs. It is score-feasible, fair within categories and swap stable---the last without the no-justified-envy property that yields swap stability for SPSE---but only score-relatively non-wasteful, and it pays for the cutoff rule in coverage rather than in quota (Section~\ref{sec:tada}).
-\item We propose PA-ODR, a deliberate de-reservation mechanism that gives up fixed capacities instead. It enforces score-feasibility and retains non-wastefulness relative to final capacities, within-category fairness and swap stability between reserve categories, but gives up strategy-proofness, no justified envy, and swap stability once the open category is included (Section~\ref{sec:paodr}).
+\item We propose PA-ODR, a deliberate de-reservation mechanism that gives up fixed capacities instead, subject only to conservation of the total number of seats (Definition~\ref{def:dereserve}). It enforces score-feasibility, and alone among the three does so in the effective cutoffs that read an unfilled quota as a bar of zero (Definition~\ref{def:effcutoff}), and retains non-wastefulness relative to final capacities, within-category fairness and swap stability between reserve categories, but gives up strategy-proofness, no justified envy, and swap stability once the open category is included (Section~\ref{sec:paodr}).
 \item We implement the reserve-side choice as maximum-weight bipartite matching, formulate minimum de-reservation, and report a prototype comparing all three mechanisms across capacity regimes (Remarks~\ref{rem:computation} and~\ref{prop:minderes}, Section~\ref{sec:experiments}).
 \end{enumerate}
 
 \begin{table*}[t]
-\caption{The three mechanisms. Proposition~\ref{prop:impossibility} forbids score-feasibility, open-completeness and reserve-completeness together, so each row of the lower block records which of the three a mechanism abandons. SPSE abandons score-feasibility; TA-DA abandons reserve-completeness and leaves seats idle; PA-ODR abandons the announced capacities and retires the seats instead.}
+\caption{The three mechanisms. Proposition~\ref{prop:impossibility} forbids score-feasibility, open-completeness and reserve-completeness together, so each row of the lower block records which of the three a mechanism abandons. SPSE abandons score-feasibility; TA-DA abandons reserve-completeness and leaves seats idle; PA-ODR abandons the announced capacities and retires the seats instead, conserving their total (Def.~\ref{def:dereserve}).}
 \label{tab:comparison}
 \centering
 \small
@@ -110,7 +110,8 @@ Within-category fairness (Def.~\ref{def:fair}) & Yes & Yes (Prop.~\ref{prop:tada
 Non-wastefulness, score-relative (Def.~\ref{def:nw}) & Yes & Open in general; holds at $o$ (Prop.~\ref{prop:tada-props}) and in every instance tested & Yes, w.r.t.\ $\hat q$ \\
 Swap stability within reserves (Def.~\ref{def:swap}) & Yes & Yes (Prop.~\ref{prop:tada-props}) & Yes (Prop.~\ref{prop:paodr-swap}) \\
 \hline
-Score-feasibility & No (Prop.~\ref{prop:spse-not-sf}) & Yes (Prop.~\ref{prop:tada-props}) & Yes (Prop.~\ref{prop:paodr-basic}) \\
+Score-feasibility, realized cutoffs & No (Prop.~\ref{prop:spse-not-sf}) & Yes (Prop.~\ref{prop:tada-props}) & Yes (Prop.~\ref{prop:paodr-basic}) \\
+Score-feasibility, effective cutoffs (Def.~\ref{def:effcutoff}) & No & No (Ex.~\ref{ex:tada-idle}) & Yes (Prop.~\ref{prop:paodr-basic}) \\
 Non-wastefulness, plain & Yes & No (Ex.~\ref{ex:tada-idle}) & Yes, w.r.t.\ $\hat q$ \\
 Swap stability, all categories (Def.~\ref{def:swap}) & Yes (Lem.~\ref{lem:nje-swap}) & Yes (Prop.~\ref{prop:tada-props}) & No (Ex.~\ref{ex:paodr-envy}) \\
 No justified envy (Def.~\ref{def:nje}) & Yes & No (Ex.~\ref{ex:tada-idle}) & No (Ex.~\ref{ex:paodr-envy}) \\
@@ -137,12 +138,28 @@ A matching is a tuple $\mu=(\mu_c)_{c\in V}$ with $\mu_c\subseteq I$; write $M(\
 
 Condition (ii) is the formal statement of one-to-one counting. The open category ranks by raw score, reserve categories by score plus the common bonus. As $i$ is assignable only within $V_i$, define for $c\in V_i$ the \emph{adjusted score} $\sigma_c(i):=\sigma(i)$ if $c=o$ and $\sigma_c(i):=\sigma(i)+k$ if $c=t\in\T(i)$. Reserve categories thus share one ranking over their eligible students, differing only through eligibility, capacities and preferences. The case $k=0$, in which every category ranks by raw score, is covered throughout.
 
+\begin{definition}[De-reservation and conservation of the total]
+\label{def:dereserve}
+An \emph{effective capacity vector} is $\hat q=(\hat q^c)_{c\in V}$ with $\hat q^t\le q^t$ for every $t\in T$ and $\sum_{c\in V}\hat q^c=\sum_{c\in V}q^c$, equivalently $\hat q^o=q^o+\sum_{t\in T}(q^t-\hat q^t)$. A mechanism \emph{de-reserves} when it operates at some $\hat q\neq q$; feasibility, cutoffs and non-wastefulness are read against the vector it operates at, which is $\hat q=q$ for Sections~\ref{sec:spse} and~\ref{sec:tada}.
+\end{definition}
+
+The only discipline we impose on capacity change is conservation of the total: seats may be relabelled from reserve to open, never created or destroyed. This is what a school is committed to, the enrolment target being an external number while the split across categories is an internal instrument, and it makes de-reservation a redistribution rather than a change in the school's size. Judging a mechanism at $\hat q$ instead of $q$ therefore costs the quota and not the seat---the entering class is exactly as large and only the route by which its members enter has moved---which is why we allow it at all. The inequality $\hat q^t\le q^t$ makes it one-directional, so no reserve quota may be inflated at the open category's expense, and Example~\ref{ex:order} shows the cost in quota is nonetheless real.
+
 \begin{definition}[Cutoffs and score-feasibility]
 \label{def:scorefeas}
 For a matching $\mu$ let $e_o(\mu):=\min_{i\in\mu_o}\sigma(i)$, with $e_o(\mu)=-\infty$ if $\mu_o=\emptyset$, and for $t\in T$ let $e_t^+(\mu):=\min_{i\in\mu_t}\sigma_t(i)$, with $e_t^+(\mu)=+\infty$ if $\mu_t=\emptyset$. A feasible $\mu$ is \emph{score-feasible} if $e_o(\mu)-e_t^+(\mu)\le\delta$ for every $t\in T$.
 \end{definition}
 
 We read $e_o(\mu)-e_t^+(\mu)$ as $-\infty$ whenever $\mu_o=\emptyset$ or $\mu_t=\emptyset$, including when both are, so the condition is vacuous there and needs no side condition. No reserve cutoff may fall too far below the open one, measured on the adjusted scale: the bonus is institutionally legitimate and $\delta$ bounds only the gap left after it, so the two parameters do different work rather than granting the advantage twice. In raw scores they compound, a reserve admit falling up to $\delta+k$ below the open cutoff; for $k=0$, $\delta$ alone bounds the raw gap, which is the ten-point rule of \cite{AyTu23b}. Score-feasibility is an ex post requirement on realized cutoffs, not something implied by the within-category ranking rule, which is why Sections~\ref{sec:tada} and~\ref{sec:paodr} need mechanisms that enforce it directly.
+
+Those cutoffs record the weakest admit rather than the bar actually set. A category is \emph{undersubscribed} at $\mu$ when $|\mu_c|<\hat q^c$, the case a school reports as an unfilled quota; it then set no bar at all, having taken every eligible applicant it received, so its cutoff is $0$ and not the score of its weakest admit.
+
+\begin{definition}[Effective cutoffs]
+\label{def:effcutoff}
+Let $\mu$ be feasible for $\hat q$. Put $\tilde e_o(\mu):=e_o(\mu)$ if $|\mu_o|=\hat q^o\ge1$ and $\tilde e_o(\mu):=0$ otherwise; for $t\in T$ put $\tilde e_t^+(\mu):=e_t^+(\mu)$ if $|\mu_t|=\hat q^t\ge1$, $\tilde e_t^+(\mu):=0$ if $t$ is undersubscribed, and $\tilde e_t^+(\mu):=+\infty$ if $\hat q^t=0$. Then $\mu$ is \emph{effectively score-feasible} if $\tilde e_o(\mu)-\tilde e_t^+(\mu)\le\delta$ for every $t\in T$.
+\end{definition}
+
+A category holding no seats sets no bar to compare, whence the last clause: a de-reserved category leaves the constraint rather than violating it, which is what makes Definition~\ref{def:effcutoff} compatible with Definition~\ref{def:dereserve}. Effective score-feasibility implies score-feasibility: it only lowers reserve cutoffs, $\tilde e_t^+(\mu)\le e_t^+(\mu)$, and lowers the open one too except when $\mu_o=\emptyset$, where the realized condition is vacuous anyway. The implication is strict by Example~\ref{ex:tada-idle}. Its bite is that $\tilde e_t^+(\mu)=0$ at an undersubscribed $t$ with $\hat q^t\ge1$, forcing $\tilde e_o(\mu)\le\delta$: unless the open category itself sets a bar no higher than $\delta$, every surviving quota must be filled exactly, and a quota that cannot be filled must be reduced. That is de-reservation, which Definition~\ref{def:dereserve} supplies at no cost in seats, so the two conventions are one design---reading an unfilled quota at $0$ makes it a violation rather than a vacuity, and conservation of the total makes the only remedy an admissible one. Two consequences are recorded where they arise: PA-ODR's stopping rule is not stronger than the cutoff rule requires but identical to it (Remark~\ref{sec:trigger}), and idling a seat, the escape TA-DA takes from Proposition~\ref{prop:impossibility}, is not effectively score-feasible (Example~\ref{ex:tada-idle}). We state results in both readings, as TA-DA satisfies only the weaker.
 
 \subsection{Desiderata}
 
@@ -312,7 +329,7 @@ Individual completability rules out the shortage-of-candidates explanation; what
 \section{\uppercase{Threshold-Adjusting Deferred Acceptance}}
 \label{sec:tada}
 
-Proposition~\ref{prop:impossibility} leaves exactly three ways out, and a mechanism that insists on the cutoff rule must abandon either open-completeness, or reserve-completeness, or the announced capacities. This section takes the middle option and the next section takes the last. TA-DA keeps $q$ untouched and simply declines to fill a reserve seat it cannot fill legally, so the seat stays empty and on the books.
+Read in realized cutoffs, Proposition~\ref{prop:impossibility} leaves exactly three ways out, and a mechanism that insists on the cutoff rule must abandon either open-completeness, or reserve-completeness, or the announced capacities. This section takes the middle option and the next section takes the last. TA-DA keeps $q$ untouched and simply declines to fill a reserve seat it cannot fill legally, so the seat stays empty and on the books.
 
 For a threshold $e\in\R$, let the \emph{admissible application set} of $i$ be
 \[
@@ -345,7 +362,7 @@ Take $e=\bar\sigma:=\max_{i\in I}\sigma(i)$, a candidate threshold. Every $i\in\
 
 \begin{proposition}[Properties of TA-DA]
 \label{prop:tada-props}
-The output of TA-DA is feasible with respect to the original capacities $q$, score-feasible, fair within categories in the sense of Definition~\ref{def:fair}, and swap stable in the sense of Definition~\ref{def:swap}. Moreover no unmatched student can be added to the open category.
+The output of TA-DA is feasible with respect to the original capacities $q$, score-feasible in the realized cutoffs of Definition~\ref{def:scorefeas}, fair within categories in the sense of Definition~\ref{def:fair}, and swap stable in the sense of Definition~\ref{def:swap}. Moreover no unmatched student can be added to the open category.
 \end{proposition}
 
 \begin{proof}
@@ -365,6 +382,8 @@ What TA-DA does not inherit is the rest of the deferred-acceptance package, and 
 Take the instance of Remark~\ref{rem:overlap-cause}: $T=\{t_1\}$, $q^o=q^{t_1}=1$, $k=5$, $\delta=10$, $i_1(100,\emptyset)$ and $i_2(80,\{t_1\})$ with $t_1\succ_{i_2}o$. At $e=100$, $80+5=85<90$, so $A_{i_2}(100)=\{o\}$; DA gives $\mu_o=\{i_1\}$, $\mu_{t_1}=\emptyset$, which is score-feasible and matches one student. At $e=80$, $A_{i_2}(80)=\{o,t_1\}$ and DA gives $\mu_o=\{i_1\}$, $\mu_{t_1}=\{i_2\}$ with $e_o-e_{t_1}^+=100-85=15>\delta$, so that candidate is discarded. TA-DA therefore returns $\mu_o=\{i_1\}$, $\mu_{t_1}=\emptyset$, leaving $t_1$ empty although $i_2$ is eligible for it and unmatched. The outcome is unchanged if $i_2$ instead ranks $o$ first.
 
 The empty seat is a plain waste: $|\mu_{t_1}|=0<q^{t_1}$ and $t_1\in V_{i_2}$. It is not a waste in the sense of Definition~\ref{def:nw}, because adding $i_2$ to $t_1$ produces exactly the discarded candidate, whose gap is $15>\delta$. The example thus separates the two readings of non-wastefulness and shows that the score-relative clause of Definition~\ref{def:nw} is not a bookkeeping convention: it is the difference between calling this outcome wasteful and calling it constrained. The same seat also witnesses justified envy, since $i_2\notin M(\mu)$, $t_1\in V_{i_2}$ and $|\mu_{t_1}|<q^{t_1}$ satisfy both clauses of Definition~\ref{def:nje}. The complainant is unmatched, though, so no exchange between matched students answers her: TA-DA loses Definition~\ref{def:nje}, and with it Lemma~\ref{lem:nje-swap}, yet keeps swap stability by Proposition~\ref{prop:tada-props}.
+
+The same seat separates the two cutoff readings. Here $t_1$ is undersubscribed, so $\tilde e_{t_1}^+(\mu)=0$ while $\tilde e_o(\mu)=100>10=\delta$, and the outcome TA-DA returns is not effectively score-feasible: read through Definition~\ref{def:effcutoff}, a school that leaves a quota unfilled has set no bar in that category and has thereby breached the gap rule it was protecting. TA-DA is score-feasible in realized cutoffs only, which is the price of keeping $q$ fixed, and Lemma~\ref{lem:tada-nonempty} guarantees a survivor of the scan under that reading alone. Under the effective reading Proposition~\ref{prop:impossibility} loses this escape route: giving up reserve-completeness no longer restores the cutoff rule, and de-reservation---which by Definition~\ref{def:dereserve} costs no seat---is left as the only remedy that keeps the open category open.
 \end{example}
 
 \begin{nremark}[How far the non-wastefulness guarantee reaches]
@@ -450,7 +469,7 @@ Based on \textsc{PrefLexMaxMatching}, we propose the Preference-Aware Overlappin
 
 \begin{nremark}[What triggers de-reservation]
 \label{sec:trigger}
-The stopping rule is stronger than score-feasibility alone requires: PA-ODR halts when $|\mu_t|=\hat q^t$ for every $t$, i.e.\ when the outcome is reserve-complete for the \emph{current} capacities. It therefore de-reserves whenever a reserve category cannot be filled, not merely when the score rule would otherwise fail. The difference can be revealed on the instance of Proposition~\ref{prop:spse-not-sf}. The first iteration gives $\mu_o=\{i_1\}$ and $e=100$; admissibility needs $\sigma(i)\ge85$, so only $i_2$ qualifies, and criterion 3 routes her to her top choice $t_1$, leaving $t_2$ short. PA-ODR de-reserves $t_2$, reaching $\hat q=(2,1,0)$. The second iteration gives $\mu_o=\{i_1,i_2\}$ and $e=95$, so $i_3$ becomes admissible---but $i_3$ is eligible only for $t_2$, whose capacity is now $0$, so $t_1$ is short and is de-reserved in turn. PA-ODR ends at $\hat q=(3,0,0)$ with $\mu_o=\{i_1,i_2,i_3\}$ and both quotas destroyed.
+PA-ODR halts when $|\mu_t|=\hat q^t$ for every $t$, i.e.\ when the outcome is reserve-complete for the \emph{current} capacities, and so de-reserves whenever a reserve category cannot be filled. In realized cutoffs that is stronger than score-feasibility alone requires; under Definition~\ref{def:effcutoff} the two coincide whenever $\tilde e_o(\mu)>\delta$, since an undersubscribed quota is itself a breach of the cutoff rule. The gap below is therefore between the stopping rule and the \emph{weaker} reading, and this is where the choice between the two readings has teeth. The difference can be revealed on the instance of Proposition~\ref{prop:spse-not-sf}. The first iteration gives $\mu_o=\{i_1\}$ and $e=100$; admissibility needs $\sigma(i)\ge85$, so only $i_2$ qualifies, and criterion 3 routes her to her top choice $t_1$, leaving $t_2$ short. PA-ODR de-reserves $t_2$, reaching $\hat q=(2,1,0)$. The second iteration gives $\mu_o=\{i_1,i_2\}$ and $e=95$, so $i_3$ becomes admissible---but $i_3$ is eligible only for $t_2$, whose capacity is now $0$, so $t_1$ is short and is de-reserved in turn. PA-ODR ends at $\hat q=(3,0,0)$ with $\mu_o=\{i_1,i_2,i_3\}$ and both quotas destroyed.
 
 Yet $\nu$ of that proposition is score-feasible, non-wasteful and fair \emph{under the original capacities}: an idle category would have sufficed. The design's defence is coverage---PA-ODR matches all three students, $\nu$ only two---and its cost is that here \emph{every} quota is retired rather than merely unmet. The alternative is not hypothetical: TA-DA returns $\mu_o=\{i_1\}$, $\mu_{t_1}=\{i_2\}$, $\mu_{t_2}=\emptyset$ on this instance, a relabelling of $\nu$ keeping both announced quotas and matching two students, and Section~\ref{sec:experiments} measures the gap at scale. All results below, and \textsc{MinDeres}, are relative to the reserve-completeness rule.
 \end{nremark}
@@ -493,7 +512,7 @@ Cs\'aji and Sun \cite{CsSu26a} minimize violation of overlapping quotas in polyn
 
 \subsection{Properties of PA-ODR}
 
-With de-reservation in the model, feasibility and non-wastefulness must be judged against the final vector $\hat q$ rather than the initial $q$; by Example~\ref{ex:order} this qualifier is a genuine weakening, not a bookkeeping convention.
+With de-reservation in the model (Definition~\ref{def:dereserve}), feasibility and non-wastefulness must be judged against the final vector $\hat q$ rather than the initial $q$; by Example~\ref{ex:order} this qualifier is a genuine weakening, not a bookkeeping convention.
 
 \begin{definition}[Non-wastefulness relative to the final effective capacities]
 \label{def:nw-hat}
@@ -502,7 +521,7 @@ Let $\hat q$ be the final effective capacity vector produced by PA-ODR. A matchi
 
 \begin{proposition}[Termination, running time, feasibility, score-feasibility, non-wastefulness]
 \label{prop:paodr-basic}
-PA-ODR terminates; after replacing each $q^c$ by $\min\{q^c,|I|\}$ it runs in time polynomial in the input size. Its output is feasible with respect to the final effective capacities, score-feasible, and non-wasteful relative to them.
+PA-ODR terminates; after replacing each $q^c$ by $\min\{q^c,|I|\}$ it runs in time polynomial in the input size. Its output is feasible with respect to the final effective capacities, score-feasible in the effective cutoffs of Definition~\ref{def:effcutoff} and hence in the realized ones, and non-wasteful relative to those capacities.
 \end{proposition}
 
 \begin{proof}
@@ -512,7 +531,7 @@ PA-ODR terminates; after replacing each $q^c$ by $\min\{q^c,|I|\}$ it runs in ti
 
 \emph{Feasibility.} In every iteration $o$ receives the top $\min\{\hat q^o,|I|\}$ students, reserve assignment runs on the students not in $\mu_o$ with capacities $\hat q^t$, and edges of $G(e)$ join $i$ only to $t\in\T(i)$. So no student is assigned twice and no category is over capacity; the output is the final iteration's assignment.
 
-\emph{Score-feasibility.} Let $e$ be the final cutoff, so $e_o(\mu)=e$. Every reserve assignee is chosen along an edge of $G(e)$, hence satisfies $\sigma(i)+k\ge e-\delta$, so for nonempty $t$ we get $e_t^+(\mu)\ge e-\delta=e_o(\mu)-\delta$, i.e.\ $e_o(\mu)-e_t^+(\mu)\le\delta$; empty categories are vacuous by Definition~\ref{def:scorefeas}.
+\emph{Score-feasibility.} Let $e$ be the final cutoff, so $e_o(\mu)=e$. Every reserve assignee is chosen along an edge of $G(e)$, hence satisfies $\sigma(i)+k\ge e-\delta$, so for nonempty $t$ we get $e_t^+(\mu)\ge e-\delta=e_o(\mu)-\delta$, i.e.\ $e_o(\mu)-e_t^+(\mu)\le\delta$; empty categories are vacuous by Definition~\ref{def:scorefeas}. The effective version follows because the loop exits only with $|\mu_t|=\hat q^t$ for every $t$, so no reserve category is undersubscribed and $\tilde e_t^+(\mu)$ is either $e_t^+(\mu)$ or $+\infty$, while $|\mu_o|<\hat q^o$ forces $\mu_o=I$ and $\tilde e_o(\mu)=0$, leaving the constraint vacuous.
 
 \emph{Non-wastefulness.} $\mu_o$ holds the top $\min\{\hat q^o,|I|\}$ students, so either everyone is matched or $|\mu_o|=\hat q^o$ and nobody can be added to $o$. At termination $|\mu_t|=\hat q^t$ for every $t$, since otherwise another de-reservation would have occurred. So no unmatched student can be added anywhere within $\hat q$, and a fortiori none yields a matching both feasible for $\hat q$ and score-feasible.
 \end{proof}
