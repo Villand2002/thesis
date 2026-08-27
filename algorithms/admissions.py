@@ -510,3 +510,160 @@ def threshold_adjusting_da(problem: AdmissionProblem) -> AdmissionResult:
     _, threshold, chosen = max(scored_results, key=lambda item: (item[0], item[1]))
     chosen.metadata.update({"mechanism": "threshold_adjusting_da", "threshold": threshold})
     return chosen
+
+
+# ---------------------------------------------------------------------------
+# Property checkers used by scripts/paper_table.py (ICAART table).
+# Each one follows a numbered definition of the paper literally; see the
+# docstrings for the correspondence.
+# ---------------------------------------------------------------------------
+
+
+def _caps(result: AdmissionResult, problem: AdmissionProblem) -> Dict[str, int]:
+    return result.effective_capacities or problem.capacities
+
+
+def _assignment_rank(student: Student, result: AdmissionResult) -> Optional[int]:
+    """Rank of the category the student holds, or None when she is unmatched."""
+    category = result.category_of(student.student_id)
+    if category is None:
+        return None
+    return _preference_rank(student, category)
+
+
+def _strictly_prefers(student: Student, category: str, result: AdmissionResult) -> bool:
+    """True when ``category`` beats the student's own assignment (unmatched counts)."""
+    rank_target = _preference_rank(student, category)
+    if rank_target is None:
+        return False
+    rank_own = _assignment_rank(student, result)
+    if rank_own is None:
+        return True
+    return rank_target < rank_own
+
+
+def realized_score_feasible(problem: AdmissionProblem, result: AdmissionResult) -> bool:
+    """Definition "Cutoffs and score-feasibility": empty open or empty reserve is vacuous."""
+    if not result.assignments[OPEN_CATEGORY]:
+        return True
+    e_open = open_cutoff(problem, result)
+    for category in problem.reserved_categories:
+        if not result.assignments[category]:
+            continue
+        if e_open - reserved_cutoff(problem, result, category) > problem.delta:
+            return False
+    return True
+
+
+def effectively_score_feasible(problem: AdmissionProblem, result: AdmissionResult) -> bool:
+    """Definition "Effective cutoffs": an unfilled quota sets a bar of zero."""
+    caps = _caps(result, problem)
+    open_assignees = result.assignments[OPEN_CATEGORY]
+    if len(open_assignees) == caps[OPEN_CATEGORY] >= 1:
+        e_open = open_cutoff(problem, result)
+    else:
+        e_open = 0.0
+    for category in problem.reserved_categories:
+        capacity = caps[category]
+        assignees = result.assignments[category]
+        if capacity == 0:
+            continue
+        if len(assignees) == capacity:
+            e_reserve = reserved_cutoff(problem, result, category)
+        else:
+            e_reserve = 0.0
+        if e_open - e_reserve > problem.delta:
+            return False
+    return True
+
+
+def non_wasteful_plain(problem: AdmissionProblem, result: AdmissionResult) -> bool:
+    """Wastefulness without the score-feasibility clause: any vacant admissible seat."""
+    caps = _caps(result, problem)
+    matched = set(result.matched_students())
+    for sid, student in problem.student_map().items():
+        if sid in matched:
+            continue
+        for category in problem.categories:
+            if not student.can_apply(category):
+                continue
+            if len(result.assignments[category]) < caps[category]:
+                return False
+    return True
+
+
+def non_wasteful(problem: AdmissionProblem, result: AdmissionResult) -> bool:
+    """Definition "Non-wastefulness": the enlarged matching must be score-feasible too."""
+    caps = _caps(result, problem)
+    matched = set(result.matched_students())
+    for sid, student in problem.student_map().items():
+        if sid in matched:
+            continue
+        for category in problem.categories:
+            if not student.can_apply(category):
+                continue
+            if len(result.assignments[category]) >= caps[category]:
+                continue
+            enlarged = {c: list(result.assignments[c]) for c in problem.categories}
+            enlarged[category].append(sid)
+            candidate = build_result(problem, enlarged, caps, result.metadata)
+            if realized_score_feasible(problem, candidate):
+                return False
+    return True
+
+
+def within_category_fairness_strong(problem: AdmissionProblem, result: AdmissionResult) -> bool:
+    """Within-category fairness with clause (iv) ``t \\succ_i \\mu(i)``: matched students may complain."""
+    return not across_category_blocks(problem, result, reserves_only=True)
+
+
+def across_category_fairness(problem: AdmissionProblem, result: AdmissionResult) -> bool:
+    """Definition "Across-category fairness"."""
+    return not across_category_blocks(problem, result, reserves_only=False)
+
+
+def across_category_blocks(
+    problem: AdmissionProblem,
+    result: AdmissionResult,
+    reserves_only: bool = False,
+) -> List[Tuple[str, str, str]]:
+    """Pairs ``(i, c', j)`` witnessing a violation of across-category fairness."""
+    student_map = problem.student_map()
+    found: List[Tuple[str, str, str]] = []
+    categories = problem.reserved_categories if reserves_only else problem.categories
+    for category in categories:
+        assignees = result.assignments[category]
+        if not assignees:
+            continue
+        for sid_i, student_i in student_map.items():
+            if not student_i.can_apply(category):
+                continue
+            if not _strictly_prefers(student_i, category, result):
+                continue
+            score_i = adjusted_score(problem, student_i, category)
+            for sid_j in assignees:
+                if sid_j == sid_i:
+                    continue
+                if score_i > adjusted_score(problem, student_map[sid_j], category):
+                    found.append((sid_i, category, sid_j))
+    return found
+
+
+def no_justified_envy(problem: AdmissionProblem, result: AdmissionResult) -> bool:
+    """Definition "No justified envy": also lets a claimant point at a vacant seat."""
+    caps = _caps(result, problem)
+    student_map = problem.student_map()
+    for sid_i, student_i in student_map.items():
+        for category in problem.categories:
+            if not student_i.can_apply(category):
+                continue
+            if not _strictly_prefers(student_i, category, result):
+                continue
+            assignees = result.assignments[category]
+            if len(assignees) < caps[category]:
+                return False
+            score_i = adjusted_score(problem, student_i, category)
+            for sid_j in assignees:
+                if sid_j != sid_i and adjusted_score(problem, student_map[sid_j], category) < score_i:
+                    return False
+    return True
