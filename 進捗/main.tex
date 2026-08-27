@@ -1,0 +1,607 @@
+% !TeX program = lualatex
+% =====================================================================
+% 進捗報告スライド（2026-08-26 ミーティング 修正後版）
+% PowerPoint 版からの LaTeX (beamer) 移植
+% コンパイル: lualatex main.tex  （または make）
+% =====================================================================
+\documentclass[aspectratio=43,11pt]{beamer}
+
+% ---------- 日本語（pdfLaTeX / LuaLaTeX どちらでも通る） ----------
+\usepackage{iftex}
+\ifLuaTeX
+  \usepackage{luatexja}
+  \usepackage[haranoaji]{luatexja-preset} % TeX Live 同梱の原ノ味フォント
+  \renewcommand{\kanjifamilydefault}{\gtdefault} % beamer は sans 基調
+\else
+  \usepackage[whole]{bxcjkjatype} % pdfLaTeX 用（IPAex フォント）
+\fi
+
+% ---------- 数式ほか ----------
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+
+% ---------- テーマ（元 pptx の見た目に合わせた設定） ----------
+\usetheme{default}
+\useinnertheme{rounded}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{%
+  \hfill
+  \begin{beamercolorbox}[wd=1.8em,ht=2.2ex,dp=1ex,center]{palette primary}
+    \insertframenumber\,/\,\inserttotalframenumber
+  \end{beamercolorbox}}
+\setbeamercolor{structure}{fg=blue!40!black}
+
+% ---------- よく使う記号のマクロ ----------
+\newcommand{\muc}[1]{\mu_{#1}}
+\newcommand{\eo}{e_o}
+\newcommand{\et}{e_t^{+}}
+\newcommand{\score}{\sigma}
+
+\title{進捗報告}
+\author{}
+\date{2026年8月26日}
+
+\begin{document}
+
+% ---------------------------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{目次}
+  \tableofcontents
+\end{frame}
+
+% =====================================================================
+\section{これまでの進捗}
+% =====================================================================
+
+\begin{frame}
+  \centering
+  {\LARGE\bfseries 問題設定}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{モチベーション 1: 重複カテゴリ}
+  留保カテゴリの学生に加点し，加点後点数での割り当てを行う
+
+  \begin{block}{例}
+    女性に 10 点を加点して割り当てる
+  \end{block}
+
+  これを重複カテゴリに拡張すると，
+  \begin{itemize}
+    \item 学生は複数の留保カテゴリに資格を持ちうる
+    \item しかし one-to-one counting では，高々一つのカテゴリにしか計上できない
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{モチベーション 2: cutoff 差を制約として扱う}
+  score-feasibility を通常の raw score cutoff ではなく，
+  \textbf{留保カテゴリ側では加点後の点数を利用して cutoff を定義する}。\\
+  一般 cutoff と留保 cutoff の差を $\delta$ 以内に抑える
+
+  \vspace{1em}
+  重複カテゴリと one-to-one counting の下で，score-feasibility を満たす
+  メカニズムをどう設計するかを考える
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{モデル 1: 基本記号}
+  学生集合 $I$，留保カテゴリ集合 $T$，一般カテゴリ $o$，
+  \[
+    V := T \cup \{o\}, \qquad q^c \in \mathbb{N}\ (c \in V).
+  \]
+  各学生 $i \in I$ について、
+  \begin{itemize}\setlength{\itemsep}{2pt}
+    \item $k \ge 0$（全留保カテゴリ共通の加点），
+    \item $\delta \ge 0$（許容される cutoff の差）．
+    \item 加点前点数 $\score(i) \in \mathbb{R}_{+}$（学生間で相異なる）
+    \item 資格カテゴリ集合 $T(i) \subseteq T$
+    \item 応募可能集合 $V_i := \{o\} \cup T(i)$ 上の厳密な選好 $\succ_i$
+    \item $r_i(c)$: $i$ にとって $c$ が何番目の希望か
+    \item {\color{red}容量の合計: $Q = \sum_{t\in T} q_t + q_o$\\
+      （今回は $Q$ が変化しなければ容量比を変えても良いとする）}
+    \item {\color{red}$\eo(\mu)$: 一般カテゴリのカットオフ（最低点，定員を下回れば 0）}
+    \item {\color{red}$\et(\mu)$: ある留保カテゴリのカットオフ（最低点，割り当てられた学生が
+      いなければ 0）}
+  \end{itemize}
+  % Note: どうして一般カテゴリは0なのかというと基本的にその枠に対して入れたいから
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{モデル 2: One-to-one counting と feasibility}
+  合格者は資格を持つ全カテゴリではなく，メカニズムが選ぶ\textbf{一つ}の
+  カテゴリに割り当てられる。
+
+  \begin{block}{Definition（Matching と feasibility）}
+    $\mu = (\muc{c})_{c \in V}$，\quad $M(\mu) := \bigcup_{c \in V} \muc{c}$
+
+    $\mu$ が feasible とは
+    \begin{enumerate}
+      \item[(i)] $|\muc{c}| \le q^c$ \quad $(\forall c \in V)$
+      \item[(ii)] $\muc{c} \cap \muc{c'} = \emptyset$ \quad $(\forall c \ne c')$
+      \item[(iii)] $c \in V_i$ \quad $(\forall i \in \muc{c})$
+    \end{enumerate}
+    を満たすことである
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{モデル 3: 加点後点数と score-feasibility}
+  $c \in V_i$ に対する\textbf{加点後点数}:
+  \begin{align*}
+    \score_c(i) &= \score(i) \quad (c = o)\\
+    \score_c(i) &= \score(i) + k \quad (k \ge 0,\ \forall t \in T)
+  \end{align*}
+
+  \vspace{0.5em}
+  feasible な $\mu$ が \textbf{score-feasible} であるとは
+  \[
+    \eo(\mu) - \et(\mu) \le \delta \quad (\forall t \in T)
+  \]
+  を満たすことをいう
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{性質 1: Non-wastefulness と Within-category fairness}
+  \begin{block}{Definition（Non-wastefulness）}
+    feasible な $\mu$ が non-wasteful とは，$i \in I \setminus M(\mu)$ と
+    $c \in V_i$ で $i$ を $c$ に加えた結果が feasible かつ score-feasible に
+    なるものが存在しないこと。
+  \end{block}
+
+  \begin{block}{Definition（Within-category fairness）}
+    feasible な $\mu$ が fair within categories とは，次を全て満たす
+    $t \in T$ と $i, j$ が存在しないこと:
+    \begin{align*}
+      &\text{(i)}\ t \in T(i) \cap T(j),\\
+      &\text{(ii)}\ \score_t(i) > \score_t(j),\\
+      &\text{(iii)}\ j \in \muc{t},\\
+      &\text{(iv)}\ t \succ_i \mu(i)
+    \end{align*}
+  \end{block}
+  % Note: 空席があっても，そこに入れると点数制約が破れるなら浪費とは呼ばない。
+  % Note: i,j には共通の割り当てられるべき資格があり、i の方が点数と選好が高い
+  %       にも関わらず、j のみ割り当てられている
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{SPSE: 入力と出力}
+  \begin{block}{入力（問題インスタンス）}
+    \begin{itemize}
+      \item 学生集合 $I$，留保カテゴリ集合 $T$，一般カテゴリ $o$
+        $\left(V = T \cup \{o\}\right)$
+      \item 容量 $q^c \in \mathbb{N}$，加点前点数
+        $\score : I \to \mathbb{R}^{+}$（学生間で相異なる）
+      \item 資格カテゴリ
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{出力}
+    \begin{itemize}
+      \item マッチング $\mu = (\muc{c})_{c \in V}$
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{SPSE: Student-Proposing Score-Elevated Mechanism}
+  加点後点数の下での deferred acceptance。
+  \begin{enumerate}
+    \item $\muc{c} \leftarrow \emptyset$，全員未割当。
+      $V_i = \{o\} \cup T(i)$ と $\score_c(i)$ を計算
+    \item 未応募カテゴリを残す未割当学生がいる間:
+      \begin{itemize}
+        \item $i$ は最も好む未応募の $c \in V_i$ に応募
+        \item $c$ は $\muc{c} \cup \{i\}$ のうち $\score_c$ 上位を高々
+          $q^c$ 人保留
+        \item 拒否された学生は未割当に戻る
+      \end{itemize}
+  \end{enumerate}
+
+  \begin{itemize}
+    \item 学生は同時に高々一つのカテゴリにしか仮割当されない
+    \item 各学生は各カテゴリに高々 1 回応募するのでループは
+      $|I|(|T| + 1)$ 回以下で停止
+    \item {\color{red}要するに DA アルゴリズムを適用している}
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{SPSE の性質}
+  \begin{block}{score-feasibility ・ non-wastefulness ・ within-category fairness}
+    Non-wastefulness: 未割当 $i$ は $V_i$ の全カテゴリに応募済みで拒否されて
+    いる。カテゴリは満員のときしか拒否せず，一度満員になれば容量を空けない
+    $\Rightarrow$ $|\muc{c}| = q^c$
+
+    \vspace{0.8em}
+    Within-category fairness: $j \in \muc{t}$ より低い未割当 $i$ がいるなら，
+    $i$ は $t$ に応募済みで拒否されているはずなので矛盾している
+
+    \vspace{0.8em}
+    \textbf{SPSE は score-feasible とは限らない}
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{PA-ODR}
+  \begin{block}{グラフによるマッチング}
+    \begin{enumerate}
+      \item まず，できるだけ多くの留保カテゴリを埋める
+      \item 同じ人数なら，より高点数の学生を優先する
+      \item それでも同じなら，学生のカテゴリ希望をできるだけ尊重する
+      \item まだ同じ候補が複数あれば，その中から一つ選ぶ
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{PA-ODR: 入力と出力}
+  \begin{block}{入力}
+    \begin{itemize}
+      \item SPSE と同じ問題インスタンス
+        $\left(I, T, o, q^c, \score, T(i), \succ, k\right)$
+      \item 許容 cutoff 差 $\delta$
+      \item カテゴリに対する処理順位
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{出力}
+    \begin{itemize}
+      \item マッチング $\mu = (\muc{o}, (\muc{t})_{t \in T})$:
+        score-feasible・non-wasteful・within-category fair
+      \item 更新後容量 $\hat q^{o}, (\hat q^{t})_{t \in T}$
+        （総容量は不変，$\hat q^{t} \le q^{t}$）
+      \item 差 $q^{t} - \hat q^{t}$ が一般枠へ解放された留保カテゴリ数
+        $=$ de-reservation 量
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{グラフ内マッチングの入出力}
+    \begin{itemize}
+      \item \textbf{入力}: $G(e)$，留保容量 $(\hat q^{t})$，点数 $\score$，
+        希望順位 $r_i$
+      \item \textbf{出力}: 割当 $(\muc{t})_{t \in T}$
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{PA-ODR: アルゴリズム}
+  入力にカテゴリの処理順位 $\prec$ を含める。
+  \begin{enumerate}
+    \item $\hat q^{o} \leftarrow q^{o}$，\ $\hat q^{t} \leftarrow q^{t}$
+    \item 繰り返し:
+      \begin{enumerate}
+        \item[(a)] 加点前点数上位 $\min\{\hat q^{o}, |I|\}$ 人を $o$ に
+          割り当て，$e \leftarrow \min_{i \in \muc{o}} \score(i)$
+        \item[(b)] $G(e)$ を構成（$t$ の容量は $\hat q^{t}$）し，
+          グラフ内マッチングで $(\muc{t})_{t \in T}$ を得る
+        \item[(c)] $|\muc{t}| < \hat q^{t}$ となる $t$ があれば，
+          $\prec$ 最初のものを $t^{*}$ として
+          \[
+            \hat q^{t^{*}} \leftarrow \hat q^{t^{*}} - 1,\quad
+            \hat q^{o} \leftarrow \hat q^{o} + 1
+          \]
+        \item[(d)] $|\muc{t}| < \hat q^{t}$ となる $t$ がなければ $\mu$ を出力
+      \end{enumerate}
+  \end{enumerate}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{PA-ODR: 動作例}
+  \[
+    T = \{t_1, t_2\}, \quad q^{o} = q^{t_1} = q^{t_2} = 1, \quad
+    k = 5, \quad \delta = 10,
+  \]
+  \[
+    i_1(100, \emptyset), \quad
+    i_2(84, \{t_1\})\ (t_2 \succ t_1 \succ o), \quad
+    i_3(83, \{t_2\})\ (t_2 \succ o)
+  \]
+  \[
+    \text{処理順位: } t_1 \succ t_2
+  \]
+
+  まず、最高得点である $i_1$ を一般カテゴリに割り当てる
+  （$\muc{o} = \{i_1\}$，$e = 100$）。\\
+  辺を張るには $\score(i) + 5 \ge 90$ が必要だが $89, 88$ とも届かず，
+  $G(100)$ は辺を張らない。\\
+  次に、$t_1$ を一般カテゴリに de-reserve して考える。
+
+  \begin{itemize}
+    \item $t_1$ を de-reserve: $\hat q = (2, 0, 1)$
+    \item $\muc{o} = \{i_1, i_2\}$，$e = 84$，条件は
+      $84 - \score(i) + 5 \le 10$
+    \item $i_3$ が届き $(i_3, t_2)$ と割り当てられる
+  \end{itemize}
+
+  出力 $\muc{o} = \{i_1, i_2\}$，$\muc{t_2} = \{i_3\}$\\
+  de-reserve は 1 カテゴリに対して行われる
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{PA-ODR: 性質}
+  \begin{block}{score-feasibility ・ non-wastefulness ・ within-category fairness}
+    \begin{itemize}
+      \item Score-feasibility: 留保割当は全て $G(e)$ の辺に沿うので
+        \begin{itemize}
+          \item $\score(i) + k \ge e - \delta$，よって
+            $\et(\mu) \ge \eo(\mu) - \delta$
+        \end{itemize}
+      \item Non-wastefulness（最終容量 $\hat q$ に関して）: 停止時は
+        $|\muc{t}| = \hat q^{t}$ が全ての留保カテゴリ $t$ で成立し，
+        一般カテゴリ $o$ も上位 $\hat q^{o}$ 人で満員
+      \item Within-category fairness: 未割当の学生 $i$ が $j \in \muc{t}$
+        より $\score_t$ で上位なら $(i, t)$ は自動的に $G(e)$ の辺。
+        $j$ を $i$ に置換するとマッチ数は同じで点数ベクトルが厳密に改善し，
+        基準 1--2 の最適性に矛盾。
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% =====================================================================
+\section{前回発表以降の性質}
+% =====================================================================
+
+\begin{frame}{目次}
+  \tableofcontents[currentsection]
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{A-STDA: アイデア}
+  PA-ODR は score-feasibility 違反を考慮して、その後留保カテゴリを解放する
+  ことでマッチングを構成する\\
+  代わりに，最初から留保枠への応募資格を絞ることを考える
+
+  \vspace{1em}
+  ある{\color{red}閾値} $\tau$ を導入し、それに対して応募可能な学生の集合を
+  \[
+    V_i(\tau) = \{o\} \cup \{\, t \in T(i) : \score(i) + k \ge \tau - \delta \,\}
+  \]
+  と定める。
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{A-STDA: 入力と出力}
+  \begin{block}{入力（問題インスタンス）}
+    \begin{itemize}
+      \item SPSE と同じ問題インスタンス
+        $\left(I, T, o, q^c, \score, T(i), \succ, k\right)$
+      \item 許容 cutoff 差 $\delta \ge 0$
+        \begin{itemize}
+          \item 応募可能集合
+            $V_i(\tau) = \{o\} \cup
+             \{\, t \in T(i) : \score(i) + k \ge \tau - \delta \,\}$
+            の定義に使用
+        \end{itemize}
+      \item 閾値 $\tau$（初期値は $-\infty$）
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{出力}
+    \begin{itemize}
+      \item マッチング $\mu = DA(\tau^{*})$
+      \item 停止時の閾値 $\tau^{*}$
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{A-STDA: アルゴリズム}
+  $\eo(\mu)$ は一般カテゴリの cutoff（$\muc{o} = \emptyset$ なら $-\infty$），
+  $DA(\tau)$ は応募可能集合 $V_i(\tau)$ の下での学生提案型 DA を表す。
+
+  \vspace{1em}
+  アルゴリズム:
+  \begin{enumerate}
+    \item $\tau \leftarrow -\infty$
+    \item $\mu \leftarrow DA(\tau)$
+    \item $\eo(\mu) \le \tau$ なら $\mu$ を出力して停止
+    \item そうでなければ $\tau \leftarrow \eo(\mu)$ として 2 へ戻り
+      再度繰り返す
+  \end{enumerate}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{A-STDA: 動作例}
+  \[
+    T = \{t_1, t_2\},\ q^{o} = q^{t_1} = q^{t_2},\ \delta = 10,\ k = 5\text{。}
+  \]
+  \[
+    A(100, \emptyset),\ B(92, \{t_1\}),\ C(80, \{t_2\}),\ D(78, \{t_1, t_2\})\text{。}
+  \]
+
+  \textbf{反復 1}（$\tau = -\infty$）: $t_2$ は
+  $\score_{t_2}(C) = 85 > 83 = \score_{t_2}(D)$ であるので $C$ が保持され，
+  $D$ は割り当てられない。
+  \[
+    \mu = (\{A\}, \{B\}, \{C\}), \quad
+    \eo - \et = 100 - 85 = 15 > 10
+  \]
+  \[
+    \eo(\mu) = 100 > -\infty \text{ であるので } \tau \leftarrow 100\text{。}
+  \]
+
+  \textbf{反復 2}（$\tau = 100$）: 留保枠への応募条件は
+  $\score(i) \ge 85$ であるので
+  \[
+    \mu = (\{A\}, \{B\}, \emptyset), \quad \eo(\mu) = 100 \le 100
+  \]
+
+  二度目の反復でメカニズムは終了する
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{A-STDA: 性質}
+  \begin{block}{score-feasibility ・ non-wastefulness ・ within-category fairness}
+    \textbf{Score-feasibility.}
+    終了時に $\eo(\mu) \le \tau^{*}$ であるので，$i \in \muc{t}$ なら
+    \[
+      \score_t(i) \ge \tau^{*} - \delta \ge \eo(\mu) - \delta
+    \]
+
+    \textbf{公平性.} $\score(i) \ge \tau - \delta - k$ であるので
+    学生 $j$ が応募できるなら，$j$ より高点数の学生 $i$ も応募できる。
+    よって満たす。
+
+    \vspace{0.5em}
+    \textbf{Non-wastefulness}: 満たす
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{性質: Across-Category Fairness}
+  各学生の選好と点数の両方から正当化される不満（justified envy）を，
+  カテゴリをまたいで禁止する
+
+  \vspace{1em}
+  \textbf{Across-category fairness.}\\
+  feasible な $\mu$ が fair across categories とは，次を全て満たす
+  $c' \in V$ と $i, j$ が存在しないこと:
+  \begin{align*}
+    &\text{(i)}\ c' \in V_i
+      &&\text{（$i$ が応募できるカテゴリ）}\\
+    &\text{(ii)}\ j \in \muc{c'}
+      &&\text{（$j$ が $c'$ の席を占めている）}\\
+    &\text{(iii)}\ c' \succ_i \mu(i)
+      &&\text{（$i$ は自分の割当より $c'$ を望む）}\\
+    &\text{(iv)}\ \score_{c'}(i) > \score_{c'}(j)
+      &&\text{（$c'$ の加点後点数で $i$ が $j$ を上回る）}
+  \end{align*}
+  % Note: つまり，自分がより望むカテゴリの席を，そのカテゴリでの点数が
+  %   自分より低い学生が占めている，という状況をなくす。
+  % Note: 旧版は Alcalde (1995) の exchange stability に基づいていたが，
+  %   点数を考慮せず「交換」でしか不満を捉えられないため，選好と加点後点数の
+  %   両方で正当化される envy を禁止する定義に変更した。
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{SPSE: 新しい fairness の証明スケッチ}
+  \textbf{主張.} SPSE の出力は fair within categories かつ
+  fair across categories．
+
+  \vspace{0.5em}
+  \textbf{証明スケッチ}（DA の標準論法）:
+  \begin{enumerate}
+    \item $c' \succ_i \mu(i)$ なる $c' \in V_i$ を任意にとる。
+      学生提案 DA では，$i$ は $\mu(i)$ より先に $c'$ に応募し，
+      拒否されている．
+    \item 拒否の時点で $c'$ は $\score_{c'}$ 上位 $q^{c'}$ 人を保留しており，
+      全員が $\score_{c'}(i)$ を上回る．
+    \item DA では各カテゴリの保留集合は $\score_{c'}$ の意味で単調に改善する
+      （入れ替わるのはより高得点の学生のみ）．
+    \item よって最終的な任意の $j \in \muc{c'}$ で
+      $\score_{c'}(j) > \score_{c'}(i)$ となり，条件 (iv) が成立しない．
+      blocking は存在しない．$\blacksquare$
+  \end{enumerate}
+
+  （within は across で $c' \in T$ とした特殊場合なので同時に従う）
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{PA-ODR: 新しい within が成り立たない反例}
+  \textbf{主張.} PA-ODR の出力は fair within categories とは限らない．
+
+  \vspace{0.5em}
+  \textbf{反例.} $I = \{i, j\}$，$T = \{t\}$，$q^{o} = q^{t} = 1$，
+  $T(i) = T(j) = \{t\}$，$\score(i) > \score(j)$，
+  $t \succ_i o$（$i$ は $o$ より $t$ を望む）とする．
+
+  \vspace{0.5em}
+  \textbf{PA-ODR の動作:}
+  (a) 加点前点数上位 1 名（$= i$）を $o$ に割当．
+  (b) グラフ内マッチングで $t$ に $j$ を割当．
+
+  \vspace{0.5em}
+  \textbf{結果:} $\muc{o} = \{i\}$，$\muc{t} = \{j\}$
+
+  \vspace{0.5em}
+  \textbf{blocking の確認:}
+  $t \in T(i) \cap T(j)$，$\score_t(i) > \score_t(j)$，$j \in \muc{t}$，
+  $t \succ_i \mu(i) = o$ が全て成立．
+
+  \vspace{0.5em}
+  よって出力は fair within categories でない
+  （同じ組が across の blocking にもなる）．$\blacksquare$
+
+  \vspace{0.5em}
+  （旧定義では $i \in M(\mu)$ のため違反にならなかった:
+  割当済み学生の希望を保護していなかった）
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{A-STDA: 新しい fairness の証明スケッチ}
+  \textbf{主張.} A-STDA の出力は fair within / across categories
+  （終了時の閾値 $\tau^{*}$ の不動点性を仮定: 要補題）．
+
+  \vspace{0.5em}
+  \textbf{証明スケッチ.} 最終反復 $DA(\tau^{*})$ を考え，
+  $c' \succ_i \mu(i)$ なる $c' \in V_i$ で場合分け:
+  \begin{itemize}
+    \item \textbf{場合 1}: $c' \in V_i(\tau^{*})$（応募可能）．
+      DA の安定性より，任意の $j \in \muc{c'}$ で
+      $\score_{c'}(j) > \score_{c'}(i)$（SPSE と同じ論法）．
+    \item \textbf{場合 2}: $c' = t \in T(i) \setminus V_i(\tau^{*})$
+      （閾値で排除）．排除条件より $\score(i) + k < \tau^{*} - \delta$．\\
+      一方 $j \in \muc{t}$ は応募資格より
+      $\score(j) + k \ge \tau^{*} - \delta$．よって
+      $\score_t(j) > \score_t(i)$．
+  \end{itemize}
+  いずれの場合も条件 (iv) が成立せず，blocking は存在しない．$\blacksquare$
+
+  \vspace{0.5em}
+  $o$ は常に応募可能なので $c' = o$ の場合は場合 1 に含まれる．
+
+  \vspace{0.5em}
+  \textbf{要補題:} 終了時に $\tau^{*}$ が最終マッチングの $\eo(\mu)$ と
+  整合する（不動点になっている）こと．
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{メカニズムの性質比較}
+  \begin{center}
+    \begin{tabular}{lccc}
+      \toprule
+      性質 & SPSE & PA-ODR & A-STDA \\
+      \midrule
+      Feasibility & \checkmark & \checkmark & \checkmark \\
+      Score-feasibility & $\times$ & \checkmark & \checkmark \\
+      Non-wastefulness & \checkmark & \checkmark & \checkmark \\
+      Within-category fairness & \checkmark & \checkmark & \checkmark \\
+      Across-category fairness & \checkmark & $\times$ & \checkmark \\
+      de-reservation & なし & あり & なし \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+
+  \vspace{1em}
+  \textbf{中心的な知見}
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{まとめ}
+  \begin{itemize}
+    \item SPSE は within-category fairness を満たすが score-feasible でない
+    \item PA-ODR は点数制約を満たし，within-category fairness を満たすが
+      留保カテゴリを一般カテゴリとして de-reserve する必要がある
+    \item A-STDA は adaptive DA のような方式で一般カテゴリの閾値を元に
+      割り当てを構成する
+  \end{itemize}
+
+  \vspace{1em}
+  \textbf{これからの方針}
+  \begin{itemize}
+    \item 孫先生から「加点だけした後に留保カテゴリを考えずに全ての
+      エージェントを割り当てる」というアイデアをいただいているので
+      それを考える
+    \item Across category fair の証明を行い、計算実験を行う
+    \item （可能であれば）ICAART に提出
+  \end{itemize}
+\end{frame}
+
+\end{document}
