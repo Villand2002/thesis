@@ -1,0 +1,72 @@
+
+@article{wang2024gemnet,
+  title={GemNet: Menu-Based, strategy-proof multi-bidder auctions through deep learning},
+  author={Wang, Tonghan and Jiang, Yanchen and Parkes, David C},
+  journal={arXiv preprint arXiv:2406.07428},
+  year={2024}
+}
+
+@article{ravindranath2021deep,
+  title={Deep learning for two-sided matching},
+  author={Ravindranath, Sai Srivatsa and Feng, Zhe and Li, Shira and Ma, Jonathan and Kominers, Scott D and Parkes, David C},
+  journal={arXiv preprint arXiv:2107.03427},
+  year={2021}
+}
+
+@article{MACKENZIE2022105511,
+title = {Menu mechanisms},
+journal = {Journal of Economic Theory},
+volume = {204},
+pages = {105511},
+year = {2022},
+issn = {0022-0531},
+doi = {https://doi.org/10.1016/j.jet.2022.105511},
+url = {https://www.sciencedirect.com/science/article/pii/S0022053122001016},
+author = {Andrew Mackenzie and Yu Zhou},
+keywords = {Menu mechanism, Strategy-proofness, Robust implementation},
+abstract = {We investigate menu mechanisms: dynamic mechanisms where at each history, an agent selects from a menu of his possible assignments. We consider both ex-post implementation and full implementation for a strengthening of dominance that covers off-path histories, and provide conditions under which menu mechanisms provide these implementations of rules. Our results cover a variety of environments, including matching with contracts, labor markets, auctions, school choice, marriage, object allocation, and elections.}
+}
+
+
+@article{shapley1974cores,
+  title={On cores and indivisibility},
+  author={Shapley, Lloyd and Scarf, Herbert},
+  journal={Journal of mathematical economics},
+  volume={1},
+  number={1},
+  pages={23--37},
+  year={1974},
+  publisher={Elsevier}
+}
+
+
+
+@article{dutting2021optimal,
+  title={Optimal auctions through deep learning},
+  author={D{\"u}tting, Paul and Feng, Zhe and Narasimhan, Harikrishna and Parkes, David C and Ravindranath, Sai S},
+  journal={Communications of the ACM},
+  volume={64},
+  number={8},
+  pages={109--116},
+  year={2021},
+  publisher={ACM New York, NY, USA}
+}
+
+@article{gale1962college,
+  title={College admissions and the stability of marriage},
+  author={Gale, David and Shapley, Lloyd S},
+  journal={The American Mathematical Monthly},
+  volume={69},
+  number={1},
+  pages={9--15},
+  year={1962},
+  publisher={Taylor \& Francis}
+}
+
+
+@misc{gurobi,
+  author = {{Gurobi Optimization, LLC}},
+  title = {{Gurobi Optimizer Reference Manual}},
+  year = 2024,
+  url = "https://www.gurobi.com"
+}

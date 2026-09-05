@@ -57,39 +57,146 @@
 
 ---
 
-## 【最優先】分量が上限を超過（swap stability 追加後）
+## 分量: 投稿要件クリア（2026-08-27）
 
-現状（2026-08-18, swap stability 反映後）:
+| | 規定 | 0826改稿後 | 圧縮後 | **削減後（現在）** |
+|---|---|---|---|---|
+| 非空白文字数（参考文献・表・図込み） | ≤50,000 | 67,362 | 62,124 | **49,986** ✅ |
+| ページ数（tectonic 実測） | 12 | 17 | 16 | **13**（あと1ページ） |
 
-- 本文の非空白文字数（同じ機械除去スクリプトによる概算）: **約53,100 / 50,000字**
-  → **約3,100字の超過**。swap stability の追加が正味 +3,100字（総量 +4,300字、既存圧縮 −1,200字）
-- 推定ページ数: 13〜13.5ページ vs Full Paper 枠 12ページ
+- **投稿を止める文字数制限（50,000）はクリア。** 概算スクリプトなので ±10% の誤差はある
+- ページは13。Full Paper 採択時は12ページだが **+4ページは有料**なので提出自体は可能。
+  査読後に本文が動くので、camera-ready 時に再測定すること
+- コンパイル: error 0 / Overfull hbox 0 / 未定義参照 0
 
-### 実施済みの削減（本セッション）
+### 削除したもの（バックアップ `main.tex.before_cuts`）
 
-- [x] `Remark~\ref{rem:capbound}`（容量上限）を Prop.~\ref{prop:paodr-basic} の証明中の脚注に降格
-- [x] `Proposition[MinDeres]` を Remark に圧縮（主張・計算量の式・open question は保持）
-- [x] Prototype 第4読み（δ 感度）を1文に圧縮
-- [x] SPSE 戦略耐性の証明・`rem:hall`・`sec:trigger`・δ/k 議論を純圧縮
+1. **`\subsection{Order Dependence and Non-Minimality}` 全体**（Ex.~order、非最小性の議論、
+   MinDeres Remark、Csáji--Sun 段落）。順序依存の主張は Lemma monotone を畳んだ2文と
+   Conclusion の open question に残した
+2. **nremark 6個すべて**。中身は本文に畳み込み済みで、主張は落としていない:
+   - `rem:overlap-cause`（2原因の切り分け）→ Prop. spse-not-sf 直後の段落
+   - `rem:hall`（Hall 障害）→ Prop. impossibility 直後の段落
+   - `rem:computation`（多項式時間）→ Lemma matroid 直後の段落
+   - `rem:tada-nw`（NW の射程）→ Ex. tada-idle 直後の段落
+   - `sec:trigger`（何が de-reservation を起こすか）→ 削除（Prototype 第4読みに要約が残る）
+3. **TA-DA を落として A-STDA に一本化**。走査版 Algorithm 2 と Lemma「走査は失敗しない」を削除し、
+   `prop:tada-props` を A-STDA の命題（停止性を含む）に書き換え。
+   Ex.~tada-idle も A-STDA の2反復として記述し直した（同じ出力になることは実測で確認済み）。
+   **0826 スライドの3本立て（SPSE / PA-ODR / A-STDA）と一致した**
+4. **Prototype 第2ファミリ（|I|=500）**。表・本文の数値をすべて2ファミリに修正
+5. Lemma「open cutoff は単調に下がる」→ 散文に吸収
 
-### 残る削減候補（**著者判断**。いずれも主張を1つ落とす）
+### 圧縮したもの（主張は不変）
 
-| 候補 | 字数 | 失うもの |
-|---|---|---|
-| `\subsection{Order Dependence and Non-Minimality}` 全体（Ex.~order + 非最小性の議論 + MinDeres Remark） | 約3,170字 | PA-ODR の順序依存＝非最小性という限界の明示。Introduction からの `Example~\ref{ex:order}` 参照も要修正 |
-| Prototype の第2ファミリ（|I|=500）を落とす | 約900字 | スケール確認。第3ファミリ（capacity-rich）が論旨の核なので残す |
-| `Remark~\ref{sec:trigger}`（何が de-reservation を起こすか） | 1,245字 | PA-ODR と TA-DA の対比の要。削ると Prototype 第3読みの伏線が消える |
-| `Remark~\ref{rem:hall}`（Hall 条件による障害の同定） | 704字 | Conclusion が参照しているので同時修正が必要 |
+- 全節の散文を2周、証明14本、example 3本を引き締め
+- レイアウト: Algorithm 1・3 を `algorithm*`（段抜き）→ `algorithm`（1段）に、
+  表を `\footnotesize` + `tabcolsep` 詰めに。**内容ゼロ損失で約1ページ分**
 
-1つ目を採ると1回で解消する。**推奨は1つ目**（PA-ODR の非最小性は Conclusion の open question に1文で残せる）。
+### 残っているもの（すべて維持）
 
-- [ ] 投稿パッケージから `Example.tex` / `Example.pdf`（テンプレート付属の見本）を除外する
-- [ ] LaTeX 処理系のある環境でコンパイルし、実ページ数と実文字数を確認する
-      （このリポジトリの作業環境には latexmk/pdflatex が入っていない）
+4つの公平性の定義と入れ子補題、SPSE / A-STDA / PA-ODR の全命題と証明、
+不可能性定理、PA-ODR の反例2つ（|T|=1 と reserve 内のみ）、実験2ファミリ。
+
+---
+
+## 完了済み（2026-08-27）— 進捗_マスター_0826 ミーティング反映
+
+`進捗/main.tex`（0826 ミーティング修正後スライド）の内容に合わせて公平性の定義体系を入れ替えた。
+バックアップ: `main.tex.before_0826_meeting`
+
+### 定義の変更
+
+- **swap stability を全面削除**（`def:swap` / `lem:nje-swap` / TA-DA の swap 節 /
+  `prop:paodr-swap`）。スライドの注記「旧版は Alcalde (1995) の exchange stability に
+  基づいていたが…定義に変更した」に従った。criterion 3 の存在理由は
+  「reserve 間の交換要求は依然として満たす」という2〜3行の議論として PA-ODR 節に残した
+- **within-category fairness を強化**: 条件 (iv) を `i ∉ M(μ)` から `t ≻_i μ(i)` に変更。
+  旧定義は `def:fair-unm`（Fairness against unmatched claimants）として残した
+- **across-category fairness を新設**（`def:across`）。c' を V 全体に走らせた版
+- **`lem:hierarchy`**: nje ⇒ across ⇒ within ⇒ unmatched の入れ子関係を証明付きで追加
+
+### 証明（スライドの「証明スケッチ」を本文の証明に）
+
+- SPSE: `prop:spse-nje` の系として across/within/unmatched を導出
+- TA-DA: `prop:tada-props` の within+swap 証明を **across-category fairness の2場合分け**
+  （閾値内 = DA の標準論法 / 閾値で排除 = 排除条件から σ_t(j) > σ_t(i)）に置換
+- A-STDA: `prop:astda` に across を追加。スライドが「要補題」としていた
+  **τ* の不動点性は不要**であることを明記（場合分けは τ* 自身で回り、
+  e_o(μ) ≤ τ* は score-feasibility にしか使わない）
+- PA-ODR: **`prop:paodr-unfair` を新設**（within/across を満たさない）。
+  スライドの反例は既存の `ex:paodr-envy` と同一インスタンスなので流用し、
+  さらに **open カテゴリを含まない reserve 内だけの反例**
+  （i1(100,∅), i2(95,{t1,t2}), i3(90,{t2}), t2 ≻_{i2} t1）を追加した。
+  どちらも score-relative 読みでも成立することを確認済み
+
+**スライドの比較表は PA-ODR の within を ✓ としているが、同スライドの反例と矛盾する。
+反例が新しい内容なので反例側を採用した（表 `tab:comparison` は × に修正済み）。**
+
+### 実験の再実行（`scripts/paper_table.py` を新設）
+
+`algorithms/admissions.py` に定義どおりの判定関数を追加
+（`realized_score_feasible` / `effectively_score_feasible` / `non_wasteful` /
+`non_wasteful_plain` / `within_category_fairness_strong` / `across_category_fairness` /
+`no_justified_envy`）。seed 100・3ファミリ・各100件で 4メカニズムを再測定した。
+
+- 旧表の数値は再現した（SPSE score-feas. 54/52/45、matched 62.97/187.33/55.48 など）
+- 表2に **A-STDA 行**と **Across-fair 列**を追加。時間は本セッションの実測値に更新
+- 主要な新事実:
+  - across-category fairness は SPSE / TA-DA / A-STDA で **600/600 成立**、
+    PA-ODR は 0/0/63。**no justified envy と綺麗に分離する**
+    （TA-DA の nje 違反は全て「空席」に対する不満で、across はその節を落としている）
+  - PA-ODR は across と nje が完全に一致（停止時に全枠が埋まるので空席の不満が出ない）
+  - within（新定義）と across は 1,200 回すべてで一致 → PA-ODR の損失は open 枠に限らない
+  - A-STDA は TA-DA と 100/100/78 で完全一致、割当人数は常に同じ
+- δ 感度（34,43,54,79,97 / 30.32,26.38,18.57,7.84,0.61）と overlap 0.15 の 6/100 も再現
+
+### 未着手
+
+- スライドの A-STDA 動作例（A/B/C/D, 2反復で停止）は**分量の都合で本文に入れていない**
+- スライドのまとめにある「加点だけして留保カテゴリを考えずに全員割り当てる」案は
+  Conclusion の open question に1文だけ入れた
 
 ---
 
 ## 完了済み（2026-08-18）
+
+### 引用文献の実在確認（2026-08-18, 29件すべて）
+
+`main.tex` が `\cite` している29キー全件を arXiv API と Crossref API で照合した。
+**捏造・存在しない文献はゼロ。** バックアップ: `references.bib.before_ref_check`
+
+修正済み（3件）:
+
+| key | 誤 | 正 | 出典 |
+|---|---|---|---|
+| `DKT23a` | Matching Mechanisms for Refugee **Settlement** | Refugee **Resettlement** | AER 113(10) 2689–2717, doi:10.1257/aer.20210096 |
+| `ABB24a` | number={1} | number={1--2}（合併号） | Math. Prog. 203(1-2) 247–269, doi:10.1007/s10107-022-01917-1 |
+| `Roth08a` | number={3} | number={3--4}（合併号） | IJGT 36(3-4) 537–569, doi:10.1007/s00182-008-0117-6 |
+
+要判断（1件）:
+
+- `Glit26a`（Near-Feasible Stable Matchings）は **AAMAS 2026（Paphos, 2026-05-25/29,
+  IFAAMAS, doi:10.65109/rzem3915）に extended abstract として採録済み**。
+  ただし arXiv 側の note が "EA to appear at AAMAS 2026" であり、本文が引用している
+  incentive 分析はフルバージョン（arXiv:2602.10851v1）にしかない。
+  arXiv のまま維持するか、AAMAS 版を併記するかは著者判断。Crossref にページ番号はまだない
+
+確認結果（問題なし）:
+
+- arXiv 5件は API で実在・著者・タイトル一致を確認:
+  2312.14648v2 (2023-12-26) / 2602.09189v2 (2026-02-17) / 2604.27823v1 (2026-04-30) /
+  2602.10851v1 (2026-02-11) / 2504.04689**v4 (2026-06-10)**
+  ※ `HuZh25a` は v4 が最新（bib は版指定なしなので最新版に解決される）
+- Crossref 掲載24件は誌名・巻・号・ページ・年・著者姓すべて bib と一致
+- `KaKo24a`（REStud 91(2) 1162–1199）は Crossref の issued が 2023（online-first）だが
+  冊子体は 2024。`AyTu23a` と同じ online-first のずれで、bib の 2024 のままでよい
+- `KoSo16a` は DOI 未記載だが実在（TE 11(2) 683–710, doi:10.3982/te1839）
+
+未解決のまま残るもの:
+
+- `AyTu23b` は依然として著者ページで "Subsumed and Replaced" 扱い（本ファイル冒頭の項目）。
+  arXiv 上の実在は確認済みだが、置換先の照会は未了
 
 ### A-STDA（adaptive 版）の追加 — `swap公平性追加.pptx` スライド 16〜20 より
 
@@ -233,3 +340,18 @@ Introduction → Model → SPSE → **Impossibility** → TA-DA → PA-ODR → P
 
 なお `AyTu23a`（How to De-Reserve Reserves, Management Science）は Turhan 氏のページでは
 2022年掲載、bib は 69(10) 2023。online-first と巻号確定のずれと判断し **69(10), 2023 のまま**とした。
+
+## 実効カットオフ（定員割れ=0）導入に伴う未処理項目
+
+2026-08-25 に Definition `def:dereserve`（総量保存つき de-reservation）と
+Definition `def:effcutoff`（定員割れカテゴリのカットオフは 0）をモデルに追加した。
+残る作業:
+
+- [ ] **Prototype に実効カットオフ違反率を追加する。** 現在 Sec.~\ref{sec:experiments} は
+  TA-DA の「plain NW 違反」を 54/52/46 件と報告しているが、実効カットオフ違反
+  （$|\mu_t|<q^t$ かつ $\tilde e_o(\mu)>\delta$）は同一ではない（前者は後者を含意しない）。
+  数値を実測するまで本文に件数を書かないこと。
+- [ ] **A-STDA も実効 score-feasibility は満たさない**はず（TA-DA と同じ理由）。
+  Prop.~\ref{prop:astda} に一言添えるか、Table~\ref{tab:comparison} の扱いに合わせるか判断する。
+- [ ] **分量.** この追加で約 +2,000 字。Full Paper 12 ページ枠に対して既に超過中なので、
+  削減候補（TODO 上部の表）と併せて再計算する。

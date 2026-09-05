@@ -1,0 +1,387 @@
+
+@article{wang2024gemnet,
+  title={GemNet: Menu-Based, strategy-proof multi-bidder auctions through deep learning},
+  author={Wang, Tonghan and Jiang, Yanchen and Parkes, David C},
+  journal={arXiv preprint arXiv:2406.07428},
+  year={2024}
+}
+
+@article{ravindranath2021deep,
+  title={Deep learning for two-sided matching},
+  author={Ravindranath, Sai Srivatsa and Feng, Zhe and Li, Shira and Ma, Jonathan and Kominers, Scott D and Parkes, David C},
+  journal={arXiv preprint arXiv:2107.03427},
+  year={2021}
+}
+
+@article{MACKENZIE2022105511,
+title = {Menu mechanisms},
+journal = {Journal of Economic Theory},
+volume = {204},
+pages = {105511},
+year = {2022},
+issn = {0022-0531},
+doi = {https://doi.org/10.1016/j.jet.2022.105511},
+url = {https://www.sciencedirect.com/science/article/pii/S0022053122001016},
+author = {Andrew Mackenzie and Yu Zhou},
+keywords = {Menu mechanism, Strategy-proofness, Robust implementation},
+abstract = {We investigate menu mechanisms: dynamic mechanisms where at each history, an agent selects from a menu of his possible assignments. We consider both ex-post implementation and full implementation for a strengthening of dominance that covers off-path histories, and provide conditions under which menu mechanisms provide these implementations of rules. Our results cover a variety of environments, including matching with contracts, labor markets, auctions, school choice, marriage, object allocation, and elections.}
+}
+
+
+@article{shapley1974cores,
+  title={On cores and indivisibility},
+  author={Shapley, Lloyd and Scarf, Herbert},
+  journal={Journal of mathematical economics},
+  volume={1},
+  number={1},
+  pages={23--37},
+  year={1974},
+  publisher={Elsevier}
+}
+
+
+
+@article{dutting2021optimal,
+  title={Optimal auctions through deep learning},
+  author={D{\"u}tting, Paul and Feng, Zhe and Narasimhan, Harikrishna and Parkes, David C and Ravindranath, Sai S},
+  journal={Communications of the ACM},
+  volume={64},
+  number={8},
+  pages={109--116},
+  year={2021},
+  publisher={ACM New York, NY, USA}
+}
+
+@article{gale1962college,
+  title={College admissions and the stability of marriage},
+  author={Gale, David and Shapley, Lloyd S},
+  journal={The American Mathematical Monthly},
+  volume={69},
+  number={1},
+  pages={9--15},
+  year={1962},
+  publisher={Taylor \& Francis}
+}
+
+
+@misc{gurobi,
+  author = {{Gurobi Optimization, LLC}},
+  title = {{Gurobi Optimizer Reference Manual}},
+  year = 2024,
+  url = "https://www.gurobi.com"
+}
+
+% ================================================================
+% [AI 2026-08-21] icaart_26___score/references.bib から，本論文が引用する
+% 文献を移入。上の既存エントリ（メニュー・メカニズム／深層学習系）は
+% 現在は未引用だが，参照用にそのまま残している。
+% ================================================================
+
+@article{ABB24a,
+  title={Cutoff stability under distributional constraints with an application to summer internship matching},
+  author={H. Aziz and A. Baychkov and P. Bir{\'o}},
+  journal={Mathematical Programming},
+  volume={203},
+  number={1--2},
+  pages={247--269},
+  year={2024},
+  publisher={Springer}
+}
+
+@article{Abdu05a,
+	author = {A. Abdulkadiro{\u{g}}lu},
+	journal = {International Journal of Game Theory},
+	number = {4},
+	pages = {535--549},
+	publisher = {Springer},
+	title = {College admissions with affirmative action},
+	volume = {33},
+	year = {2005}}
+
+
+@article{AyBo21a,
+	author = {O. Ayg{\"u}n and I. B{\'o}},
+      volume={13},
+      number={3},
+      pages={1--28},
+      year={2021},
+	journal = {American Economic Journal: Microeconomics},
+	title = {College admission with multidimensional privileges: The {B}razilian affirmative action case},
+	}
+
+
+@article{AyTu20a,
+	author = {O. Ayg{\"u}n and B. Turhan},
+	journal = {Journal of Economic Theory},
+	title = {Dynamic reserves in matching markets: Theory and applications},
+	volume = {188},
+    pages = {105069},
+	year = {2020}}
+
+@article{AyTu23a,
+  author       = {Orhan Ayg{\"{u}}n and
+                  Bertan Turhan},
+  title        = {How to De-Reserve Reserves: Admissions to Technical Colleges in {India}},
+  journal      = {Management Science},
+  volume       = {69},
+  number       = {10},
+  pages        = {6147--6164},
+  year         = {2023}
+}
+
+% [AI 2026-08-21 再確認] 著者の研究ページ (sites.google.com/site/bertanturhan/research) で
+% 依然 "Subsumed and Replaced Papers" に分類。置換先とみられる
+% "Reconciling Affirmative Action and Merit in India: An Axiomatic Analysis"
+% (Aygun & Turhan) は "Under Review" のままで公開版なし（arXiv/SSRN とも未発見）。
+% arXiv 版は v2 2023-12-26 から更新なし。→ 投稿前に著者へ照会すること。
+@techreport{AyTu23b,
+  author       = {O. Ayg{\"{u}}n and B. Turhan},
+  title        = {Inconsistency of Score-Elevated Reserve Policy for {I}ndian Affirmative Action},
+  institution  = {arXiv.org},
+  number       = {2312.14648},
+  note         = {arXiv:2312.14648v2},
+  year         = {2023}
+}
+
+@article{BCC+19b,
+  author       = {S. Baswana and
+                  P. P. Chakrabarti and
+                  S. Chandran and
+                  Y. Kanoria and
+                  U. Patange},
+  title        = {Centralized Admissions for Engineering Colleges in {India}},
+  journal      = {{INFORMS} J. Appl. Anal.},
+  volume       = {49},
+  number       = {5},
+  pages        = {338--354},
+  year         = {2019}
+}
+
+@article{DKPS18a,
+  title={Reserve Design: Unintended Consequences and the Demise of Boston's Walk Zones},
+  author={U. Dur and S. Kominers and P. Pathak and T. S{\"o}nmez},
+  journal={Journal of Political Economy},
+  volume={126},
+  number={6},
+  pages={2457--2479},
+  year={2018}
+}
+
+@article{DKT23a,
+  title={Matching Mechanisms for Refugee Resettlement},
+  author={D. Delacr{\'e}taz and S. Kominers and A. Teytelboym},
+  journal={American Economic Review},
+  volume={113},
+  number={10},
+  pages={2689--2717},
+  year={2023}
+}
+
+@article{EHYY14a,
+	author = {L. Ehlers and I. E. Hafalir and M. B. Yenmez and M. A. Yildirim},
+	journal = {Journal of Economic Theory},
+	pages = {648--683},
+	publisher = {Elsevier},
+	title = {School choice with controlled choice constraints: Hard bounds versus soft bounds},
+	volume = {153},
+	year = {2014}}
+
+@article{EcYe15a,
+	author = {Echenique, F. and Yenmez, M. B.},
+	journal = {American Economic Review},
+	month = {August},
+	number = {8},
+	pages = {2679-94},
+	title = {How to Control Controlled School Choice},
+	volume = {105},
+	year = {2015}}
+
+@article{GaSh62a,
+	author = {D. Gale and L. S. Shapley},
+	journal = {The American Mathematical Monthly},
+	number = {1},
+	pages = {9--15},
+	publisher = {Taylor \& Francis},
+	title = {College admissions and the stability of marriage},
+	volume = {69},
+	year = {1962}}
+
+@article{GKK+17a,
+  title={Designing Matching Mechanisms under General Distributional Constraints},
+  author       = {M. Goto and
+                  F. Kojima and
+                  R. Kurata and
+                  A. Tamura and
+                  M. Yokoo},
+  journal={American Economic Journal: Microeconomics},
+  volume={9},
+  number={2},
+  pages={226--262},
+  year={2017},
+  publisher={American Economic Association}
+}
+
+
+@article{HYY13a,
+	author = {I. E. Hafalir and M. B. Yenmez and M.A. Yildirim},
+	journal = {Theoretical Economics},
+	number = {2},
+	pages = {325--363},
+	publisher = {Wiley Online Library},
+	title = {Effective affirmative action in school choice},
+	volume = {8},
+	year = {2013}}
+
+@article{KHIY17a,
+	author = {R. Kurata and N. Hamada and A. Iwasaki and M. Yokoo},
+	journal = {Journal of Artificial Intelligence Research},
+	keywords = {Diversity},
+	pages = {153--184},
+	title = {Controlled school choice with soft bounds and overlapping types},
+	volume = {58},
+	year = {2017}}
+
+
+@article{KaKo24a,
+    author = {Kamada, Yuichiro and Kojima, Fuhito},
+    title = {Fair Matching under Constraints: Theory and Applications},
+    journal = {The Review of Economic Studies},
+    volume = {91},
+    number = {2},
+    pages = {1162-1199},
+    year = {2024},
+    month = {03},
+    issn = {0034-6527},
+    doi = {10.1093/restud/rdad046},
+    url = {https://doi.org/10.1093/restud/rdad046},
+    eprint = {https://academic.oup.com/restud/article-pdf/91/2/1162/57172836/rdad046.pdf},
+}
+
+@article{KoSo16a,
+  title={Matching with slot-specific priorities: Theory},
+  author={S. D. Kominers and T. S{\"o}nmez},
+  journal={Theoretical Economics},
+  volume={11},
+  number={2},
+  pages={683--710},
+  year={2016}
+}
+
+@article{PRS23a,
+  author       = {P. A. Pathak and
+                  A. Rees{-}Jones and
+                  T. S{\"{o}}nmez},
+  title        = {Reversing Reserves},
+  journal      = {Manag. Sci.},
+  volume       = {69},
+  number       = {11},
+  pages        = {6940--6953},
+  year         = {2023}
+}
+
+@article{PSUY24a,
+  title={Fair Allocation of Vaccines, Ventilators and Antiviral Treatments: Leaving No Ethical Value Behind in Healthcare Rationing},
+  author={P. A. Pathak and T. S{\"o}nmez and M. {\"U}nver  and M. Yenmez},
+  journal={Management Science},
+  volume={70},
+  number={6},
+  pages={3999--4036},
+  year={2024},
+  publisher={INFORMS}
+}
+
+@article{DuFr81a,
+	author = {L. E. Dubins and D. A. Freedman},
+	journal = {The American Mathematical Monthly},
+	number = {7},
+	pages = {485--494},
+	title = {Machiavelli and the {G}ale--{S}hapley algorithm},
+	volume = {88},
+	year = {1981}}
+
+@article{Roth82a,
+	author = {A. E. Roth},
+	journal = {Mathematics of Operations Research},
+	number = {4},
+	pages = {617--628},
+	title = {The economics of matching: Stability and incentives},
+	volume = {7},
+	year = {1982}}
+
+@article{Roth08a,
+	author = {A. E. Roth},
+	journal = {International Journal of Game Theory},
+	number = {3--4},
+	pages = {537--569},
+	publisher = {Springer},
+	title = {Deferred acceptance algorithms: History, theory, practice, and open questions},
+	volume = {36},
+	year = {2008}}
+
+@article{SoYe22a,
+	author = {T. S{\"o}nmez and M. B. Yenmez},
+	journal = {Econometrica},
+	number = {3},
+	pages = {1143--1176},
+	title = {Affirmative Action in {I}ndia via Vertical, Horizontal, and Overlapping Reservations},
+	doi = {10.3982/ECTA17788},
+	volume = {90},
+	year = {2022}}
+
+@article{Flei03a,
+	author = {T. Fleiner},
+	journal = {Mathematics of Operations Research},
+	number = {1},
+	pages = {103--126},
+	title = {A fixed-point approach to stable matchings and some applications},
+	volume = {28},
+	year = {2003}}
+
+% ---- added by prior-work check, 2026-08-18 ----
+
+@techreport{AyTu26a,
+  author      = {O. Ayg{\"u}n and B. Turhan},
+  title       = {Affirmative Action in {I}ndia with Hierarchical Reservations},
+  institution = {arXiv.org},
+  number      = {2602.09189},
+  note        = {arXiv:2602.09189v2; under review},
+  year        = {2026}
+}
+
+@techreport{Glit26a,
+  author      = {F. Glitzner},
+  title       = {Near-Feasible Stable Matchings: Incentives and Optimality},
+  institution = {arXiv.org},
+  number      = {2602.10851},
+  note        = {arXiv:2602.10851v1; extended abstract to appear at AAMAS 2026},
+  year        = {2026}
+}
+
+@inproceedings{CGH20a,
+  author    = {J. Chen and R. Ganian and T. Hamm},
+  title     = {Stable Matchings with Diversity Constraints: Affirmative Action is beyond {NP}},
+  booktitle = {Proceedings of the Twenty-Ninth International Joint Conference on
+               Artificial Intelligence, {IJCAI} 2020},
+  pages     = {146--152},
+  year      = {2020}
+}
+
+@techreport{CsSu26a,
+  author      = {G. Cs{\'a}ji and Z. Sun},
+  title       = {Maximally Diverse Stable Matchings: Optimizing Arbitrary Institutional Objectives},
+  institution = {arXiv.org},
+  number      = {2604.27823},
+  note        = {arXiv:2604.27823v1},
+  year        = {2026}
+}
+
+% [AI 2026-08-21] arXiv 版数を再確認: v1 2025-04-07 / v2 2025-08-15 /
+% v3 2026-05-24 / v4 2026-06-10（最新）。タイトル変更なし，掲載誌なし。
+@techreport{HuZh25a,
+  author      = {X. Hu and J. Zhang},
+  title       = {Verifiable Affirmative Action in Centralized School Admissions},
+  institution = {arXiv.org},
+  number      = {2504.04689},
+  note        = {arXiv:2504.04689v4},
+  year        = {2026}
+}
