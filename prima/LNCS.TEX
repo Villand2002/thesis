@@ -61,7 +61,7 @@ S\"onmez and Yenmez \cite{SoYe20a,SoYe22a} take reserve capacities as given and 
 \item We modify student-proposing deferred acceptance for score-elevated categories (SPSE). SPSE is feasible, non-wasteful, strategy-proof and free of justified envy, but using DA this way does not guarantee score-feasibility (Section~\ref{sec:spse}).
 \item We prove that fixed reserve capacities cannot always be preserved while maintaining score-feasibility, even when each reserve category is individually fulfillable under the cutoff rule (Proposition~\ref{prop:impossibility}).
 \item We propose PA-ODR, a deliberate de-reservation mechanism that enforces score-feasibility and retains non-wastefulness relative to final capacities and within-category fairness, but gives up strategy-proofness and no justified envy (Section~\ref{sec:paodr}).
-\item We implement the reserve-side choice as maximum-weight bipartite matching, formulate minimum de-reservation, and include a small prototype check (Remark~\ref{rem:computation}, Proposition~\ref{prop:minderes}, Table~\ref{tab:prototype-time}).
+\item We implement the reserve-side choice as maximum-weight bipartite matching, formulate minimum de-reservation, and include a small prototype check (Remark~\ref{rem:computation}, Proposition~\ref{prop:minderes}).
 \end{enumerate}
 
 \begin{table}[t]
@@ -309,11 +309,11 @@ The weights need $O(|I||T|)$ bits, so the subproblem is polynomial, for instance
 \end{algorithmic}
 \end{algorithm}
 
-Based on \textsc{PrefLexMaxMatching}, we propose the Preference-Aware Overlapping De-Reservation (PA-ODR) mechanism, described in Algorithm~\ref{alg:paodr}. PA-ODR treats score-feasibility as a hard institutional constraint and should be read as a fallback mechanism, not as a quota-preserving reserve rule. The open category is filled first by raw score; reserve assignment runs only over pairs feasible at the induced cutoff; capacity a reserve category cannot fill is de-reserved to the open category. The mechanism thus preserves merit ordering in the open category and uses preferences only to break ties among already-feasible reserve placements, but may change the effective quotas. The order $\prec$ is part of its specification and makes the output well defined (Section~\ref{sec:order}). Note that PA-ODR is preference-aware only on the reserve side: a student strictly preferring a reserve category to $o$ may still be placed in $o$, which makes it sacrifice both envy-freeness and strategy-proofness, as shown by Section~\ref{sec:paodr-limits}.
+Based on \textsc{PrefLexMaxMatching}, we propose the Preference-Aware Overlapping De-Reservation (PA-ODR) mechanism, described in Algorithm~\ref{alg:paodr}. PA-ODR treats score-feasibility as a hard institutional constraint and should be read as a fallback mechanism, not as a quota-preserving reserve rule. Its institutional rationale is non-wastefulness: if a reserve seat cannot be used without violating the cutoff rule, the seat should not remain idle while admissible students can still be admitted through the open category. The open category is filled first by raw score; reserve assignment runs only over pairs feasible at the induced cutoff; capacity a reserve category cannot fill is de-reserved to the open category. The mechanism thus preserves merit ordering in the open category and uses preferences only to break ties among already-feasible reserve placements, but may change the effective quotas. The order $\prec$ is part of its specification and makes the output well defined (Section~\ref{sec:order}). Note that PA-ODR is preference-aware only on the reserve side: a student strictly preferring a reserve category to $o$ may still be placed in $o$, which makes it sacrifice both envy-freeness and strategy-proofness, as shown by Section~\ref{sec:paodr-limits}.
 
 \begin{nremark}[What triggers de-reservation]
 \label{sec:trigger}
-The stopping rule is stronger than score-feasibility alone requires: PA-ODR halts when $|\mu_t|=\hat q^t$ for every $t$, i.e.\ when the outcome is reserve-complete for the \emph{current} capacities. It therefore de-reserves whenever a reserve category cannot be filled, not merely when the score rule would otherwise fail. The difference can be revealed on the instance of Proposition~\ref{prop:spse-not-sf}, where the first iteration gives $\mu_o=\{i_1\}$, $e=100$; admissibility needs $\sigma(i)\ge85$, only $i_2$ qualifies, so one category is short and PA-ODR de-reserves, ending at $\hat q=(2,0,1)$ with $\mu_o=\{i_1,i_2\}$, $\mu_{t_2}=\{i_3\}$. Yet $\nu$ of that proposition is score-feasible, non-wasteful and fair \emph{under the original capacities}: an idle category would have sufficed. The design's defence is coverage---PA-ODR matches all three students, $\nu$ only two---and its cost is that a quota is retired rather than merely unmet. An idle-category variant halting when no further edge can be added is well defined and score-feasible by the same argument but forfeits that gain; we do not pursue it. All results below, and \textsc{MinDeres}, are relative to the reserve-completeness rule.
+The stopping rule is stronger than score-feasibility alone requires: PA-ODR halts when $|\mu_t|=\hat q^t$ for every $t$, i.e.\ when the outcome is reserve-complete for the \emph{current} capacities. It therefore de-reserves whenever a reserve category cannot be filled, not merely when the score rule would otherwise fail. The difference can be revealed on the instance of Proposition~\ref{prop:spse-not-sf}, where the first iteration gives $\mu_o=\{i_1\}$, $e=100$; admissibility needs $\sigma(i)\ge85$, only $i_2$ qualifies, so one category is short and PA-ODR de-reserves, ending at $\hat q=(2,0,1)$ with $\mu_o=\{i_1,i_2\}$, $\mu_{t_2}=\{i_3\}$. Yet $\nu$ of that proposition is score-feasible, non-wasteful and fair \emph{under the original capacities}: an idle category would have sufficed. The design's defence is coverage and non-wastefulness---PA-ODR matches all three students, $\nu$ only two---and its cost is that a quota is retired rather than merely unmet. An idle-category variant halting when no further edge can be added is well defined and score-feasible by the same argument but forfeits that gain; we do not pursue it. All results below, and \textsc{MinDeres}, are relative to the reserve-completeness rule.
 \end{nremark}
 
 \begin{lemma}[The open cutoff falls monotonically]
@@ -330,13 +330,13 @@ Two opposing forces follow. Lowering $e$ relaxes $\sigma(i)+k\ge e-\delta$, so e
 \subsection{Order Dependence and Non-Minimality}
 \label{sec:order}
 
-De-reservation enables otherwise infeasible reserve assignment but destroys reserve capacity, so one naturally asks to de-reserve as few seats as possible. PA-ODR fails to guarantee this miniality all the time, since the number of de-reserved categories may depend on the order $\prec$.
+De-reservation enables otherwise infeasible reserve assignment but destroys reserve capacity, so one naturally asks to de-reserve as few seats as possible. PA-ODR does not guarantee minimality: for some orders it de-reserves more reserve capacity than another order on the same instance, and the number of de-reserved seats may depend on $\prec$.
 
 \begin{example}[The order $\prec$ changes how many categories are de-reserved]
 \label{ex:order}
 Let $T=\{t_1,t_2\}$, $q^o=q^{t_1}=q^{t_2}=1$, $k=5$, $\delta=10$, with $i_1(100,\emptyset)$, $i_2(84,\{t_1\})$, $i_3(83,\{t_2\})$. In the first iteration $\hat q=(1,1,1)$, so $\mu_o=\{i_1\}$ and $e=100$; admissibility needs $\sigma(i)+5\ge90$, and neither $89$ nor $88$ clears it, so $G(100)$ has no edges and both categories are unfilled.
 
-\emph{If $t_1\prec t_2$}, the algorithm de-reserves $t_1$, giving $\hat q=(2,0,1)$, so $\mu_o=\{i_1,i_2\}$, $e=84$ and admissibility needs $\sigma(i)+5\ge74$. Then $i_3$ qualifies, the edge $(i_3,t_2)$ appears, and the algorithm returns $\mu_o=\{i_1,i_2\}$, $\mu_{t_2}=\{i_3\}$, having de-reserved one categor.
+\emph{If $t_1\prec t_2$}, the algorithm de-reserves $t_1$, giving $\hat q=(2,0,1)$, so $\mu_o=\{i_1,i_2\}$, $e=84$ and admissibility needs $\sigma(i)+5\ge74$. Then $i_3$ qualifies, the edge $(i_3,t_2)$ appears, and the algorithm returns $\mu_o=\{i_1,i_2\}$, $\mu_{t_2}=\{i_3\}$, having de-reserved one category.
 
 \emph{If $t_2\prec t_1$}, it de-reserves $t_2$, giving $\hat q=(2,1,0)$, and again $\mu_o=\{i_1,i_2\}$ with $e=84$; but $i_2$, the only student eligible for $t_1$, has been absorbed into the open category, so $G(84)$ has no edge into $t_1$ and $|\mu_{t_1}|=0<1$ triggers a second de-reservation. The algorithm returns $\mu_o=\{i_1,i_2,i_3\}$, having de-reserved two categories.
 \end{example}
@@ -373,7 +373,7 @@ PA-ODR terminates; after replacing each $q^c$ by $\min\{q^c,|I|\}$ it runs in ti
 \begin{proof}
 \emph{Termination.} A non-terminating iteration sets $\hat q^{t^\ast}\gets\hat q^{t^\ast}-1$ and $\hat q^o\gets\hat q^o+1$, so the nonnegative integer $\sum_{t}\hat q^t$ falls by one each time and the loop stops after at most $\sum_t q^t$ iterations.
 
-\emph{Running time.} That bound is exponential in the input size if capacities are binary-encoded, so normalize $q^c\gets\min\{q^c,|I|\}$ first. This changes no output, since no category can hold more than $|I|$ students and neither the open assignment nor the capacitated matching is affected by capacity above $|I|$; it is also the normalization under which no categor is de-reserved that no student could have filled. Afterwards $\sum_t\hat q^t\le|I||T|$, so there are $O(|I||T|)$ iterations, each sorting by raw score, building $G(e)$ and solving one \textsc{PrefLexMaxMatching}, polynomial by Remark~\ref{rem:computation}.
+\emph{Running time.} That bound is exponential in the input size if capacities are binary-encoded, so normalize $q^c\gets\min\{q^c,|I|\}$ first. This changes no output, since no category can hold more than $|I|$ students and neither the open assignment nor the capacitated matching is affected by capacity above $|I|$; it is also the normalization under which no category is de-reserved that no student could have filled. Afterwards $\sum_t\hat q^t\le|I||T|$, so there are $O(|I||T|)$ iterations, each sorting by raw score, building $G(e)$ and solving one \textsc{PrefLexMaxMatching}, polynomial by Remark~\ref{rem:computation}.
 
 \emph{Feasibility.} In every iteration $o$ receives the top $\min\{\hat q^o,|I|\}$ students, reserve assignment runs on the students not in $\mu_o$ with capacities $\hat q^t$, and edges of $G(e)$ join $i$ only to $t\in\T(i)$. So no student is assigned twice and no category is over capacity; the output is the final iteration's assignment.
 
@@ -477,28 +477,7 @@ This is the manipulation any egalitarian tie-breaker invites: reporting a catego
 
 Overlapping reserve categories create a genuine allocation problem because admitted students count toward exactly one category. Score constraints make feasibility depend on endogenous cutoffs, so non-wastefulness must be score-relative, and full capacity utilization can fail even when every quota is individually honorable. SPSE keeps capacities fixed and inherits the incentive and no-envy properties of DA but need not be score-feasible. PA-ODR enforces score-feasibility by de-reserving unfulfillable reserve capacity, retaining within-category fairness but losing strategy-proofness and envy-freeness (Table~\ref{tab:comparison}).
 
-As a sanity check we coded both mechanisms in Python and ran them on two families of $100$ randomized instances, seed $100$. Raw scores are uniform on $[0,100]$, the common bonus uniform on $[0,15]$, $\delta=8$, preferences over $V_i$ uniformly random, and each category enters $\T(i)$ independently with probability $0.45$ (a student drawing none is given one at random). Capacities are uniform on $q^o\le q^o_{\max}$ and $q^t\le q^t_{\max}$, with $(|I|,|T|,q^o_{\max},q^t_{\max})$ equal to $(200,6,30,15)$ and $(500,8,70,35)$, offering on average $47.99$ and $149.82$ reserve seats. PA-ODR follows Remark~\ref{rem:computation} rather than enumerating matchings: the admitted set by matroid greedy, then one min-cost assignment for criteria 3--4.
-
-\begin{table}[b]
-\centering
-\caption{Prototype outcomes and running times, 100 randomized instances per family}
-\label{tab:prototype-time}
-\small
-\begin{tabular}{|l|l|r|r|r|r|}
-\hline
-Family & Mechanism & Med.\ (ms) & Score-feasible & Matched & De-reserved categories \\
-\hline
-$|I|=200$, $|T|=6$ & SPSE & 1.09 & 54/100 & 62.97 & 0.00 \\
- & PA-ODR & 24.08 & 100/100 & 62.97 & 18.57 (39\%) \\
-\hline
-$|I|=500$, $|T|=8$ & SPSE & 5.92 & 52/100 & 187.33 & 0.00 \\
- & PA-ODR & 692.51 & 100/100 & 187.33 & 73.24 (49\%) \\
-\hline
-\end{tabular}
-\end{table}
-
-The check is not an evidence of average-case performance; it records what the trade-off costs. SPSE breaches the cutoff rule in $46$ and $48$ of the $100$ instances, so Proposition~\ref{prop:spse-not-sf} is neither an artifact of three-student examples nor something scale washes out. PA-ODR never breaches it, at a price growing with the instance: $39\%$ and $49\%$ of the reserve seats. Two readings should be resisted. Both mechanisms match the same number of students at both sizes, so de-reservation buys score-feasibility and nothing else here, and the coverage gain Remark~\ref{sec:trigger} offers in defence of the reserve-completeness stopping rule is a feature of that example. And the price tracks $\delta$ rather than an indiscriminate appetite for de-reserving: on the smaller family, $\delta=2$ retires $30.3$ of the $47.99$ reserve seats and $\delta=25$ only $0.6$.
-
+As a small prototype check, we ran the mechanisms on the randomized instances described in our replication script. SPSE breached score-feasibility in $46$ and $48$ of $100$ instances in the two families. An idle-category comparator, using PA-ODR's open-first cutoff and reserve matching but leaving unfilled reserve seats idle, was always score-feasible and de-reserved no seat, but matched far fewer students ($44.57$ versus $62.97$, and $114.10$ versus $187.33$). PA-ODR matched as many students as SPSE while enforcing score-feasibility, at the cost of de-reserving $39\%$ and $49\%$ of reserve seats. Thus the comparison is not only score-feasibility versus quota preservation, but also a non-wastefulness trade-off: idle categories preserve nominal quotas by leaving usable admission capacity unused, while PA-ODR reallocates that capacity to admit students. This is only a sanity check, not evidence of average-case performance.
 
 We should not overstate what overlap explains: cutoff-gap breaches and order dependence can occur without it. The specifically overlapping content is the routing of multiply eligible students and the joint-versus-individual Hall obstruction of Proposition~\ref{prop:impossibility}.
 
@@ -568,6 +547,12 @@ Several questions remain. The sharpest is whether the incentive loss of Proposit
 % The analysis then develops two mechanisms. SPSE combines common reserve-side score elevation with deferred-acceptance logic and keeps the initial reserve capacities fixed, but it need not satisfy score-feasibility. PA-ODR instead combines common reserve-side score elevation with an open-first rule and converts unfulfillable reserve capacity into open capacity when necessary. The first uses a fixed capacity vector; the second enforces the score constraint through endogenous capacity reallocation.
 
 % The unresolved tension between fixed capacities and score-feasibility is therefore not an accidental artifact of a particular algorithm. It appears to be a core design challenge of admissions with overlapping reserve categories under cutoff restrictions.
+
+\section*{Disclosure of Interests}
+The author has no competing interests to declare that are relevant to the content of this chapter.
+
+\section*{AI Declaration}
+During the preparation of this work, the author used generative AI and AI-assisted tools to support language editing, proofreading, and checking small pieces of prototype code used for the sanity checks. These tools were not used to generate the paper's research ideas, mathematical claims, proofs, experimental results, or citations. All AI-assisted output was reviewed, verified, and edited by the author, who takes full responsibility for the content of the chapter.
 
 \bibliographystyle{splncs04}
 \bibliography{references}
