@@ -454,6 +454,36 @@ def pa_odr(problem: AdmissionProblem) -> AdmissionResult:
         capacities[OPEN_CATEGORY] += 1
 
 
+def idle_odr(problem: AdmissionProblem) -> AdmissionResult:
+    """Open-first reserve assignment that leaves unfillable reserve seats idle.
+
+    This is the idle-category comparator discussed in the paper: it uses the
+    same feasibility graph and preference-aware reserve matching as PA-ODR, but
+    keeps the original capacities and stops after one reserve-side matching.
+    """
+    capacities = dict(problem.capacities)
+    student_map = problem.student_map()
+    ordered_students = sorted_students_by_open_merit(problem, student_map.keys())
+    open_assignees = ordered_students[: min(capacities[OPEN_CATEGORY], len(ordered_students))]
+    threshold = min((student_map[sid].raw_score for sid in open_assignees), default=inf)
+    open_set = set(open_assignees)
+    remaining = [sid for sid in ordered_students if sid not in open_set]
+    reserved_matching = _best_reserved_matching(problem, remaining, capacities, threshold)
+    assignments = {OPEN_CATEGORY: tuple(open_assignees)}
+    assignments.update(reserved_matching)
+    return build_result(
+        problem,
+        assignments,
+        capacities,
+        {
+            "mechanism": "idle_odr",
+            "open_cutoff": threshold,
+            "open_assignees": tuple(open_assignees),
+            "reserved_matching": reserved_matching,
+        },
+    )
+
+
 def _admissible_application_sets(problem: AdmissionProblem, threshold: float) -> Dict[str, Tuple[str, ...]]:
     """V_i(tau) = {o} u {t in T(i) : sigma(i) + k >= tau - delta}."""
     sets: Dict[str, Tuple[str, ...]] = {}

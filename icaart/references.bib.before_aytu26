@@ -1,0 +1,2180 @@
+% Update Sep 30, 2026
+
+@article{Abdu05a,
+  author         = {A. Abdulkadiro{\u{g}}lu},
+  title          = {College admissions with affirmative action},
+  journal        = {International Journal of Game Theory},
+  volume         = {33},
+  number         = {4},
+  pages          = {535--549},
+  publisher      = {Springer},
+  year           = {2005},
+}
+
+@article{APR05a,
+  author         = {A. Abdulkadiro{\u{g}}lu and P. A. Pathak and A. E. Roth},
+  title          = {The {New York City} High School Match},
+  journal        = {American Economic Review},
+  volume         = {95},
+  number         = {2},
+  pages          = {364--367},
+  year           = {2005},
+}
+
+@article{APRS05a,
+  author         = {A. Abdulkadiro{\u{g}}lu and P. A. Pathak and A. E. Roth and T. S{\"o}nmez},
+  title          = {The {Boston} Public School Match},
+  journal        = {American Economic Review},
+  volume         = {95},
+  number         = {2},
+  pages          = {368--371},
+  year           = {2005},
+}
+
+@article{AbSo98a,
+  author         = {Abdulkadiro{\u{g}}lu, Atila and S{\"o}nmez, Tayfun},
+  title          = {Random serial dictatorship and the core from random endowments in house allocation problems},
+  journal        = {Econometrica},
+  volume         = {66},
+  number         = {3},
+  pages          = {689--701},
+  year           = {1998},
+}
+
+@article{AbSo99a,
+  author         = {Abdulkadiro{\u{g}}lu, Atila and S{\"o}nmez, Tayfun},
+  title          = {House allocation with existing tenants},
+  journal        = {Journal of Economic Theory},
+  volume         = {88},
+  number         = {2},
+  pages          = {233--260},
+  publisher      = {Elsevier},
+  year           = {1999},
+}
+
+@article{AbSo03b,
+  author         = {A. Abdulkadiro{\u{g}}lu and T. S{\"o}nmez},
+  title          = {School Choice: A Mechanism Design Approach},
+  journal        = {American Economic Review},
+  volume         = {93},
+  number         = {3},
+  pages          = {729--747},
+  year           = {2003},
+}
+
+@inproceedings{ABS07a,
+  author         = {D. J. Abraham and A. Blum and T. Sandholm},
+  title          = {Clearing algorithms for barter exchange markets: Enabling nationwide kidney exchanges},
+  booktitle      = {Proceedings of the 8th ACM conference on Electronic commerce},
+  pages          = {295--304},
+  year           = {2007},
+  organization   = {ACM},
+}
+
+% Corrected reprint in LNCS 3827 (2005); original chapter appeared in LNCS 3341 (2004).
+@inproceedings{ACMM05a,
+  author         = {D. J. Abraham and K. Cechl{\'a}rov{\'a} and D. Manlove and K. Mehlhorn},
+  title          = {{Pareto} Optimality in House Allocation Problems},
+  booktitle      = {Proceedings of the 16th International Symposium on Algorithms and Computation (ISAAC)},
+  volume         = {3827},
+  series         = {Lecture Notes in Computer Science},
+  pages          = {1163--1175},
+  publisher      = {Springer},
+  year           = {2005},
+  doi            = {10.1007/11602613_115},
+}
+
+@article{ABM16a,
+  author         = {K. C. {\'A}goston and P. Bir{\'o} and I. McBride},
+  title          = {Integer programming methods for special college admissions problems},
+  journal        = {Journal of Combinatorial Optimization},
+  volume         = {32},
+  number         = {4},
+  pages          = {1371--1399},
+  publisher      = {Springer},
+  year           = {2016},
+}
+
+@inproceedings{AAD+20a,
+  author         = {S. Ahmadi and F. Ahmed and J. P. Dickerson and M. Fuge and S. Khuller},
+  title          = {An Algorithm for Multi-Attribute Diverse Matching},
+  booktitle      = {Proceedings of the Twenty-Ninth International Joint Conference on Artificial Intelligence, {IJCAI} 2020},
+  pages          = {3--9},
+  year           = {2020},
+}
+
+@inproceedings{ADF17a,
+  author         = {F. Ahmed and J. P. Dickerson and M. Fuge},
+  title          = {Diverse weighted bipartite b-matching},
+  booktitle      = {Proceedings of the 26th International Joint Conference on Artificial Intelligence},
+  pages          = {35--41},
+  year           = {2017},
+  organization   = {AAAI Press},
+}
+
+@book{AMO93a,
+  author         = {R. K. Ahuja and T. L. Magnanti and J. B. Orlin},
+  title          = {Network Flows: Theory, Algorithms, and Applications},
+  publisher      = {Prentice Hall},
+  year           = {1993},
+}
+
+@techreport{AnEh17a,
+  author         = {T. Andersson and L. Ehlers},
+  title          = {{Assigning Refugees to Landlords in Sweden: Stable Maximum Matchings}},
+  number         = {2016-08},
+  institution    = {Universit{\'e} de Montr{\'e}al Papyrus Institutional Repository},
+  year           = {2016},
+}
+
+@inproceedings{arnosti2024explainable,
+  author         = {Arnosti, Nick and Bonet, Carlos and Sethuraman, Jay},
+  title          = {Explainable affirmative action},
+  booktitle      = {Proceedings of the 25th ACM Conference on Economics and Computation},
+  pages          = {310--310},
+  year           = {2024},
+}
+
+@article{ABH14a,
+  author         = {I. Ashlagi and M. Braverman and A. Hassidim},
+  title          = {Stability in large matching markets with complementarities},
+  journal        = {Operations Research},
+  volume         = {62},
+  number         = {4},
+  pages          = {713--732},
+  year           = {2014},
+}
+
+@article{AyBo21a,
+  author         = {O. Ayg{\"u}n and I. B{\'o}},
+  title          = {College admission with multidimensional privileges: The {B}razilian affirmative action case},
+  journal        = {American Economic Journal: Microeconomics},
+  volume         = {13},
+  number         = {3},
+  pages          = {1--28},
+  year           = {2021},
+}
+
+@article{AySo13a,
+  author         = {O. Ayg{\"u}n and T. S{\"o}nmez},
+  title          = {Matching with contracts: Comment},
+  journal        = {American Economic Review},
+  volume         = {103},
+  number         = {5},
+  pages          = {2050--2051},
+  year           = {2013},
+}
+
+% Working-paper version retained separately from the 2020 journal article AyTu20a.
+@unpublished{AyTu16a,
+  author         = {O. Ayg{\"u}n and B. Turhan},
+  title          = {Dynamic reserves in matching markets: Theory and applications},
+  year           = {2016},
+  url            = {https://www.aeaweb.org/conference/2017/preliminary/paper/NGi6QFH3},
+  note           = {Working paper},
+}
+
+@article{AyTu17a,
+  author         = {O. Ayg{\"u}n and B. Turhan},
+  title          = {{Large-Scale Affirmative Action in School Choice: Admissions to IITs in {India}}},
+  journal        = {American Economic Review},
+  volume         = {107},
+  number         = {5},
+  pages          = {210--213},
+  year           = {2017},
+}
+
+@techreport{AyTu20b,
+  author         = {O. Ayg{\"u}n and B. Turhan},
+  title          = {{Designing Direct Matching Mechanism for {India} with Comprehensive Affirmative Action}},
+  number         = {2004.13264},
+  institution    = {arXiv.org},
+  type           = {Papers},
+  year           = {2020},
+  month          = {April},
+}
+
+@article{AyTu20a,
+  author         = {O. Ayg{\"u}n and B. Turhan},
+  title          = {Dynamic reserves in matching markets},
+  journal        = {Journal of Economic Theory},
+  volume         = {188},
+  pages          = {105069},
+  year           = {2020},
+  doi            = {10.1016/j.jet.2020.105069},
+}
+
+@inproceedings{AyTu22a,
+  author         = {Orhan Ayg{\"{u}}n and Bertan Turhan},
+  title          = {How to De-reserve Reserves: Admissions to Technical Colleges in {India}},
+  booktitle      = {{EC} '22: The 23rd {ACM} Conference on Economics and Computation, Boulder, CO, USA, July 11 - 15, 2022},
+  pages          = {956--957},
+  publisher      = {{ACM}},
+  year           = {2022},
+}
+
+@article{AyTu23a,
+  author         = {Orhan Ayg{\"{u}}n and Bertan Turhan},
+  title          = {How to De-Reserve Reserves: Admissions to Technical Colleges in {India}},
+  journal        = {Management Science},
+  volume         = {69},
+  number         = {10},
+  pages          = {6147--6164},
+  year           = {2023},
+}
+
+@article{AyTu23b,
+  title={Inconsistency of Score-Elevated Reserve Policy for Indian Affirmative Action},
+author       = {Orhan Ayg{\"{u}}n and
+                  Bertan Turhan},
+  journal={arXiv preprint arXiv:2312.14648},
+  year={2023}
+}
+
+@article{Aziz19b,
+  author         = {H. Aziz},
+  title          = {A Rule for Committee Selection with Soft Diversity Constraints},
+  journal        = {Group Decision and Negotiation},
+  volume         = {28},
+  number         = {6},
+  pages          = {1193--1200},
+  year           = {2019},
+  doi            = {10.1007/s10726-019-09634-5},
+}
+
+@article{ABB24a,
+  author         = {H. Aziz and A. Baychkov and P. Bir{\'o}},
+  title          = {Cutoff stability under distributional constraints with an application to summer internship matching},
+  journal        = {Mathematical Programming},
+  volume         = {203},
+  number         = {1},
+  pages          = {247--269},
+  publisher      = {Springer},
+  year           = {2024},
+  doi            = {10.1007/s10107-022-01917-1},
+}
+
+@inproceedings{ABY22a,
+  author         = {H. Aziz and P. Bir{\'{o}} and M. Yokoo},
+  title          = {Matching Market Design with Constraints},
+  booktitle      = {Proceedings of the Thirty-Sixth {AAAI} Conference on Artificial Intelligence},
+  volume         = {36},
+  pages          = {12308--12316},
+  publisher      = {{AAAI} Press},
+  year           = {2022},
+  doi            = {10.1609/aaai.v36i11.21495},
+  url            = {https://ojs.aaai.org/index.php/AAAI/article/view/21495},
+}
+
+@inproceedings{AzBr21a,
+  author         = {H. Aziz and F. Brandl},
+  title          = {Efficient, Fair, and Incentive-Compatible Healthcare Rationing},
+  booktitle      = {Proceedings of the 22nd {ACM} Conference on Economics and Computation, Budapest, Hungary, July 18-23, {EC} 2021},
+  pages          = {103--104},
+  publisher      = {{ACM}},
+  year           = {2021},
+  doi            = {10.1145/3465456.3467531},
+}
+
+@article{AzBr22a,
+  author         = {Haris Aziz and Florian Brandl},
+  title          = {The Vigilant Eating Rule: {A} General Approach for Probabilistic Economic Design with Constraints},
+  journal        = {Games and Economic Behavior},
+  volume         = {135},
+  pages          = {168--187},
+  year           = {2022},
+}
+
+@article{AzBr24a,
+  author         = {H. Aziz and F. Brandl},
+  title          = {Efficient and Fair Healthcare Rationing},
+  journal        = {Journal of Artificial Intelligence Research},
+  volume         = {81},
+  pages          = {337--358},
+  year           = {2024},
+}
+
+@inproceedings{ACGS18a,
+  author         = {H. Aziz and J. Chen and S. Gaspers and Z. Sun},
+  title          = {Stability and {Pareto} Optimality in Refugee Allocation Matchings},
+  booktitle      = {International Conference on Autonomous Agents and Multiagent Systems},
+  pages          = {964--972},
+  year           = {2018},
+}
+
+% REVIEW: original year 2015 is unverified; possible earlier version of AGS20a. Retained, not silently merged.
+@unpublished{AGS19a,
+  author         = {H. Aziz and S. Gaspers and Z. Sun},
+  title          = {Mechanism Design for School Choice with Soft Diversity Constraints},
+  year           = {2015},
+  note           = {Working paper},
+}
+
+@inproceedings{AGS20a,
+  author         = {H. Aziz and S. Gaspers and Z. Sun},
+  title          = {Mechanism Design for School Choice with Soft Diversity Constraints},
+  booktitle      = {Proceedings of the Twenty-Ninth International Joint Conference on Artificial Intelligence, {IJCAI} 2020},
+  pages          = {153--159},
+  year           = {2020},
+  doi            = {10.24963/ijcai.2020/22},
+}
+
+@inproceedings{AGSW19a,
+  author         = {H. Aziz and S. Gaspers and Z. Sun and T. Walsh},
+  title          = {From Matching with Diversity Constraints to Matching with Regional Quotas},
+  booktitle      = {Proceedings of the 18th International Conference on Autonomous Agents and MultiAgent Systems},
+  pages          = {377--385},
+  year           = {2019},
+}
+
+@inproceedings{AGSY20a,
+  author         = {H. Aziz and S. Gaspers and Z. Sun and M. Yokoo},
+  title          = {Multiple Levels of Importance in Matching with Distributional Constraints},
+  booktitle      = {Proceedings of the 19th International Conference on Autonomous Agents and MultiAgent Systems (AAMAS), Extended Abstract},
+  pages          = {1759--1761},
+  year           = {2020},
+}
+
+@inproceedings{AzSu21a,
+  author         = {H. Aziz and Z. Sun},
+  title          = {Multi-rank Smart Reserves},
+  booktitle      = {Proceedings of the 22nd {ACM} Conference on Economics and Computation, Budapest, Hungary, July 18-23, {EC} 2021},
+  pages          = {105--124},
+  year           = {2021},
+}
+
+@inproceedings{AzSu21b,
+  author         = {H. Aziz and Z. Sun},
+  title          = {School Choice with Flexible Diversity Goals and Specialized Seats},
+  booktitle      = {Proceedings of the Thirtieth International Joint Conference on Artificial Intelligence, {IJCAI} 2021, Virtual Event / Montreal, Canada, 19-27 August 2021},
+  pages          = {17--23},
+  publisher      = {International Joint Conferences on Artificial Intelligence Organization},
+  year           = {2021},
+}
+
+@article{AzSu25a,
+  author         = {H. Aziz and Z. Sun},
+  title          = {Multi-rank smart reserves: {A} general framework for selection and matching diversity goals},
+  journal        = {Artificial Intelligence},
+  volume         = {339},
+  pages          = {104274},
+  year           = {2025},
+}
+
+@article{baiou2000many,
+  author         = {Ba{\"\i}ou, Mourad and Balinski, Michel},
+  title          = {Many-to-many matching: stable polyandrous polygamy (or polygamous polyandry)},
+  journal        = {Discrete Applied Mathematics},
+  volume         = {101},
+  number         = {1-3},
+  pages          = {1--12},
+  publisher      = {Elsevier},
+  year           = {2000},
+}
+
+@article{baiou2000stable,
+  author         = {Ba{\"\i}ou, Mourad and Balinski, Michel},
+  title          = {The stable admissions polytope},
+  journal        = {Mathematical Programming},
+  volume         = {87},
+  number         = {3},
+  pages          = {427--439},
+  publisher      = {Springer},
+  year           = {2000},
+}
+
+@article{BaSo99a,
+  author         = {M. Balinski and T. S{\"o}nmez},
+  title          = {A tale of two mechanisms: student placement},
+  journal        = {Journal of Economic Theory},
+  volume         = {84},
+  number         = {1},
+  pages          = {73--94},
+  publisher      = {Elsevier},
+  year           = {1999},
+}
+
+@article{BFHD+18a,
+  author         = {K. Bansak and J. Ferwerda and J. Hainmueller and A. Dillon and D. Hangartner and D. Lawrence and J. Weinstein},
+  title          = {Improving Refugee Integration Through Data-driven Algorithmic Assignment},
+  journal        = {Science},
+  volume         = {359},
+  number         = {6373},
+  pages          = {325--329},
+  publisher      = {American Association for the Advancement of Science},
+  year           = {2018},
+}
+
+@inproceedings{Basu25a,
+  author         = {Soumya Basu},
+  title          = {Competing Bandits in Matching Markets via Super Stability},
+  booktitle      = {Proceedings of the Forty-Second International Conference on Machine Learning},
+  volume         = {267},
+  series         = {Proceedings of Machine Learning Research},
+  pages          = {3226--3250},
+  publisher      = {PMLR},
+  year           = {2025},
+  url            = {https://proceedings.mlr.press/v267/basu25a.html},
+}
+
+@inproceedings{BSS21a,
+  author         = {Basu, Soumya and Sankararaman, Karthik Abinav and Sankararaman, Abishek},
+  title          = {Beyond {$\log^2(T)$} Regret for Decentralized Bandits in Matching Markets},
+  booktitle      = {Proceedings of the 38th International Conference on Machine Learning ({ICML})},
+  volume         = {139},
+  series         = {Proceedings of Machine Learning Research},
+  pages          = {705--715},
+  publisher      = {PMLR},
+  year           = {2021},
+  url            = {https://proceedings.mlr.press/v139/basu21a.html},
+}
+
+@inproceedings{BCC+19a,
+  author         = {S. Baswana and P. P. Chakrabarti and S. Chandran and Y. Kanoria and U. Patange},
+  title          = {Centralized Admissions for Engineering Colleges in {I}ndia},
+  booktitle      = {Proceedings of the 20th ACM Conference on Economics and Computation},
+  pages          = {323--324},
+  year           = {2019},
+}
+
+@article{BCC+19b,
+  author         = {S. Baswana and P. P. Chakrabarti and S. Chandran and Y. Kanoria and U. Patange},
+  title          = {Centralized Admissions for Engineering Colleges in {India}},
+  journal        = {INFORMS Journal on Applied Analytics},
+  volume         = {49},
+  number         = {5},
+  pages          = {338--354},
+  year           = {2019},
+}
+
+@inproceedings{BCH+18a,
+  author         = {N. Benabbou and M. Chakraborty and X. Ho and J. Sliwinski and Y. Zick},
+  title          = {Diversity constraints in public housing allocation},
+  booktitle      = {Proceedings of the 17th International Conference on Autonomous Agents and MultiAgent Systems, {AAMAS} 2018, Stockholm, Sweden, July 10-15, 2018},
+  pages          = {973--981},
+  year           = {2018},
+}
+
+@article{Berg57a,
+  author         = {C. Berge},
+  title          = {Two theorems in graph theory},
+  journal        = {Proceedings of the National Academy of Sciences of the United States of America},
+  volume         = {43},
+  number         = {9},
+  pages          = {842--844},
+  year           = {1957},
+}
+
+@techreport{BKS03a,
+  author         = {P. Berman and M. Karpinski and A. D. Scott},
+  title          = {Approximation Hardness of Short Symmetric Instances of {MAX-3SAT}},
+  number         = {TR03-049},
+  institution    = {Electronic Colloquium on Computational Complexity},
+  type           = {Technical Report},
+  year           = {2003},
+  url            = {https://eccc.weizmann.ac.il/report/2003/049/},
+}
+
+@article{BFI16a,
+  author         = {P. Bir{\'o} and T. Fleiner and R. W. Irving},
+  title          = {Matching couples with {Scarf}'s algorithm},
+  journal        = {Annals of Mathematics and Artificial Intelligence},
+  volume         = {77},
+  pages          = {303--316},
+  publisher      = {Springer},
+  year           = {2016},
+}
+
+@article{BFIM10a,
+  author         = {P. Bir{\'o} and T. Fleiner and R. W. Irving and D. F. Manlove},
+  title          = {The College Admissions problem with lower and common quotas},
+  journal        = {Theoretical Computer Science},
+  volume         = {411},
+  number         = {34--36},
+  pages          = {3136--3153},
+  publisher      = {Elsevier},
+  year           = {2010},
+  doi            = {10.1016/j.tcs.2010.05.005},
+  issn           = {0304-3975},
+}
+
+@article{BIS11a,
+  author         = {P. Bir{\'o} and R. W. Irving and I. Schlotter},
+  title          = {Stable matching with couples: an empirical study},
+  journal        = {Journal of Experimental Algorithmics},
+  volume         = {16},
+  articleno      = {1.2},
+  numpages       = {27},
+  publisher      = {ACM},
+  year           = {2011},
+  doi            = {10.1145/1963190.1970372},
+  note           = {Article 1.2, 27 pages},
+}
+
+@article{BiKl13a,
+  author         = {Bir{\'o}, P{\'e}ter and Klijn, Flip},
+  title          = {Matching with couples: a multidisciplinary survey},
+  journal        = {International Game Theory Review},
+  volume         = {15},
+  number         = {02},
+  pages          = {1340008},
+  publisher      = {World Scientific},
+  year           = {2013},
+}
+
+@inproceedings{BMM14a,
+  author         = {P. Bir{\'o} and D. F. Manlove and I. McBride},
+  title          = {The hospitals/residents problem with couples: Complexity and integer programming models},
+  booktitle      = {International Symposium on Experimental Algorithms},
+  pages          = {10--21},
+  year           = {2014},
+  organization   = {Springer},
+}
+
+@article{BiMc10a,
+  author         = {P. Bir{\'o} and E. McDermid},
+  title          = {Three-Sided Stable Matchings with Cyclic Preferences},
+  journal        = {Algorithmica},
+  volume         = {58},
+  number         = {1},
+  pages          = {5--18},
+  year           = {2010},
+  month          = {Sep},
+  day            = {01},
+}
+
+@article{BiMc14a,
+  author         = {P. Bir{\'o} and E. McDermid},
+  title          = {Matching with sizes (or scheduling with processing set restrictions)},
+  journal        = {Discrete Applied Mathematics},
+  volume         = {164},
+  pages          = {61--67},
+  publisher      = {Elsevier},
+  year           = {2014},
+}
+
+@article{BoMo01a,
+  author         = {A. Bogomolnaia and H. Moulin},
+  title          = {A new solution to the random assignment problem},
+  journal        = {Journal of Economic Theory},
+  volume         = {100},
+  number         = {2},
+  pages          = {295--328},
+  publisher      = {Elsevier},
+  year           = {2001},
+}
+
+@inproceedings{BGI+18a,
+  author         = {R. Bredereck and P. Faliszewski and A. Igarashi and M. Lackner and P. Skowron},
+  title          = {Multiwinner elections with diversity constraints},
+  booktitle      = {Proceedings of the Thirty-Second {AAAI} Conference on Artificial Intelligence, (AAAI-18), the 30th innovative Applications of Artificial Intelligence (IAAI-18), and the 8th {AAAI} Symposium on Educational Advances in Artificial Intelligence (EAAI-18), New Orleans, Louisiana, USA, February 2-7, 2018},
+  pages          = {933--940},
+  year           = {2018},
+}
+
+@inproceedings{BrHo22a,
+  author         = {A. Brilliantova and H. Hosseini},
+  title          = {Fair Stable Matching Meets Correlated Preferences},
+  booktitle      = {Proceedings of the 21st International Conference on Autonomous Agents and Multiagent Systems, {AAMAS} 2022, Auckland, New Zealand, May 9-13, 2022},
+  pages          = {190--198},
+  year           = {2022},
+}
+
+@article{BCK+13a,
+  author         = {E. Budish and Y. Che and F. Kojima and P. Milgrom},
+  title          = {Designing Random Allocation Mechanisms: Theory and Applications},
+  journal        = {American Economic Review},
+  volume         = {103},
+  number         = {2},
+  pages          = {585--623},
+  year           = {2013},
+  month          = {April},
+  doi            = {10.1257/aer.103.2.585},
+  url            = {https://www.aeaweb.org/articles?id=10.1257/aer.103.2.585},
+}
+
+@article{ChKo10a,
+  author         = {Y. Che and F. Kojima},
+  title          = {Asymptotic equivalence of probabilistic serial and random priority mechanisms},
+  journal        = {Econometrica},
+  volume         = {78},
+  number         = {5},
+  pages          = {1625--1672},
+  year           = {2010},
+}
+
+@article{cheng2010understanding,
+  author         = {Cheng, Christine T},
+  title          = {Understanding the generalized median stable matchings},
+  journal        = {Algorithmica},
+  volume         = {58},
+  number         = {1},
+  pages          = {34--51},
+  publisher      = {Springer},
+  year           = {2010},
+}
+
+@article{CKM+22a,
+  author         = {S. Cho and M. Koshimura and P. Mandal and K. Yahiro and M. Yokoo},
+  title          = {Impossibility of weakly stable and strategy-proof mechanism},
+  journal        = {Economics Letters},
+  volume         = {217},
+  pages          = {110675},
+  publisher      = {Elsevier},
+  year           = {2022},
+}
+
+@inproceedings{CTY22a,
+  author         = {S. Cho and T. Todo and M. Yokoo},
+  editor         = {Luc De Raedt},
+  title          = {Two-Sided Matching over Social Networks},
+  booktitle      = {Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence, {IJCAI} 2022, Vienna, Austria, 23-29 July 2022},
+  pages          = {186--193},
+  publisher      = {International Joint Conferences on Artificial Intelligence Organization},
+  year           = {2022},
+  doi            = {10.24963/ijcai.2022/27},
+}
+
+@inproceedings{CKL+24a,
+  author         = {Sung-Ho Cho and Kei Kimura and Kiki Liu and Kwei-guu Liu and Zhengjie Liu and Zhaohong Sun and Kentaro Yahiro and Makoto Yokoo},
+  title          = {Fairness and Efficiency Trade-off in Two-sided Matching},
+  booktitle      = {Proceedings of the 23rd International Conference on Autonomous Agents and Multiagent Systems, {AAMAS} 2024, Auckland, New Zealand, May 6-10, 2024},
+  pages          = {372--380},
+  publisher      = {International Foundation for Autonomous Agents and Multiagent Systems / {ACM}},
+  year           = {2024},
+}
+
+@inproceedings{CFSV19a,
+  author         = {Conitzer, V. and Freeman, R. and Shah, N. and Vaughan, J. W.},
+  title          = {Group fairness for the allocation of indivisible goods},
+  booktitle      = {Proceedings of the Thirty-Third {AAAI} Conference on Artificial Intelligence},
+  volume         = {33},
+  pages          = {1853--1860},
+  year           = {2019},
+  doi            = {10.1609/aaai.v33i01.33011853},
+}
+
+@inproceedings{CKR09a,
+  author         = {D. Conry and Y. Koren and N. Ramakrishnan},
+  title          = {Recommender systems for the conference paper assignment problem},
+  booktitle      = {Proc. of the 3rd {ACM} Conference on Recommender Systems (RecSyS)},
+  pages          = {357--360},
+  year           = {2009},
+}
+
+@article{CEE+22a,
+  author         = {J. Correa and N. Epstein and R. Epstein and J. Escobar and I. Rios and N. Aramayo and B. Bahamondes and C. Bonet and M. Castillo and A. Cristi and B. Epstein and F. Subiabre},
+  title          = {School choice in {Chile}},
+  journal        = {Operations Research},
+  volume         = {70},
+  number         = {2},
+  pages          = {1066--1087},
+  publisher      = {INFORMS},
+  year           = {2022},
+}
+
+@inproceedings{CEE+19a,
+  author         = {J. R. Correa and R. Epstein and J. Escobar and I. Rios and B. Bahamondes and C. Bonet and N. Epstein and N. Aramayo and M. Castillo and A. Cristi and B. Epstein},
+  title          = {{School Choice in Chile}},
+  booktitle      = {Proceedings of the 2019 {ACM} Conference on Economics and Computation, {EC} 2019, Phoenix, AZ, USA, June 24-28, 2019},
+  pages          = {325--343},
+  year           = {2019},
+}
+
+@inproceedings{CMMT24a,
+  author         = {G. Cs{\'{a}}ji and D. F. Manlove and I. McBride and J. Trimble},
+  title          = {Couples Can Be Tractable: New Algorithms and Hardness Results for the Hospitals/Residents Problem with Couples},
+  booktitle      = {Proceedings of the Thirty-Third International Joint Conference on Artificial Intelligence, {IJCAI} 2024, Jeju, South Korea, August 3-9, 2024},
+  pages          = {2731--2739},
+  year           = {2024},
+}
+
+@inproceedings{DaKa05a,
+  author         = {S. Das and E. Kamenica},
+  title          = {Two-Sided Bandits and the Dating Market},
+  booktitle      = {Proceedings of the Nineteenth International Joint Conference on Artificial Intelligence, Edinburgh, Scotland, UK, July 30 - August 5, 2005},
+  pages          = {947--952},
+  year           = {2005},
+}
+
+@inproceedings{DGI06a,
+  author         = {B. Dean and M. Goemans and N. Immorlica},
+  title          = {The unsplittable stable marriage problem},
+  booktitle      = {Fourth IFIP International Conference on Theoretical Computer Science-TCS 2006},
+  pages          = {65--75},
+  year           = {2006},
+  organization   = {Springer},
+}
+
+@article{DKT23a,
+  author         = {D. Delacr{\'e}taz and S. Kominers and A. Teytelboym},
+  title          = {Matching Mechanisms for Refugee Resettlement},
+  journal        = {American Economic Review},
+  volume         = {113},
+  number         = {10},
+  pages          = {2689--2717},
+  year           = {2023},
+}
+
+@inproceedings{DSSX19a,
+  author         = {J. P. Dickerson and K. A. Sankararaman and A. Srinivasan and P. Xu},
+  title          = {Balancing relevance and diversity in online bipartite matching via submodularity},
+  booktitle      = {The Thirty-Third {AAAI} Conference on Artificial Intelligence, {AAAI} 2019, The Thirty-First Innovative Applications of Artificial Intelligence Conference, {IAAI} 2019, The Ninth {AAAI} Symposium on Educational Advances in Artificial Intelligence, {EAAI} 2019, Honolulu, Hawaii, USA, January 27 - February 1, 2019},
+  volume         = {33},
+  pages          = {1877--1884},
+  year           = {2019},
+}
+
+@inproceedings{DPB15a,
+  author         = {J. Drummond and A. Perrault and F. Bacchus},
+  title          = {{SAT} Is an Effective and Complete Method for Solving Stable Matching Problems with Couples},
+  booktitle      = {Proceedings of the Twenty-Fourth International Joint Conference on Artificial Intelligence, {IJCAI} 2015, Buenos Aires, Argentina, July 25-31, 2015},
+  pages          = {518--525},
+  publisher      = {{AAAI} Press},
+  year           = {2015},
+}
+
+@inproceedings{DTYF+22a,
+  author         = {Z. Duan and J. Tang and Y. Yin and Z. Feng and X. Yan and M. Zaheer and X. Deng},
+  title          = {A Context-Integrated Transformer-Based Neural Network for Auction Design},
+  booktitle      = {Proceedings of the 39th International Conference on Machine Learning},
+  volume         = {162},
+  series         = {Proceedings of Machine Learning Research},
+  pages          = {5609--5626},
+  publisher      = {PMLR},
+  year           = {2022},
+  month          = {17--23 Jul},
+}
+
+@article{DKPS18a,
+  author         = {U. Dur and S. Kominers and P. Pathak and T. S{\"o}nmez},
+  title          = {Reserve Design: Unintended Consequences and the Demise of {Boston}'s Walk Zones},
+  journal        = {Journal of Political Economy},
+  volume         = {126},
+  number         = {6},
+  pages          = {2457--2479},
+  year           = {2018},
+}
+
+@article{DMP22a,
+  author         = {U. Dur and T. Morrill and W. Phan},
+  title          = {Family Ties: School Assignment with Siblings},
+  journal        = {Theoretical Economics},
+  volume         = {17},
+  number         = {1},
+  pages          = {89--120},
+  year           = {2022},
+}
+
+@article{DPS20a,
+  author         = {U. Dur and P. A. Pathak and T. S{\"o}nmez},
+  title          = {Explicit vs. statistical targeting in affirmative action: Theory and evidence from {Chicago}'s exam schools},
+  journal        = {Journal of Economic Theory},
+  volume         = {187},
+  pages          = {104996},
+  year           = {2020},
+}
+
+@article{DFN+24a,
+  author         = {P. D{\"{u}}tting and Z. Feng and H. Narasimhan and D. C. Parkes and S. S. Ravindranath},
+  title          = {Optimal Auctions through Deep Learning: Advances in Differentiable Economics},
+  journal        = {Journal of the ACM},
+  volume         = {71},
+  number         = {1},
+  pages          = {5:1--5:53},
+  year           = {2024},
+  doi            = {10.1145/3630749},
+  url            = {https://doi.org/10.1145/3630749},
+}
+
+@article{DuFr81a,
+  title={Machiavelli and the Gale-Shapley algorithm},
+  author={L. E. Dubins and D. A. Freedman},
+  journal={The American Mathematical Monthly},
+  volume={88},
+  number={7},
+  pages={485--494},
+  year={1981},
+  publisher={Taylor \& Francis}
+}
+
+@article{EcYe15a,
+  author         = {Echenique, F. and Yenmez, M. B.},
+  title          = {How to Control Controlled School Choice},
+  journal        = {American Economic Review},
+  volume         = {105},
+  number         = {8},
+  pages          = {2679--2694},
+  year           = {2015},
+  month          = {August},
+}
+
+@article{EHYY14a,
+  author         = {L. Ehlers and I. E. Hafalir and M. B. Yenmez and M. A. Yildirim},
+  title          = {School choice with controlled choice constraints: Hard bounds versus soft bounds},
+  journal        = {Journal of Economic Theory},
+  volume         = {153},
+  pages          = {648--683},
+  publisher      = {Elsevier},
+  year           = {2014},
+}
+
+@article{eirinakis2012finding,
+  author         = {Eirinakis, Pavlos and Magos, Dimitrios and Mourtos, Ioannis and Miliotis, Panayiotis},
+  title          = {Finding all stable pairs and solutions to the many-to-many stable matching problem},
+  journal        = {INFORMS Journal on Computing},
+  volume         = {24},
+  number         = {2},
+  pages          = {245--259},
+  publisher      = {INFORMS},
+  year           = {2012},
+}
+
+@article{ErEr08a,
+  author         = {Erdil, Aytek and Ergin, Haluk},
+  title          = {What's the matter with tie-breaking? Improving efficiency in school choice},
+  journal        = {American Economic Review},
+  volume         = {98},
+  number         = {3},
+  pages          = {669--689},
+  publisher      = {American Economic Association},
+  year           = {2008},
+}
+
+@article{ETU17a,
+  author         = {H. Ergin and T. S{\"o}nmez and M. U. {\"U}nver},
+  title          = {Dual-Donor Organ Exchange},
+  journal        = {Econometrica},
+  volume         = {85},
+  number         = {5},
+  pages          = {1645--1671},
+  year           = {2017},
+}
+
+@article{faenza2025minimum,
+  author         = {Faenza, Yuri and Foussoul, Ayoub and He, Chengyue},
+  title          = {Minimum cut representability of stable matching problems},
+  journal        = {arXiv preprint arXiv:2504.04577},
+  year           = {2025},
+  url            = {https://arxiv.org/abs/2504.04577},
+  archiveprefix  = {arXiv},
+  eprint         = {2504.04577},
+}
+
+@inproceedings{FNP18a,
+  author         = {Z. Feng and H. Narasimhan and D. C. Parkes},
+  editor         = {Elisabeth Andr{\'{e}} and Sven Koenig and Mehdi Dastani and Gita Sukthankar},
+  title          = {Deep Learning for Revenue-Optimal Auctions with Budgets},
+  booktitle      = {Proceedings of the 17th International Conference on Autonomous Agents and MultiAgent Systems, {AAMAS} 2018, Stockholm, Sweden, July 10-15, 2018},
+  pages          = {354--362},
+  publisher      = {International Foundation for Autonomous Agents and Multiagent Systems Richland, SC, {USA} / {ACM}},
+  year           = {2018},
+  url            = {http://dl.acm.org/citation.cfm?id=3237439},
+}
+
+
+
+@inproceedings{Flei01a,
+  author         = {Fleiner, Tam{\'a}s},
+  title          = {A matroid generalization of the stable matching polytope},
+  booktitle      = {International Conference on Integer Programming and Combinatorial Optimization},
+  pages          = {105--114},
+  year           = {2001},
+  organization   = {Springer},
+}
+
+
+@article{Flei03a,
+  title={A fixed-point approach to stable matchings and some applications},
+  author={T. Fleiner},
+  journal={Mathematics of Operations research},
+  volume={28},
+  number={1},
+  pages={103--126},
+  year={2003},
+  publisher={INFORMS}
+}
+
+
+@article{Flei03b,
+  author         = {Fleiner, Tam{\'a}s},
+  title          = {On the stable b-matching polytope},
+  journal        = {Mathematical Social Sciences},
+  volume         = {46},
+  number         = {2},
+  pages          = {149--158},
+  publisher      = {Elsevier},
+  year           = {2003},
+}
+
+@article{Flei16a,
+  author         = {Fleiner, Tam{\'a}s and Kamiyama, Naoyuki},
+  title          = {A matroid approach to stable matchings with lower quotas},
+  journal        = {Mathematics of Operations Research},
+  volume         = {41},
+  number         = {2},
+  pages          = {734--744},
+  publisher      = {INFORMS},
+  year           = {2016},
+}
+
+@book{Gala84a,
+  author         = {M. Galanter},
+  title          = {Competing Equalities: Law and the Backward Classes in {India}},
+  publisher      = {University of California Press},
+  year           = {1984},
+}
+
+@article{GaSh62a,
+  author         = {D. Gale and L. S. Shapley},
+  title          = {College admissions and the stability of marriage},
+  journal        = {The American Mathematical Monthly},
+  volume         = {69},
+  number         = {1},
+  pages          = {9--15},
+  publisher      = {Taylor \& Francis},
+  year           = {1962},
+}
+
+@book{GaJo79a,
+  author         = {M. R. Garey and D. S. Johnson},
+  title          = {Computers and Intractability: A Guide to the Theory of {NP}-Completeness},
+  publisher      = {WH Freeman},
+  year           = {1979},
+}
+
+@inproceedings{GZZ+24a,
+  author         = {Ge, Yaoxin and Zhang, Yao and Zhao, Dengji and Tang, Zhihao Gavin and Fu, Hu and Lu, Pinyan},
+  title          = {Incentives for Early Arrival in Cooperative Games},
+  booktitle      = {Proceedings of the 23rd International Conference on Autonomous Agents and Multiagent Systems},
+  pages          = {651--659},
+  year           = {2024},
+}
+
+@article{GJR+21a,
+  author         = {A. H. Geitle and {\O}. K. Johnsen and H. F. E. Ruud and K. Fagerholt and C. A. Julsvoll},
+  title          = {Kindergarten allocation in {Norway}: An integer programming approach},
+  journal        = {Journal of the Operational Research Society},
+  volume         = {72},
+  number         = {7},
+  pages          = {1664--1673},
+  year           = {2021},
+}
+
+@article{GSRJ+24a,
+  author         = {A. Ghosh and A. Sankararaman and K. Ramchandran and T. Javidi and A. Mazumdar},
+  title          = {Competing Bandits in Non-Stationary Matching Markets},
+  journal        = {IEEE Transactions on Information Theory},
+  volume         = {70},
+  number         = {4},
+  pages          = {2831--2850},
+  year           = {2024},
+  doi            = {10.1109/TIT.2024.3352228},
+}
+
+@article{GoTa88a,
+  author         = {A. V. Goldberg and R. E. Tarjan},
+  title          = {A new approach to the maximum-flow problem},
+  journal        = {Journal of the ACM},
+  volume         = {35},
+  number         = {4},
+  pages          = {921--940},
+  year           = {1988},
+}
+
+@article{GoPr18a,
+  author         = {P. G{\"{o}}lz and A. D. Procaccia},
+  title          = {Migration as Submodular Optimization},
+  journal        = {CoRR},
+  volume         = {abs/1809.02673},
+  year           = {2018},
+  url            = {https://arxiv.org/abs/1809.02673},
+  archiveprefix  = {arXiv},
+  eprint         = {1809.02673},
+}
+
+@inproceedings{GKNR18a,
+  author         = {Y. A. Gonczarowski and L. Kovalio and N. Nisan and A. Romm},
+  title          = {Matching for the {Israeli "Mechinot"} Gap Year: Handling Rich Diversity Requirements},
+  booktitle      = {2nd Workshop on Mechanism Design for Social Good},
+  year           = {2018},
+}
+
+@inproceedings{GNKR19a,
+  author         = {Y. A. Gonczarowski and N. Nisan and L. Kovalio and A. Romm},
+  title          = {Matching for the {Israeli ``Mechinot''} Gap-Year Programs: Handling Rich Diversity Requirements},
+  booktitle      = {Proceedings of the 20th ACM Conference on Economics and Computation},
+  pages          = {321--321},
+  year           = {2019},
+  doi            = {10.1145/3328526.3329620},
+}
+
+@article{Gonz85a,
+  author         = {T. F. Gonzalez},
+  title          = {Clustering to minimize the maximum intercluster distance},
+  journal        = {Theoretical Computer Science},
+  volume         = {38},
+  pages          = {293--306},
+  year           = {1985},
+  issn           = {0304-3975},
+}
+
+@article{GIKY+16a,
+  author         = {M. Goto and A. Iwasaki and Y. Kawasaki and R. Kurata and Y. Yasuda and M. Yokoo},
+  title          = {Strategyproof matching with regional minimum and maximum quotas},
+  journal        = {Artificial Intelligence},
+  volume         = {235},
+  pages          = {40--57},
+  publisher      = {Elsevier},
+  year           = {2016},
+}
+
+@inproceedings{GKK+15a,
+  author         = {M. Goto and F. Kojima and R. Kurata and A. Tamura and M. Yokoo},
+  title          = {Designing Matching Mechanisms under General Distributional Constraints},
+  booktitle      = {Proceedings of the Sixteenth {ACM} Conference on Economics and Computation, {EC} '15, Portland, OR, USA, June 15-19, 2015},
+  pages          = {259--260},
+  publisher      = {{ACM}},
+  year           = {2015},
+}
+
+@article{GKK+17a,
+  author         = {M. Goto and F. Kojima and R. Kurata and A. Tamura and M. Yokoo},
+  title          = {Designing Matching Mechanisms under General Distributional Constraints},
+  journal        = {American Economic Journal: Microeconomics},
+  volume         = {9},
+  number         = {2},
+  pages          = {226--262},
+  publisher      = {American Economic Association},
+  year           = {2017},
+}
+
+@inproceedings{GKH+15a,
+  author         = {M. Goto and R. Kurata and N. Hamada and A. Iwasaki and M. Yokoo},
+  title          = {Improving fairness in nonwasteful matching with hierarchical regional minimum quotas},
+  booktitle      = {International Conference on Autonomous Agents and Multiagent Systems},
+  pages          = {1887--1888},
+  year           = {2015},
+}
+
+@article{gusfield1987three,
+  author         = {Gusfield, Dan},
+  title          = {Three fast algorithms for four problems in stable marriage},
+  journal        = {SIAM Journal on Computing},
+  volume         = {16},
+  number         = {1},
+  pages          = {111--128},
+  publisher      = {SIAM},
+  year           = {1987},
+}
+
+@article{HYY13a,
+  author         = {I. E. Hafalir and M. B. Yenmez and M. A. Yildirim},
+  title          = {Effective affirmative action in school choice},
+  journal        = {Theoretical Economics},
+  volume         = {8},
+  number         = {2},
+  pages          = {325--363},
+  year           = {2013},
+}
+
+@article{HHKS+17a,
+  author         = {N. Hamada and C. Hsu and R. Kurata and T. Suzuki and S. Ueda and M. Yokoo},
+  title          = {Strategy-proof school choice mechanisms with minimum quotas and initial endowments},
+  journal        = {Artificial Intelligence},
+  volume         = {249},
+  pages          = {47--71},
+  publisher      = {Elsevier},
+  year           = {2017},
+}
+
+@article{HaKo10a,
+  author         = {J. Hatfield and F. Kojima},
+  title          = {Substitutes and stability for matching with contracts},
+  journal        = {Journal of Economic Theory},
+  volume         = {145},
+  number         = {5},
+  pages          = {1704--1723},
+  year           = {2010},
+}
+
+@article{HaMi05a,
+  author         = {J. W. Hatfield and P. R. Milgrom},
+  title          = {Matching with contracts},
+  journal        = {American Economic Review},
+  volume         = {95},
+  number         = {4},
+  pages          = {913--935},
+  year           = {2005},
+}
+
+@article{HoKa73a,
+  author         = {John E. Hopcroft and Richard M. Karp},
+  title          = {An $n^{5/2}$ Algorithm for Maximum Matchings in Bipartite Graphs},
+  journal        = {SIAM Journal on Computing},
+  volume         = {2},
+  number         = {4},
+  pages          = {225--231},
+  year           = {1973},
+}
+
+@inproceedings{HMSS21a,
+  author         = {H. Hosseini and V. Menon and N. Shah and S. Sikdar},
+  title          = {Necessarily Optimal One-Sided Matchings},
+  booktitle      = {Thirty-Fifth {AAAI} Conference on Artificial Intelligence, {AAAI} 2021, Thirty-Third Conference on Innovative Applications of Artificial Intelligence, {IAAI} 2021, The Eleventh Symposium on Educational Advances in Artificial Intelligence, {EAAI} 2021, Virtual Event, February 2-9, 2021},
+  pages          = {5481--5488},
+  publisher      = {{AAAI} Press},
+  year           = {2021},
+}
+
+@inproceedings{Huan10a,
+  author         = {C. Huang},
+  title          = {Classified Stable Matching},
+  booktitle      = {Proceedings of the Twenty-first Annual ACM-SIAM Symposium on Discrete Algorithms},
+  pages          = {1235--1253},
+  numpages       = {19},
+  publisher      = {Society for Industrial and Applied Mathematics},
+  address        = {Philadelphia, PA, USA},
+  year           = {2010},
+  acmid          = {1873700},
+  location       = {Austin, Texas},
+}
+
+@article{HyZe79a,
+  author         = {A. Hylland and R. Zeckhauser},
+  title          = {The efficient allocation of individuals to positions},
+  journal        = {Journal of Political Economy},
+  volume         = {87},
+  number         = {2},
+  pages          = {293--314},
+  year           = {1979},
+}
+
+@inproceedings{SaYo05a,
+  author         = {Ieong, Samuel and Shoham, Yoav},
+  title          = {Marginal contribution nets: a compact representation scheme for coalitional games},
+  booktitle      = {Proceedings of the 6th ACM conference on Electronic commerce},
+  pages          = {193--202},
+  year           = {2005},
+  organization   = {ACM},
+}
+
+@article{imamura2025meritocracy,
+  author         = {Imamura, Kenzo},
+  title          = {Meritocracy versus diversity},
+  journal        = {Journal of Economic Theory},
+  volume         = {228},
+  pages          = {106047},
+  publisher      = {Elsevier},
+  year           = {2025},
+}
+
+@techreport{Irvi11a,
+  author         = {R. Irving},
+  title          = {Matching practices for entry-labor markets -- {Scotland}},
+  number         = {3},
+  pages          = {11--14},
+  institution    = {Matching in Practice},
+  type           = {MiP Country Profile},
+  year           = {2011},
+  url            = {https://matching-in-practice.com/the-scottish-foundation-allocation-scheme-sfas/},
+}
+
+@article{Ir85a,
+  author         = {R. W. Irving},
+  title          = {An efficient algorithm for the stable roommates problem},
+  journal        = {Journal of Algorithms},
+  volume         = {6},
+  number         = {4},
+  pages          = {577--595},
+  publisher      = {Elsevier},
+  year           = {1985},
+}
+
+@article{Ir07a,
+  author         = {R. W. Irving},
+  title          = {The cycle roommates problem: a hard case of kidney exchange},
+  journal        = {Information Processing Letters},
+  volume         = {103},
+  number         = {1},
+  pages          = {1--4},
+  year           = {2007},
+}
+
+@article{Ir08a,
+  author         = {Irving, Robert W},
+  title          = {Stable matching problems with exchange restrictions},
+  journal        = {Journal of Combinatorial Optimization},
+  volume         = {16},
+  number         = {4},
+  pages          = {344--360},
+  publisher      = {Springer},
+  year           = {2008},
+}
+
+@article{IKM+06a,
+  author         = {R. W. Irving and T. Kavitha and K. Mehlhorn and D. Michail and K. E. Paluch},
+  title          = {Rank-maximal matchings},
+  journal        = {ACM Transactions on Algorithms},
+  volume         = {2},
+  number         = {4},
+  pages          = {602--610},
+  publisher      = {ACM New York, NY, USA},
+  year           = {2006},
+}
+
+@article{irving1987efficient,
+  author         = {Irving, Robert W and Leather, Paul and Gusfield, Dan},
+  title          = {An efficient algorithm for the ``optimal'' stable marriage},
+  journal        = {Journal of the ACM},
+  volume         = {34},
+  number         = {3},
+  pages          = {532--543},
+  publisher      = {ACM New York, NY, USA},
+  year           = {1987},
+}
+
+@article{IMS08a,
+  author         = {R. W. Irving and D. F. Manlove and S. Scott},
+  title          = {The stable marriage problem with master preference lists},
+  journal        = {Discrete Applied Mathematics},
+  volume         = {156},
+  number         = {15},
+  pages          = {2959--2977},
+  publisher      = {Elsevier},
+  year           = {2008},
+}
+
+@article{IHZ+19a,
+  author         = {A. Ismaili and N. Hamada and Y. Zhang and T. Suzuki and M. Yokoo},
+  title          = {Weighted Matching Markets with Budget Constraints},
+  journal        = {Journal of Artificial Intelligence Research},
+  volume         = {65},
+  pages          = {393--421},
+  year           = {2019},
+}
+
+@inproceedings{ISFB22a,
+  author         = {D. Ivanov and I. Safiulin and I. Filippov and K. Balabaeva},
+  title          = {Optimal-er Auctions through Attention},
+  booktitle      = {Advances in Neural Information Processing Systems 35: Annual Conference on Neural Information Processing Systems 2022, NeurIPS 2022, New Orleans, LA, USA, November 28 - December 9, 2022},
+  year           = {2022},
+}
+
+@inproceedings{JWWJ+21a,
+  author         = {M. Jagadeesan and A. Wei and Y. Wang and M. I. Jordan and J. Steinhardt},
+  title          = {Learning Equilibria in Matching Markets from Bandit Feedback},
+  booktitle      = {Advances in Neural Information Processing Systems 34: Annual Conference on Neural Information Processing Systems 2021, NeurIPS 2021, December 6-14, 2021, virtual},
+  pages          = {3323--3335},
+  year           = {2021},
+}
+
+@article{JPY88a,
+  author         = {D. S. Johnson and C. H. Papadimitriou and M. Yannakakis},
+  title          = {How easy is local search?},
+  journal        = {Journal of Computer and System Sciences},
+  volume         = {37},
+  number         = {1},
+  pages          = {79--100},
+  publisher      = {Elsevier},
+  year           = {1988},
+}
+
+@article{KaKo12a,
+  author         = {Y. Kamada and F. Kojima},
+  title          = {Stability and strategy-proofness for matching with constraints: A problem in the {Japanese} medical match and its solution},
+  journal        = {American Economic Review},
+  volume         = {102},
+  number         = {3},
+  pages          = {366--370},
+  year           = {2012},
+}
+
+@article{KaKo15a,
+  author         = {Y. Kamada and F. Kojima},
+  title          = {Efficient matching under distributional constraints: Theory and applications},
+  journal        = {American Economic Review},
+  volume         = {105},
+  number         = {1},
+  pages          = {67--99},
+  publisher      = {American Economic Association},
+  year           = {2015},
+}
+
+@article{KaKo17a,
+  author         = {Y. Kamada and F. Kojima},
+  title          = {Recent Developments in Matching with Constraints},
+  journal        = {American Economic Review},
+  volume         = {107},
+  number         = {5},
+  pages          = {200--204},
+  publisher      = {American Economic Association},
+  year           = {2017},
+}
+
+@article{KaKo17b,
+  author         = {Y. Kamada and F. Kojima},
+  title          = {Stability concepts in matching under distributional constraints},
+  journal        = {Journal of Economic Theory},
+  volume         = {168},
+  pages          = {107--142},
+  year           = {2017},
+}
+
+@article{KaKo18a,
+  author         = {Y. Kamada and F. Kojima},
+  title          = {Stability and strategy-proofness for matching with constraints: A necessary and sufficient condition},
+  journal        = {Theoretical Economics},
+  volume         = {13},
+  number         = {2},
+  pages          = {761--793},
+  year           = {2018},
+}
+
+@article{KaKo24a,
+  author         = {Kamada, Yuichiro and Kojima, Fuhito},
+  title          = {Fair Matching under Constraints: Theory and Applications},
+  journal        = {The Review of Economic Studies},
+  volume         = {91},
+  number         = {2},
+  pages          = {1162--1199},
+  year           = {2024},
+  month          = {March},
+  doi            = {10.1093/restud/rdad046},
+}
+
+@article{kato1993complexity,
+  author         = {Kato, Akiko},
+  title          = {Complexity of the sex-equal stable marriage problem},
+  journal        = {Japan Journal of Industrial and Applied Mathematics},
+  volume         = {10},
+  number         = {1},
+  pages          = {1--19},
+  publisher      = {Springer},
+  year           = {1993},
+}
+
+@article{KaSe06a,
+  author         = {A. Katta and J. Sethuraman},
+  title          = {A solution to the random assignment problem on the full preference domain},
+  journal        = {Journal of Economic Theory},
+  volume         = {131},
+  number         = {1},
+  pages          = {231--250},
+  publisher      = {Elsevier},
+  year           = {2006},
+}
+
+@inproceedings{KaIw17a,
+  author         = {Y. Kawase and A. Iwasaki},
+  title          = {Near-Feasible Stable Matchings with Budget Constraints},
+  booktitle      = {Proceedings of the Twenty-Sixth International Joint Conference on Artificial Intelligence, {IJCAI} 2017, Melbourne, Australia, August 19-25, 2017},
+  pages          = {242--248},
+  year           = {2017},
+}
+
+@inproceedings{KaIw18a,
+  author         = {Y. Kawase and A. Iwasaki},
+  title          = {Approximately Stable Matchings With Budget Constraints},
+  booktitle      = {Proceedings of the Thirty-Second {AAAI} Conference on Artificial Intelligence, (AAAI-18), the 30th innovative Applications of Artificial Intelligence (IAAI-18), and the 8th {AAAI} Symposium on Educational Advances in Artificial Intelligence (EAAI-18), New Orleans, Louisiana, USA, February 2-7, 2018},
+  pages          = {1113--1120},
+  publisher      = {{AAAI} Press},
+  year           = {2018},
+}
+
+@article{KeCr82a,
+  author         = {A. S. Kelso and V. P. Crawford},
+  title          = {Job matching, coalition formation, and gross substitutes},
+  journal        = {Econometrica},
+  volume         = {50},
+  pages          = {1483--1504},
+  year           = {1982},
+}
+
+@article{KMT14a,
+  author         = {J. Kennes and D. Monte and N. Tumennasan},
+  title          = {The day care assignment: A dynamic matching problem},
+  journal        = {American Economic Journal: Microeconomics},
+  volume         = {6},
+  number         = {4},
+  pages          = {362--406},
+  year           = {2014},
+}
+
+@incollection{KiMa12a,
+  author         = {D. M. Kilgour and E. Marshall},
+  title          = {Approval balloting for fixed-size committees},
+  booktitle      = {Electoral Systems},
+  series         = {Studies in Choice and Welfare},
+  chapter        = {12},
+  pages          = {305--326},
+  publisher      = {Springer},
+  year           = {2012},
+}
+
+@article{KlKl05a,
+  author         = {B. Klaus and F. Klijn},
+  title          = {Stable matchings and preferences of couples},
+  journal        = {Journal of Economic Theory},
+  volume         = {121},
+  number         = {1},
+  pages          = {75--106},
+  publisher      = {Elsevier},
+  year           = {2005},
+}
+
+@article{Klkl07a,
+  author         = {B. Klaus and F. Klijn},
+  title          = {Paths to stability for matching markets with couples},
+  journal        = {Games and Economic Behavior},
+  volume         = {58},
+  number         = {1},
+  pages          = {154--171},
+  publisher      = {Elsevier},
+  year           = {2007},
+}
+
+@article{Koji12a,
+  author         = {F. Kojima},
+  title          = {School choice: Impossibilities for affirmative action},
+  journal        = {Games and Economic Behavior},
+  volume         = {75},
+  number         = {2},
+  pages          = {685--693},
+  publisher      = {Elsevier},
+  year           = {2012},
+}
+
+@article{KoMa10a,
+  author         = {Kojima, F. and Manea, M.},
+  title          = {Incentives in the probabilistic serial mechanism},
+  journal        = {Journal of Economic Theory},
+  volume         = {145},
+  pages          = {106--123},
+  year           = {2010},
+}
+
+@article{KPR13a,
+  author         = {F. Kojima and P. A. Pathak and A. E. Roth},
+  title          = {Matching with couples: Stability and incentives in large markets},
+  journal        = {The Quarterly Journal of Economics},
+  volume         = {128},
+  number         = {4},
+  pages          = {1585--1632},
+  year           = {2013},
+}
+
+@article{KTY18a,
+  author         = {F. Kojima and A. Tamura and M. Yokoo},
+  title          = {Designing matching mechanisms under constraints: An approach from discrete convex analysis},
+  journal        = {Journal of Economic Theory},
+  volume         = {176},
+  pages          = {803--833},
+  year           = {2018},
+}
+
+@inproceedings{KoSo13a,
+  author         = {S. D. Kominers and T. S{\"o}nmez},
+  title          = {Designing for diversity in matching},
+  booktitle      = {Proceedings of the fourteenth {ACM} Conference on Electronic Commerce, {EC} 2013, Philadelphia, PA, USA, June 16-20, 2013},
+  pages          = {603--604},
+  year           = {2013},
+}
+
+@article{KoSo16a,
+  author         = {S. D. Kominers and T. S{\"o}nmez},
+  title          = {Matching with slot-specific priorities: Theory},
+  journal        = {Theoretical Economics},
+  volume         = {11},
+  number         = {2},
+  pages          = {683--710},
+  year           = {2016},
+}
+
+@inproceedings{KYL22a,
+  author         = {F. Kong and J. Yin and S. Li},
+  title          = {Thompson Sampling for Bandit Learning in Matching Markets},
+  booktitle      = {Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence, {IJCAI} 2022, Vienna, Austria, 23-29 July 2022},
+  pages          = {3164--3170},
+  publisher      = {International Joint Conferences on Artificial Intelligence Organization},
+  year           = {2022},
+}
+
+@inproceedings{KHHS+16a,
+  author         = {R. Kurata and N. Hamada and C. Hsu and T. Suzuki and S. Ueda and M. Yokoo},
+  title          = {{Pareto} efficient strategy-proof school choice mechanism with minimum quotas and initial endowments},
+  booktitle      = {Proceedings of the 15th International Conference on Autonomous Agents and Multiagent Systems},
+  pages          = {59--67},
+  year           = {2016},
+}
+
+@inproceedings{KHIY15a,
+  author         = {R. Kurata and N. Hamada and A. Iwasaki and M. Yokoo},
+  title          = {Controlled school choice with soft bounds and overlapping types},
+  booktitle      = {Proceedings of the Twenty-Ninth {AAAI} Conference on Artificial Intelligence, January 25-30, 2015, Austin, Texas, {USA}},
+  pages          = {951--957},
+  year           = {2015},
+}
+
+@article{KHIY17a,
+  author         = {R. Kurata and N. Hamada and A. Iwasaki and M. Yokoo},
+  title          = {Controlled school choice with soft bounds and overlapping types},
+  journal        = {Journal of Artificial Intelligence Research},
+  volume         = {58},
+  pages          = {153--184},
+  year           = {2017},
+}
+
+@phdthesis{Levy17a,
+  author         = {A. W. Levy},
+  title          = {Novel uses of the {Mallows} model in coloring and matching},
+  school         = {Dept. of Mathematics, University of Washington, Seattle},
+  year           = {2017},
+}
+
+@article{LYY23a,
+  author         = {K. Liu and K. Yahiro and M. Yokoo},
+  title          = {Strategyproof Mechanism for Two-Sided Matching with Resource Allocation},
+  journal        = {Artificial Intelligence},
+  volume         = {316},
+  pages          = {103855},
+  year           = {2023},
+}
+
+@inproceedings{LMJ20a,
+  author         = {L. T. Liu and H. Mania and M. I. Jordan},
+  title          = {Competing Bandits in Matching Markets},
+  booktitle      = {The 23rd International Conference on Artificial Intelligence and Statistics, {AISTATS} 2020, 26-28 August 2020, Online [Palermo, Sicily, Italy]},
+  volume         = {108},
+  series         = {Proceedings of Machine Learning Research},
+  pages          = {1618--1628},
+  year           = {2020},
+}
+
+@article{LRMJ21a,
+  author         = {L. T. Liu and F. Ruan and H. Mania and M. I. Jordan},
+  title          = {Bandit Learning in Decentralized Matching Markets},
+  journal        = {Journal of Machine Learning Research},
+  volume         = {22},
+  pages          = {211:1--211:34},
+  year           = {2021},
+}
+
+@inproceedings{LuCr11a,
+  author         = {T. Lu and C. Boutilier},
+  title          = {Learning {Mallows} models with pairwise preferences},
+  booktitle      = {Proceedings of the 28th International Conference on Machine Learning (ICML-11)},
+  pages          = {145--152},
+  year           = {2011},
+}
+
+@inproceedings{LT15a,
+  author         = {S. Luo and P. Tang},
+  title          = {Mechanism Design and Implementation for Lung Exchange},
+  booktitle      = {IJCAI},
+  pages          = {209--215},
+  year           = {2015},
+}
+
+@article{MKM78a,
+  author         = {V. M. Malhotra and M. P. Kumar and S. N. Maheshwari},
+  title          = {An {$O(|V|^3)$} Algorithm for Finding Maximum Flows in Networks},
+  journal        = {Information Processing Letters},
+  volume         = {7},
+  number         = {6},
+  pages          = {277--278},
+  year           = {1978},
+}
+
+@article{Mallows1957,
+  author         = {Mallows, C. L.},
+  title          = {Non-Null Ranking Models. I},
+  journal        = {Biometrika},
+  volume         = {44},
+  pages          = {114--130},
+  year           = {1957},
+}
+
+@book{Manl13a,
+  author         = {D. F. Manlove},
+  title          = {Algorithmics of Matching Under Preferences},
+  publisher      = {World Scientific},
+  year           = {2013},
+}
+
+@article{manlove2002hard,
+  author         = {Manlove, David F and Irving, Robert W and Iwama, Kazuo and Miyazaki, Shuichi and Morita, Yasufumi},
+  title          = {Hard variants of stable marriage},
+  journal        = {Theoretical Computer Science},
+  volume         = {276},
+  number         = {1-2},
+  pages          = {261--279},
+  publisher      = {Elsevier},
+  year           = {2002},
+}
+
+@article{MMT17a,
+  author         = {D. F. Manlove and I. McBride and J. Trimble},
+  title          = {``{A}lmost-stable'' matchings in the Hospitals/Residents problem with Couples},
+  journal        = {Constraints},
+  volume         = {22},
+  number         = {1},
+  pages          = {50--72},
+  publisher      = {Springer},
+  year           = {2017},
+}
+
+@inproceedings{MOPU07a,
+  author         = {D. F. Manlove and G. O'Malley and P. Prosser and C. Unsworth},
+  title          = {A Constraint Programming Approach to the Hospitals / Residents Problem},
+  booktitle      = {Integration of AI and OR Techniques in Constraint Programming for Combinatorial Optimization Problems},
+  pages          = {155--170},
+  year           = {2007},
+}
+
+@article{MaSc11a,
+  author         = {D. Marx and I. Schlotter},
+  title          = {Stable assignment with couples: Parameterized complexity and local search},
+  journal        = {Discrete Optimization},
+  volume         = {8},
+  number         = {1},
+  pages          = {25--40},
+  year           = {2011},
+}
+
+% Uses the publisher title; the author/project website also uses "A Library of Preference Data".
+@inproceedings{MaWa13a,
+  author         = {N. Mattei and T. Walsh},
+  title          = {{PrefLib}: A Library for Preferences http://www.preflib.org},
+  booktitle      = {Proceedings of the 3rd International Conference on Algorithmic Decision Theory, ADT 2013},
+  volume         = {8176},
+  series         = {Lecture Notes in Computer Science},
+  pages          = {259--270},
+  publisher      = {Springer},
+  year           = {2013},
+  doi            = {10.1007/978-3-642-41575-3_20},
+}
+
+@article{McMa10a,
+  author         = {E. J. McDermid and D. F. Manlove},
+  title          = {Keeping partners together: algorithmic results for the hospitals/residents problem with couples},
+  journal        = {Journal of Combinatorial Optimization},
+  volume         = {19},
+  number         = {3},
+  pages          = {279--303},
+  publisher      = {Springer},
+  year           = {2010},
+}
+
+@article{Me17a,
+  author         = {Z. M{\'e}sz{\'a}ros-Karkus},
+  title          = {Hardness results for stable exchange problems},
+  journal        = {Theoretical Computer Science},
+  volume         = {670},
+  pages          = {68--78},
+  publisher      = {Elsevier},
+  year           = {2017},
+}
+
+@article{Mich07a,
+  author         = {D. Michail},
+  title          = {Reducing rank-maximal to maximum weight matching},
+  journal        = {Theoretical Computer Science},
+  volume         = {389},
+  number         = {1-2},
+  pages          = {125--132},
+  year           = {2007},
+}
+
+@article{NgVo18a,
+  author         = {T. Nguyen and R. Vohra},
+  title          = {Near-feasible stable matchings with couples},
+  journal        = {American Economic Review},
+  volume         = {108},
+  number         = {11},
+  pages          = {3154--3169},
+  year           = {2018},
+}
+
+@article{NgVo19a,
+  author         = {T. Nguyen and R. Vohra},
+  title          = {Stable Matching with Proportionality Constraints},
+  journal        = {Operations Research},
+  volume         = {67},
+  number         = {6},
+  pages          = {1503--1519},
+  year           = {2019},
+}
+
+@article{Okum19a,
+  author         = {Y. Okumura},
+  title          = {School choice with general constraints: a market design approach for the nursery school waiting list problem in {Japan}},
+  journal        = {The Japanese Economic Review},
+  volume         = {70},
+  number         = {4},
+  pages          = {497--516},
+  publisher      = {Springer},
+  year           = {2019},
+}
+
+@article{PRS23a,
+  author         = {P. A. Pathak and A. Rees{-}Jones and T. S{\"{o}}nmez},
+  title          = {Reversing Reserves},
+  journal        = {Management Science},
+  volume         = {69},
+  number         = {11},
+  pages          = {6940--6953},
+  year           = {2023},
+}
+
+@article{PSUY24a,
+  author         = {P. A. Pathak and T. S{\"o}nmez and M. {\"U}nver and M. Yenmez},
+  title          = {Fair Allocation of Vaccines, Ventilators and Antiviral Treatments: Leaving No Ethical Value Behind in Healthcare Rationing},
+  journal        = {Management Science},
+  volume         = {70},
+  number         = {6},
+  pages          = {3999--4036},
+  publisher      = {INFORMS},
+  year           = {2024},
+}
+
+@inproceedings{PSUY21a,
+  author         = {P. A. Pathak and T. S{\"{o}}nmez and M. U. {\"{U}}nver and M. B. Yenmez},
+  title          = {Fair Allocation of Vaccines, Ventilators and Antiviral Treatments: Leaving No Ethical Value Behind in Health Care Rationing},
+  booktitle      = {Proceedings of the 22nd {ACM} Conference on Economics and Computation, Budapest, Hungary, July 18-23, {EC} 2021},
+  pages          = {785--786},
+  publisher      = {{ACM}},
+  year           = {2021},
+}
+
+@inproceedings{PDB16a,
+  author         = {A. Perrault and J. Drummond and F. Bacchus},
+  title          = {Strategy-proofness in the stable matching problem with couples},
+  booktitle      = {Proceedings of the 2016 International Conference on Autonomous Agents and Multiagent Systems},
+  pages          = {132--140},
+  year           = {2016},
+}
+
+@inproceedings{Pete2022a,
+  author         = {J. Peters},
+  title          = {Online Elicitation of Necessarily Optimal Matchings},
+  booktitle      = {Thirty-Sixth {AAAI} Conference on Artificial Intelligence, {AAAI} 2022, Thirty-Fourth Conference on Innovative Applications of Artificial Intelligence, {IAAI} 2022, The Twelveth Symposium on Educational Advances in Artificial Intelligence, {EAAI} 2022 Virtual Event, February 22 - March 1, 2022},
+  pages          = {5164--5172},
+  publisher      = {{AAAI} Press},
+  year           = {2022},
+}
+
+@inproceedings{RJBW21a,
+  author         = {J. Rahme and S. Jelassi and J. Bruna and S. M. Weinberg},
+  title          = {A Permutation-Equivariant Neural Network Architecture For Auction Design},
+  booktitle      = {Thirty-Fifth {AAAI} Conference on Artificial Intelligence, {AAAI} 2021, Thirty-Third Conference on Innovative Applications of Artificial Intelligence, {IAAI} 2021, The Eleventh Symposium on Educational Advances in Artificial Intelligence, {EAAI} 2021, Virtual Event, February 2-9, 2021},
+  pages          = {5664--5672},
+  publisher      = {{AAAI} Press},
+  year           = {2021},
+  doi            = {10.1609/AAAI.V35I6.16711},
+  url            = {https://doi.org/10.1609/aaai.v35i6.16711},
+}
+
+@article{RFL+21a,
+  author         = {S. Ravindranath and Z. Feng and S. Li and J. Ma and S. Kominers and D. C. Parkes},
+  title          = {Deep Learning for Two-Sided Matching},
+  journal        = {CoRR},
+  volume         = {abs/2107.03427},
+  year           = {2021},
+  url            = {https://arxiv.org/abs/2107.03427},
+  archiveprefix  = {arXiv},
+  eprint         = {2107.03427},
+  eprinttype     = {arXiv},
+}
+
+@techreport{RKG21a,
+  author         = {T. Reischmann and T. Klein and S. Giegerich},
+  title          = {An iterative deferred acceptance mechanism for decentralized, fast and fair childcare assignment},
+  number         = {21-095},
+  institution    = {ZEW -- Leibniz Centre for European Economic Research},
+  type           = {ZEW Discussion Paper},
+  year           = {2021},
+}
+
+@article{Roch85a,
+  author         = {J. C. Rochet},
+  title          = {The taxation principle and multi-time Hamilton-Jacobi equations},
+  journal        = {Journal of Mathematical Economics},
+  volume         = {14},
+  number         = {2},
+  pages          = {113--128},
+  year           = {1985},
+  doi            = {10.1016/0304-4068(85)90015-1},
+  url            = {https://www.sciencedirect.com/science/article/pii/0304406885900151},
+  issn           = {0304-4068},
+}
+
+@article{Ronn90a,
+  author         = {E. Ronn},
+  title          = {{NP}-complete stable matching problems},
+  journal        = {Journal of Algorithms},
+  volume         = {11},
+  number         = {2},
+  pages          = {285--304},
+  publisher      = {Elsevier},
+  year           = {1990},
+}
+
+@article{Roth82a,
+  title={The economics of matching: Stability and incentives},
+	author = {A. E. Roth},
+  journal={Mathematics of operations research},
+  volume={7},
+  number={4},
+  pages={617--628},
+  year={1982},
+  publisher={INFORMS}
+}
+
+@article{Roth84a,
+  author         = {A. E. Roth},
+  title          = {The evolution of the labor market for medical interns and residents: a case study in game theory},
+  journal        = {Journal of Political Economy},
+  volume         = {92},
+  number         = {6},
+  pages          = {991--1016},
+  publisher      = {The University of Chicago Press},
+  year           = {1984},
+}
+
+@article{Roth85a,
+  author         = {A. E. Roth},
+  title          = {The college admissions problem is not equivalent to the marriage problem},
+  journal        = {Journal of Economic Theory},
+  volume         = {36},
+  number         = {2},
+  pages          = {277--288},
+  publisher      = {Elsevier},
+  year           = {1985},
+}
+
+@article{Roth86a,
+  author         = {A. E. Roth},
+  title          = {On the allocation of residents to rural hospitals: a general property of two-sided matching markets},
+  journal        = {Econometrica},
+  volume         = {54},
+  number         = {2},
+  pages          = {425--427},
+  year           = {1986},
+  doi            = {10.2307/1913160},
+}
+
+@article{Roth08a,
+  author         = {A. E. Roth},
+  title          = {Deferred acceptance algorithms: History, theory, practice, and open questions},
+  journal        = {International Journal of Game Theory},
+  volume         = {36},
+  number         = {3},
+  pages          = {537--569},
+  publisher      = {Springer},
+  year           = {2008},
+}
+
+@article{RoPe99a,
+  author         = {A. E. Roth and E. Peranson},
+  title          = {The redesign of the matching market for American physicians: Some engineering aspects of economic design},
+  journal        = {American Economic Review},
+  volume         = {89},
+  number         = {4},
+  pages          = {748--780},
+  publisher      = {American Economic Association},
+  year           = {1999},
+}
+
+@article{roth1993stable,
+  author         = {Roth, Alvin E and Rothblum, Uriel G and Vande Vate, John H},
+  title          = {Stable matchings, optimal assignments, and linear programming},
+  journal        = {Mathematics of Operations Research},
+  volume         = {18},
+  number         = {4},
+  pages          = {803--828},
+  publisher      = {INFORMS},
+  year           = {1993},
+}
+
+@book{RoSo90a,
+  author         = {Roth, A. E. and Sotomayor, M.},
+  title          = {Two-Sided Matching: A Study in Game-Theoretic Modeling and Analysis},
+  publisher      = {Cambridge University Press},
+  address        = {Cambridge, UK},
+  year           = {1990},
+}
+
+@article{RoVa90a,
+  author         = {Roth, Alvin E. and Vande Vate, John H.},
+  title          = {Random paths to stability in two-sided matching},
+  journal        = {Econometrica},
+  volume         = {58},
+  number         = {6},
+  pages          = {1475--1480},
+  year           = {1990},
+  doi            = {10.2307/2938326},
+}
+
+@article{rothblum1992characterization,
+  author         = {Rothblum, Uriel G},
+  title          = {Characterization of stable matchings as extreme points of a polytope},
+  journal        = {Mathematical Programming},
+  volume         = {54},
+  number         = {1},
+  pages          = {57--67},
+  publisher      = {Springer},
+  year           = {1992},
+}
+
+@article{Scar67a,
+  author         = {H. E. Scarf},
+  title          = {The core of an {$N$} person game},
+  journal        = {Econometrica},
+  volume         = {35},
+  number         = {1},
+  pages          = {50--69},
+  year           = {1967},
+  doi            = {10.2307/1909383},
+}
+
+@article{ScTa25a,
+  author         = {D. Scheder and J. Tantow},
+  title          = {{PLS}-complete problems with lexicographic cost functions: Max-\emph{k}-{SAT} and {Abelian} Permutation Orbit Minimization},
+  journal        = {CoRR},
+  volume         = {abs/2510.15712},
+  year           = {2025},
+  doi            = {10.48550/ARXIV.2510.15712},
+  url            = {https://arxiv.org/abs/2510.15712},
+  archiveprefix  = {arXiv},
+  eprint         = {2510.15712},
+  eprinttype     = {arXiv},
+}
+
+@article{ScTa25b,
+  author         = {D. Scheder and J. Tantow},
+  title          = {{PLS}-completeness of string permutations},
+  journal        = {CoRR},
+  volume         = {abs/2505.02622},
+  year           = {2025},
+  doi            = {10.48550/ARXIV.2505.02622},
+  url            = {https://arxiv.org/abs/2505.02622},
+  archiveprefix  = {arXiv},
+  eprint         = {2505.02622},
+  eprinttype     = {arXiv},
+}
+
+@book{Schr03a,
+  author         = {A. Schrijver},
+  title          = {Combinatorial Optimization - Polyhedra and Efficiency},
+  publisher      = {Springer},
+  year           = {2003},
+}
+
+@article{SoUn05a,
+  author         = {T. S{\"o}nmez and M. U. {\"U}nver},
+  title          = {House allocation with existing tenants: an equivalence},
+  journal        = {Games and Economic Behavior},
+  volume         = {52},
+  number         = {1},
+  pages          = {153--185},
+  publisher      = {Elsevier},
+  year           = {2005},
+}
+
+@techreport{SoYe19b,
+  author         = {T. S{\"o}nmez and M. B. Yenmez},
+  title          = {Affirmative Action in {I}ndia via Vertical and Horizontal Reservations},
+  number         = {977},
+  institution    = {Boston College, Department of Economics},
+  type           = {Working Paper},
+  year           = {2019},
+  url            = {https://fmwww.bc.edu/EC-P/wp977.pdf},
+}
+
+@techreport{SoYe20a,
+  author         = {T. S{\"o}nmez and M. B. Yenmez},
+  title          = {Affirmative Action with Overlapping Reserves},
+  number         = {990},
+  institution    = {Boston College},
+  type           = {Working Paper},
+  year           = {2020},
+  url            = {http://fmwww.bc.edu/EC-P/wp990.pdf},
+}
+
+@article{SoYe22a,
+  author         = {T. S{\"o}nmez and M. B. Yenmez},
+  title          = {Affirmative Action in {India} via Vertical, Horizontal, and Overlapping Reservations},
+  journal        = {Econometrica},
+  volume         = {90},
+  number         = {3},
+  pages          = {1143--1176},
+  year           = {2022},
+  doi            = {10.3982/ECTA17788},
+}
+
+@inproceedings{Sun25a,
+  author         = {Z. Sun},
+  title          = {A Fair and Optimal Approach to Sequential Healthcare Rationing},
+  booktitle      = {Proceedings of the 26th {ACM} Conference on Economics and Computation, {EC} 2025, Stanford University, Stanford, CA, USA, July 7-10, 2025},
+  pages          = {1026--1045},
+  publisher      = {{ACM}},
+  year           = {2025},
+}
+
+@inproceedings{STM+23a,
+  author         = {Z. Sun and Y. Takenami and D. Moriwaki and Y. Tomita and M. Yokoo},
+  title          = {Daycare Matching in {J}apan: Transfers and Siblings},
+  booktitle      = {Proceedings of the 37th AAAI Conference on Artificial Intelligence, AAAI 2023},
+  pages          = {14487--14495},
+  year           = {2023},
+}
+
+@inproceedings{STW21a,
+  author         = {Z. Sun and T. Todo and T. Walsh},
+  title          = {Fair Pairwise Exchange among Groups},
+  booktitle      = {Proceedings of the Thirtieth International Joint Conference on Artificial Intelligence, {IJCAI} 2021, Virtual Event / Montreal, Canada, 19-27 August 2021},
+  pages          = {419--425},
+  publisher      = {International Joint Conferences on Artificial Intelligence Organization},
+  year           = {2021},
+  doi            = {10.24963/ijcai.2021/59},
+  url            = {https://www.ijcai.org/proceedings/2021/59},
+}
+
+@inproceedings{STY21a,
+  author         = {Z. Sun and T. Todo and M. Yokoo},
+  title          = {New Algorithms for {Japanese} Residency Matching},
+  booktitle      = {Proceedings of the Thirtieth International Joint Conference on Artificial Intelligence, {IJCAI} 2021, Virtual Event / Montreal, Canada, 19-27 August 2021},
+  pages          = {412--418},
+  year           = {2021},
+  doi            = {10.24963/ijcai.2021/58},
+  url            = {https://www.ijcai.org/proceedings/2021/58},
+}
+
+@inproceedings{SYT+24a,
+  author         = {Z. Sun and N. Yamada and Y. Takenami and D. Moriwaki and M. Yokoo},
+  title          = {Stable matchings in practice: A constraint programming approach},
+  booktitle      = {Proceedings of the 38th AAAI Conference on Artificial Intelligence, AAAI 2024},
+  pages          = {22377--22384},
+  year           = {2024},
+}
+
+@inproceedings{SuYo25a,
+  author         = {Z. Sun and M. Yokoo},
+  title          = {Achieving Balanced Representation in School Choice with Diversity Goals},
+  booktitle      = {AAAI-25, Sponsored by the Association for the Advancement of Artificial Intelligence, February 25 - March 4, 2025, Philadelphia, PA, {USA}},
+  pages          = {14129--14138},
+  publisher      = {{AAAI} Press},
+  year           = {2025},
+}
+
+% Extended arXiv version; conference version is SYY25a.
+@article{sun2025probabilistic,
+  author         = {Sun, Zhaohong and Yokoyama, Tomohiko and Yokoo, Makoto},
+  title          = {Probabilistic analysis of stable matching in large markets with siblings},
+  journal        = {arXiv preprint arXiv:2501.13043},
+  year           = {2025},
+  url            = {https://arxiv.org/abs/2501.13043},
+  archiveprefix  = {arXiv},
+  eprint         = {2501.13043},
+}
+
+@inproceedings{SYY25a,
+  author         = {Z. Sun and T. Yokoyama and M. Yokoo},
+  title          = {Probabilistic analysis of stable matching in large markets with siblings},
+  booktitle      = {Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence ({IJCAI})},
+  pages          = {4065--4072},
+  year           = {2025},
+  doi            = {10.24963/ijcai.2025/453},
+  url            = {https://www.ijcai.org/proceedings/2025/453},
+  note           = {Extended version available at arXiv:2501.13043},
+}
+
+@article{STY+23a,
+  author         = {T. Suzuki and A. Tamura and K. Yahiro and M. Yokoo and Y. Zhang},
+  title          = {Strategyproof Allocation Mechanisms with Endowments and {M-convex} Distributional Constraints},
+  journal        = {Artificial Intelligence},
+  volume         = {315},
+  pages          = {103825},
+  year           = {2023},
+  doi            = {10.1016/j.artint.2022.103825},
+}
+
+@inproceedings{STY18a,
+  author         = {T. Suzuki and A. Tamura and M. Yokoo},
+  title          = {Efficient allocation mechanism with endowments and distributional constraints},
+  booktitle      = {Proceedings of the 17th International Conference on Autonomous Agents and MultiAgent Systems},
+  pages          = {50--58},
+  year           = {2018},
+}
+
+@inproceedings{TKK25a,
+  author         = {Ryota Takeshima and Kei Kimura and Ayumu Kuroki and Temma Wakasugi and Makoto Yokoo},
+  title          = {A New Relaxation of Fairness in Two-Sided Matching Respecting Acquaintance Relationships},
+  booktitle      = {{ECAI} 2025 - 28th European Conference on Artificial Intelligence, 25-30 October 2025, Bologna, Italy - Including 14th Conference on Prestigious Applications of Intelligent Systems {(PAIS} 2025)},
+  volume         = {413},
+  series         = {Frontiers in Artificial Intelligence and Applications},
+  pages          = {3727--3734},
+  publisher      = {{IOS} Press},
+  year           = {2025},
+  doi            = {10.3233/FAIA251252},
+  url            = {https://doi.org/10.3233/FAIA251252},
+}
+
+@article{Vand89a,
+  author         = {J. H. Vande Vate},
+  title          = {Linear programming brings marital bliss},
+  journal        = {Operations Research Letters},
+  volume         = {8},
+  number         = {3},
+  pages          = {147--153},
+  publisher      = {Elsevier},
+  year           = {1989},
+}
+
+@article{VBPL17a,
+  author         = {A. Veski and P. Bir{\'o} and K. P{\"o}der and T. Lauri},
+  title          = {Efficiency and fair access in kindergarten allocation policy design},
+  journal        = {The Journal of Mechanism and Institution Design},
+  volume         = {2},
+  number         = {1},
+  pages          = {57--104},
+  publisher      = {Society for the Promotion of Mechanism and Institution Design},
+  year           = {2017},
+}
+
+@inproceedings{ZZY18a,
+  author         = {K. Yahiro and Y. Zhang and N. Barrot and M. Yokoo},
+  title          = {Strategyproof and Fair Matching Mechanism for Ratio Constraints},
+  booktitle      = {Proceedings of the 17th International Conference on Autonomous Agents and MultiAgent Systems},
+  pages          = {59--67},
+  year           = {2018},
+}
+
+@article{Yoko17a,
+  author         = {Yu, Yokoi},
+  title          = {A generalized polymatroid approach to stable matchings with lower quotas},
+  journal        = {Mathematics of Operations Research},
+  volume         = {42},
+  number         = {1},
+  pages          = {238--255},
+  publisher      = {INFORMS},
+  year           = {2017},
+}
+
+@inproceedings{ZYBY18a,
+  author         = {Y. Zhang and K. Yahiro and N. Barrot and M. Yokoo},
+  title          = {Strategyproof and Fair Matching Mechanism for Union of Symmetric {M-convex} Constraints},
+  booktitle      = {Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence, {IJCAI} 2018, July 13-19, 2018, Stockholm, Sweden},
+  pages          = {590--596},
+  year           = {2018},
+}
+
+
+@misc{Anthropic26a,
+  author       = {{Anthropic}},
+  title        = {Claude},
+  howpublished = {Large language model},
+  year         = {2026},
+  note         = {Version: Claude Fable 5.1. https://claude.ai. Accessed October 5, 2026},
+}

@@ -5,6 +5,7 @@ from algorithms.admissions import (
     OPEN_CATEGORY,
     Student,
     blocking_swaps,
+    idle_odr,
     is_feasible,
     is_score_feasible,
     pa_odr,
@@ -58,6 +59,26 @@ class AdmissionsTest(unittest.TestCase):
         self.assertTrue(is_score_feasible(problem, result, result.effective_capacities))
         self.assertTrue(within_category_fairness(problem, result))
         self.assertTrue(shared_category_constrained_replacement_fairness(problem, result))
+
+    def test_idle_odr_leaves_unfillable_reserve_capacity_idle(self) -> None:
+        problem = AdmissionProblem(
+            students=(
+                Student("i1", 100, tuple(), (OPEN_CATEGORY,)),
+                Student("i2", 95, ("t1", "t2"), ("t1", "t2", OPEN_CATEGORY)),
+                Student("i3", 82, ("t2",), ("t2", OPEN_CATEGORY)),
+            ),
+            capacities={OPEN_CATEGORY: 1, "t1": 1, "t2": 1},
+            bonuses={"t1": 5, "t2": 5},
+            delta=10,
+        )
+
+        result = idle_odr(problem)
+        self.assertEqual(result.assignments[OPEN_CATEGORY], ("i1",))
+        self.assertEqual(result.assignments["t1"], ("i2",))
+        self.assertEqual(result.assignments["t2"], tuple())
+        self.assertEqual(result.effective_capacities, problem.capacities)
+        self.assertTrue(is_feasible(problem, result, result.effective_capacities))
+        self.assertTrue(is_score_feasible(problem, result, result.effective_capacities))
 
     def test_threshold_adjusting_da_is_not_cardinality_maximal(self) -> None:
         problem = AdmissionProblem(

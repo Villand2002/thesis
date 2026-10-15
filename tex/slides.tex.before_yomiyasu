@@ -1,0 +1,848 @@
+% !TeX program = lualatex
+% 進捗報告 — Reserve with Score Feasibility(Beamer 版)
+% Overleaf では Compiler を LuaLaTeX に設定してください.
+\documentclass[aspectratio=43,11pt]{beamer}
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\setmainjfont{Noto Serif CJK JP}
+\setsansjfont{Noto Sans CJK JP}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+
+% ---- 配色(研究室スタイルに合わせる) ----
+\definecolor{navy}{RGB}{31,42,94}
+\definecolor{lav}{RGB}{238,240,248}
+\definecolor{alertred}{RGB}{192,0,0}
+\setbeamercolor{structure}{fg=navy}
+\setbeamercolor{frametitle}{fg=black}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamercolor{block title}{bg=navy,fg=white}
+\setbeamercolor{block body}{bg=lav,fg=black}
+\setbeamercolor{alerted text}{fg=alertred}
+\setbeamertemplate{blocks}[default]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{pagebox}{bg=navy,fg=white}
+\setbeamertemplate{footline}{%
+  \hfill
+  \begin{beamercolorbox}[wd=1.6cm,ht=2.2ex,dp=0.9ex,center]{pagebox}%
+    \small \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}
+\setbeamertemplate{section in toc}[sections numbered]
+
+% セクション区切りスライド
+\AtBeginSection[]{%
+\begin{frame}[plain]
+  \vfill\centering
+  {\color{navy}\rule{2.2cm}{2.5pt}}\\[1.2em]
+  {\Large\bfseries\insertsection}
+  \vfill
+\end{frame}}
+
+% ---- 記法 ----
+\newcommand{\topf}{\mathrm{top}}
+\newcommand{\dtop}[1]{d^{\topf}_{#1}}
+\newcommand{\dacc}[1]{d^{\mathrm{acc}}_{#1}}
+\newcommand{\dV}[1]{d^{V}_{#1}}
+
+% ---- 表の列タイプ ----
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{進捗報告}
+\date{2026年9月 29日}
+\author{島村友大}
+
+\begin{document}
+
+% =============================================================
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% =============================================================
+\begin{frame}{問題設定}
+一つの大学における割当を考える.
+\begin{itemize}
+  \item 一般カテゴリ $o$ と複数の留保カテゴリ $T$
+  \item 学生 $i$ は点数 $\sigma(i)$ と資格集合 $V(i)$ を持つ(全員が $o$ の資格を持つ)
+  \item \alert{点数制約:一般カテゴリの cutoff $e_o(Y)$ と留保カテゴリ合格者の点数の差を $\delta$ 以内に抑える}
+  \item 研究課題:reserved category protection・公平性・効率性・耐戦略性はどこまで両立するか
+\end{itemize}
+\end{frame}
+
+% =============================================================
+% 先行研究
+% =============================================================
+\begin{frame}{先行研究 1:Hafalir, Yenmez, Yildirim (2013)}
+\small
+\textbf{問題意識}\quad
+多数派学生の人数に上限を課す方式(majority quota)は,
+かえって少数派学生の結果を悪化させることがある.
+
+\medskip
+\textbf{提案:minority reserve}
+\begin{itemize}
+  \item 少数派のために定員を留保するが,\alert{少数派の応募が足りなければ,その定員は多数派にも開放される}
+  \item 留保は「絶対に確保しておく定員」ではなく,需要がなければ開放される
+        $\Rightarrow$ これを soft reserve と呼んでいる
+  \item 対して majority quota は超えられない上限なので \textbf{hard}
+\end{itemize}
+
+\medskip
+\textbf{結果}\quad minority reserve の下での DA は,耐戦略性を満たし安定である.
+
+\medskip
+\begin{block}{本研究との相違点}
+  未使用の留保カテゴリの定員を開放するという発想は本研究の柔軟カテゴリ(後述)と同じ.
+  ただし,\textbf{留保カテゴリの合格者の点数を一般カテゴリと比べて制約する条件はない}.
+\end{block}
+\end{frame}
+
+\begin{frame}{先行研究 2:Aziz and Sun (2021; 2025)}
+\small
+\textbf{設定}
+\begin{itemize}
+  \item 学生は\textbf{複数のタイプ}(カテゴリ)に同時に属しうる
+  \item 合格した学生は,どれか\textbf{一つ}のタイプの定員だけを消費する(one-to-one counting)
+  \item 学校は多段階(multi-rank)の多様性目標を持つ(例:最低限確保したい人数と,できれば確保したい人数)
+\end{itemize}
+
+\medskip
+\textbf{提案}\quad 学校の選抜ルール(choice function).次の三性質を満たす唯一のルールであることを示した.
+\begin{itemize}
+  \item \textbf{maximal diversity}:\alert{多様性目標をできるだけ多く満たす}学生集合を選ぶ
+  \item 非浪費性,no justified envy
+\end{itemize}
+\end{frame}
+
+\begin{frame}{先行研究 3:Aygün and Turhan (2023)}
+\small
+\textbf{背景}\quad インド最高裁(2008)は,OBC(その他後進諸階級)カテゴリの定員が埋まらなければ一般カテゴリに戻せと命じたが,
+\alert{具体的な実施方法は定めなかった}.その結果,統一されていない手続が使われてきた.
+
+\medskip
+\textbf{提案:Backward Transfers(BT)選抜ルールと DA-BT}
+\begin{enumerate}
+  \item まず一般カテゴリを点数順に埋め,次に各留保カテゴリを埋める
+  \item OBC に未使用の定員が残れば,その人数を一般カテゴリの定員に移して選抜をやり直す
+  \item 未使用の定員がなくなるまで繰り返す
+\end{enumerate}
+法的要件と政策目標を公理として定式化し,それらを同時に満たすメカニズムは DA-BT だけであることを示す.
+
+\medskip
+一般カテゴリを先に埋めるので,\textbf{一般カテゴリの合格者は留保カテゴリの合格者より高得点},
+つまり「一般 cutoff $\geq$ 留保 cutoff」という関係性を保証した.
+しかし\alert{cutoff 差の大きさ($\delta$)は扱っていない}.
+\end{frame}
+
+% =============================================================
+% モデル
+% =============================================================
+\begin{frame}{基本記号}
+\small
+\begin{itemize}
+  \item 学生集合 $I$,留保カテゴリ集合 $T$,一般カテゴリ $o$
+  \item $V := T \cup \{o\}$,定員 $q_c \in \mathbb{N}\ (c \in V)$,総定員 $Q := \sum_{c \in V} q_c$
+  \item 許容される cutoff の差 $\delta \geq 0$
+\end{itemize}
+各学生 $i \in I$ について
+\begin{itemize}
+  \item 点数 $\sigma(i) \geq 0$,$\ i \neq j \Rightarrow \sigma(i) \neq \sigma(j)$
+  \item 資格カテゴリ集合 $V(i) \subseteq V$,$\ o \in V(i)$
+  \item $X_i$ 上の厳密な選好 $\succ_i$($\emptyset$ は外部オプション)
+  \item 第一希望:$\topf_i$($V(i) \cup \{\emptyset\}$ の中で $\succ_i$ について最も好むもの)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{契約とマッチング}
+\small
+\begin{block}{Definition(契約)}
+  \[
+    X := \{\, (i,c) : i \in I,\ c \in V(i) \cup \{\emptyset\} \,\}
+  \]
+  $(i,c)$:学生 $i$ がカテゴリ $c$ で合格.$(i,\emptyset)$:割当無し.\\
+  $Y \subseteq X$ に対し
+  \[
+    Y_i := \{\, (i,c) \in Y \,\}, \qquad Y_c := \{\, (i,c) \in Y \,\}
+  \]
+\end{block}
+\begin{block}{Definition(マッチング)}
+  $Y \subseteq X$ がマッチング $\iff$ $\forall i \in I:\ |Y_i| = 1$ かつ $Y_i \succeq_i \emptyset$
+\end{block}
+$|Y_c|$ はカテゴリ $c$ に割り当てられた学生の人数.
+\end{frame}
+
+\begin{frame}{一般カテゴリの cutoff}
+\begin{block}{Definition(不合格者と cutoff)}
+  \[
+    R_o(Y) := \{\, i \in I : (i,\emptyset) \in Y,\ o \succ_i \emptyset \,\}
+  \]
+  ($o$ を外部オプションより好むのに,外部オプションに割り当てられた学生)
+  \[
+    e_o(Y) :=
+    \begin{cases}
+      \max_{i \in R_o(Y)} \sigma(i) & |R_o(Y)| \neq 0 \\
+      0 & |R_o(Y)| = 0
+    \end{cases}
+  \]
+\end{block}
+$e_o(Y)$:$o$ を希望しながら不合格になった学生の最高点.
+一般カテゴリの cutoff として使う.
+\end{frame}
+
+\begin{frame}{固定カテゴリの quota feasibility と score-feasibility}
+\begin{block}{Definition(Quota feasibility,固定カテゴリ)}
+  \[
+    Y \text{ は quota feasible} \iff |Y_c| \leq q_c \quad (\forall c \in V)
+  \]
+\end{block}
+\begin{block}{Definition(Score-feasibility)}
+  $Y$ が score-feasible であるとは,次が成り立つこと:
+  \[
+    \forall (i,c) \in Y \text{ s.t. } c \in T:\ \ \sigma(i) \geq e_o(Y) - \delta
+  \]
+\end{block}
+\begin{itemize}
+  \item $o$ の定員も $q_o$ に固定され,留保カテゴリの未使用の定員は誰にも回らない
+  \item 誰も落ちていない間は $e_o = 0$ で制約は空.SSD の実行中は
+        最初の脱落者で $e_o$ が確定し,以後変化しない
+\end{itemize}
+\end{frame}
+
+\begin{frame}{公平性と耐戦略性}
+\small
+\begin{block}{Definition(公平性)}
+  マッチング $Y$ において,学生 $i$ が $j$ に \textbf{justified envy} を持つ $\iff$
+  \[
+    Y_j = \{(j, c)\}, \qquad c \in V(i), \qquad c \succ_i Y_i, \qquad \sigma(i) > \sigma(j)
+  \]
+  どの学生も justified envy を持たないとき,$Y$ は公平である.
+\end{block}
+\begin{block}{Definition(耐戦略性)}
+  メカニズム $\varphi$ は選好プロファイル $\succ = (\succ_i)_{i\in I}$ にマッチングを対応させる.
+  $\varphi$ が耐戦略的 $\iff$
+  \[
+    \forall i \in I,\ \forall \succ,\ \forall \succ'_i:\quad
+    \varphi_i(\succ) \ \succeq_i\ \varphi_i(\succ'_i, \succ_{-i})
+  \]
+  (どの学生も,選好を偽って厳密に得をすることはできない)
+\end{block}
+\end{frame}
+
+\begin{frame}{効率性:非浪費性と Pareto 効率性}
+\small
+\begin{block}{Definition(非浪費性)}
+  マッチング $Y$ において,学生 $i$ がカテゴリ $c$ を \textbf{claim する} $\iff$
+  \[
+    c \in V(i), \qquad c \succ_i Y_i,
+  \]
+  かつ $(Y \setminus Y_i) \cup \{(i,c)\}$ が quota feasible かつ score-feasible.\\
+  claim する学生が存在しないとき,$Y$ は非浪費的である.
+\end{block}
+\begin{block}{Definition(Pareto 効率性, PE)}
+  $Y'$ が $Y$ を \textbf{Pareto 支配する} $\iff$
+  \[
+    \forall i \in I:\ Y'_i \succeq_i Y_i
+    \quad\text{かつ}\quad
+    \exists j \in I:\ Y'_j \succ_j Y_j
+  \]
+  quota feasible かつ score-feasible なマッチング $Y$ が PE $\iff$
+  quota feasible かつ score-feasible な他のマッチングに Pareto 支配されない.
+\end{block}
+PE ならば非浪費的である.
+\end{frame}
+
+\begin{frame}{SSD と定理 1:固定カテゴリでは全部成り立つ}
+\begin{block}{Definition(Score-based Serial Dictatorship, SSD)}
+  点数の高い順に学生を選び,割当後の(部分)マッチングが
+  quota feasible かつ score-feasible となるカテゴリ(外部オプション含む)のうち,
+  最も好むものへ割り当てる.
+\end{block}
+\begin{block}{Theorem 1}
+  固定カテゴリモデルにおいて,SSD は quota feasibility・score-feasibility・公平性・
+  PE・\textbf{耐戦略性}をすべて満たす.
+\end{block}
+\medskip
+\alert{柔軟カテゴリにすると,これらを同時には満たせなくなる}
+\end{frame}
+
+% =============================================================
+\begin{frame}{柔軟カテゴリの quota feasibility}
+\begin{block}{Definition(Quota feasibility,柔軟カテゴリ)}
+  $Y$ が quota feasible であるとは,次が成り立つこと:
+  \[
+    |Y_c| \leq q_c \ \ (\forall c \in T)
+    \quad\text{かつ}\quad
+    \sum_{c \in V} |Y_c| \leq Q
+  \]
+\end{block}
+\begin{itemize}
+  \item $o$ 単独の上限はない
+  \item 留保カテゴリの未使用の定員の分だけ $o$ を増加できる(de-reservation)
+  \item $e_o(Y)$ と score-feasibility の定義は固定カテゴリと同じ
+\end{itemize}
+\medskip
+% \alert{問題:未使用の定員を無制限に $o$ に回すと,留保カテゴリを望む学生が締め出されうる}\\
+% $\Rightarrow$ 留保カテゴリの定員をどこまで守るかを定める条件が reserved category protection
+\end{frame}
+
+\begin{frame}{Reserved category protection:定義}
+\small
+\begin{block}{Definition(保護水準)}
+  \[
+    \dtop{c} := \min\bigl\{\, q_c,\ |\{\, i \in I : \topf_i = c \,\}| \,\bigr\}
+    \qquad (c \in T)
+  \]
+  $c$ の定員のうち,$o$ に回さず $c$ のために残す人数
+  ($c$ を第一希望とする学生の人数分)
+\end{block}
+\begin{block}{Definition(Reserved category protection)}
+  $Y$ が reserved category protection を満たすとは,次が成り立つこと:
+  \[
+    |Y_o| \;\leq\; q_o + \sum_{c \in T} \bigl( q_c - \max\{\, |Y_c|,\ \dtop{c} \,\} \bigr)
+  \]
+\end{block}
+$r_c(Y) := q_c - \max\{\, |Y_c|,\ \dtop{c} \,\}$($c$ から $o$ に回せる人数)とおくと,
+\begin{itemize}
+  \item $|Y_c| \geq \dtop{c}$ のとき:$r_c = q_c - |Y_c|$
+        $\Rightarrow$ \textbf{未使用の定員はすべて} $o$ に回してよい
+  \item $|Y_c| < \dtop{c}$ のとき:$r_c = q_c - \dtop{c}$
+        $\Rightarrow$ $\dtop{c} - |Y_c|$ 人分は\textbf{未使用のまま残す}
+\end{itemize}
+\end{frame}
+
+% \begin{frame}{Reserved category protection:解釈}
+% \small
+% 留保カテゴリ $c$ の定員 $q_c$ を三つに分ける.
+% \begin{center}
+% \begin{tikzpicture}[x=1.4cm,y=0.75cm]
+%   \fill[navy] (0,0) rectangle (1,1);
+%   \fill[navy!25] (1,0) rectangle (3,1);
+%   \draw (0,0) grid (4,1);
+%   \node[white] at (0.5,0.5) {\scriptsize 割当済};
+%   \node at (1.5,0.5) {\scriptsize 保護};
+%   \node at (2.5,0.5) {\scriptsize 保護};
+%   \node at (3.5,0.5) {\scriptsize $o$ へ};
+%   \draw[decorate,decoration={brace,amplitude=4pt}]
+%     (0,1.1) -- (3,1.1) node[midway,above=5pt]{\scriptsize $\dtop{c} = 3$};
+%   \draw[decorate,decoration={brace,amplitude=4pt,mirror}]
+%     (0,-0.1) -- (1,-0.1) node[midway,below=5pt]{\scriptsize $|Y_c| = 1$};
+%   \draw[decorate,decoration={brace,amplitude=4pt,mirror}]
+%     (3,-0.1) -- (4,-0.1) node[midway,below=5pt]{\scriptsize $r_c = 4 - \max\{1,3\} = 1$};
+% \end{tikzpicture}
+% \end{center}
+% \begin{itemize}
+%   \item $|Y_c| \geq \dtop{c}$ のとき:$r_c = q_c - |Y_c|$
+%         $\Rightarrow$ \textbf{未使用の定員はすべて} $o$ に回してよい
+%   \item $|Y_c| < \dtop{c}$ のとき:$r_c = q_c - \dtop{c}$
+%         $\Rightarrow$ $\dtop{c} - |Y_c|$ 人分は\textbf{未使用のまま残す}
+% \end{itemize}
+% \begin{block}{条件の意味}
+%   $o$ が本来の定員 $q_o$ を超えて受け入れられるのは,
+%   各留保カテゴリから $o$ に回せる人数の合計 $\sum_{c} r_c(Y)$ まで.
+% \end{block}
+% \end{frame}
+
+\begin{frame}{柔軟カテゴリでの cutoff の定義}
+cutoff の定義には二通りが考えられる.
+\begin{itemize}
+  \item \textbf{合格者側}:$\min\{\, \sigma(i) : (i,o) \in Y \,\}$($o$ の合格者の最低点)
+  \item \textbf{不合格者側(本研究)}:$e_o(Y) = \max_{i \in R_o(Y)} \sigma(i)$
+\end{itemize}
+\medskip
+柔軟カテゴリでは $o$ の定員が固定されていない.
+留保カテゴリの定員を $o$ に回すと $o$ の合格者が増え,合格者の最低点は\textbf{下がる}.
+\begin{itemize}
+  \item 合格者側の cutoff は,最後に $o$ に何人入るかが決まるまで確定しない
+  \item SSD で学生 $i$ を $t$ に入れてよいかをその時点で判定しても,
+        後で $o$ の合格者が増えると判定が変わりうる
+\end{itemize}
+\end{frame}
+
+% \begin{frame}{不合格者側で定義すると SSD で扱いやすい}
+% \begin{block}{不合格者側の cutoff $e_o$ の性質}
+%   学生を点数の高い順に処理すると,
+%   \begin{itemize}
+%     \item 最初に $o$ から落ちた学生の点数が $e_o$ になり,以後は変化しない
+%           (後で落ちる学生はより低得点)
+%     \item それまでに $t$ に入った学生は,$e_o$ を決めた学生より高得点なので
+%           点数制約を必ず満たす
+%   \end{itemize}
+%   $\Rightarrow$ \alert{各学生の番での判定が,最終的なマッチングでもそのまま正しい}
+% \end{block}
+% \begin{block}{例:$q_o = q_t = 1$,$\delta = 10$}
+%   $A$($100$ 点,$o$ のみ),$B$($70$ 点,$t$ のみ).
+%   \begin{itemize}
+%     \item 合格者側:cutoff は $A$ の $100$ 点なので $B$ は $90$ 点未満で $t$ に入れない.
+%           $o$ を望んで落ちた学生は誰もいないのに,$t$ の定員が未使用になる
+%     \item 不合格者側:$|R_o(Y)| = 0$ より $e_o = 0$ となり,$B$ は $t$ に入れる
+%   \end{itemize}
+% \end{block}
+% \end{frame}
+
+\begin{frame}{制約付き非浪費性と制約付き PE}
+\small
+次の Theorem 2 で見るように,reserved category protection を課すと
+非浪費性と PE は一般に達成できない.そこで,保護を制約として課した概念を使う.
+\begin{block}{Definition(制約付き非浪費性)}
+  マッチング $Y$ において,学生 $i$ がカテゴリ $c$ を \textbf{strongly claim する}とは,
+  \[
+    c \in V(i), \qquad c \succ_i Y_i, \qquad
+    (Y \setminus Y_i) \cup \{(i,c)\} \text{ が}
+  \]
+  quota feasibility・score-feasibility・reserved category protection
+  を満たすこと.
+  \\ strongly claim する学生が存在しないとき,$Y$ は制約付き非浪費性を満たす.
+\end{block}
+\begin{block}{Definition(制約付き PE)}
+  quota feasibility・score-feasibility・reserved category protection を満たすマッチング $Y$ が
+  \textbf{制約付き PE} $\iff$
+  これら三つを満たす他のマッチングに Pareto 支配されない.
+\end{block}
+{\footnotesize
+上の定義は保護に $\dtop{}$ を使うので「制約付き非浪費性($\dtop{}$)」「制約付き PE($\dtop{}$)」と書く.}
+\end{frame}
+
+\begin{frame}{二つの不可能性}
+\begin{block}{Theorem 2(Reserved category protection と非浪費性)}
+  quota feasibility・score-feasibility・非浪費性・reserved category protection をすべて満たす
+  マッチングが存在しない場合がある.
+\end{block}
+\small
+保護された $t$ の定員の分だけ $o$ が縮小して高得点者が落ち,$e_o$ が上昇
+$\to$ $t$ を望む学生が $e_o-\delta$ に届かず保護されたが割当がないカテゴリが生じる.
+\normalsize
+\medskip
+\begin{block}{Theorem 3(Reserved category protection と耐戦略性)}
+  quota feasibility・score-feasibility・公平性・制約付き非浪費性・
+  reserved category protection・耐戦略性を同時に満たすメカニズムは存在しない.
+\end{block}
+\small
+$o\succ t$ の学生($80$ 点)が「$t$ が第一希望」と偽ると $\dtop{t}=1$ で $t$ の定員が確保され,
+$t$ に割り当てられて得をする.
+\end{frame}
+
+\begin{frame}{Flexible SSD}
+\small
+どちらのメカニズムも SSD(点数の高い順に,選べる中で最も好むものに割り当てる)を使う.
+相違点は,\textbf{各学生の番に選べるカテゴリの集合 $C_i$} だけ.
+\begin{block}{Flexible SSD}
+  現時点の部分マッチングを $Y$,cutoff を $e_o$ とする.
+  \[
+    A_i := \{\, c \in T \cap V(i) : |Y_c| < q_c,\ \sigma(i) \geq e_o - \delta \,\}
+  \]
+  \[
+    C_i :=
+    \begin{cases}
+      \{\emptyset\} & \sum_{c \in V} |Y_c| = Q \\[4pt]
+      \{\emptyset, o\} \cup A_i & \text{otherwise}
+    \end{cases}
+  \]
+  $i$ を $C_i$ の中で $\succ_i$ について最も好むものに割り当てる.
+\end{block}
+$\Rightarrow$ 留保カテゴリの需要を考慮せず,未使用の定員はすべて $o$ に利用してよい
+\end{frame}
+
+\begin{frame}{Reserved category protecting SSD}
+\small
+\begin{block}{Reserved category protecting SSD}
+  Flexible SSD の $C_i$ から,次を満たさないときは $o$ を除く:
+  \[
+    |Y_o| \;<\; Q - \sum_{c \in T} \max\{\, |Y_c|,\ \dtop{c} \,\}
+    \;=\; q_o + \sum_{c \in T} r_c(Y)
+  \]
+  $\Rightarrow$ $o$ に割り当てた後も reserved category protection が保たれるときだけ $o$ を選べる
+\end{block}
+\begin{block}{Theorem 4}
+  Reserved category protecting SSD は,quota feasibility・score-feasibility・公平性・
+  制約付き非浪費性・reserved category protection を満たす.\\
+  さらに,\alert{制約付き PE} である.
+\end{block}
+Theorem 2 より PE は満たせない.
+Theorem 3 より耐戦略性も満たさない.
+\end{frame}
+
+\begin{frame}{PE と制約付き PE}
+\small
+\begin{block}{PE}
+  quota feasible かつ score-feasible なマッチングの中に,
+  誰も悪くせずに誰かを良くするマッチングがない.
+\end{block}
+\begin{block}{制約付き PE}
+  Pareto 支配するかを調べる比較対象を,\alert{reserved category protection も満たすマッチングだけ}に限定する.
+\end{block}
+\end{frame}
+
+\begin{frame}{例:Theorem 2 の設定での Reserved category protecting SSD}
+\small
+$T=\{t\}$,$q_o=q_t=1$,$\delta=10$.
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{cccc}
+  \toprule
+  学生 & $\sigma$ & $V(i)$ & 選好 \\
+  \midrule
+  $i_1$ & 100 & $\{o\}$ & $o \succ \emptyset$ \\
+  $i_2$ & 90 & $\{o\}$ & $o \succ \emptyset$ \\
+  $i_3$ & 60 & $\{o, t\}$ & $t \succ o \succ \emptyset$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+$\dtop{t} = 1$ より $r_t = 0$ なので $|Y_o| \leq q_o + 0 = 1$.\\
+\textbf{結果}:$i_1\to o$,$i_2\to\emptyset$($e_o=90$),
+$i_3\to\emptyset$($60<80$ で $t$ に入れない)
+\begin{itemize}
+  \item \textbf{PE ではない}:$i_1,i_2$ を両方 $o$ に入れると $i_2$ が良くなり,誰も悪くならない.
+        quota feasibility と score-feasibility は満たすが,
+        $|Y_o| = 2 > 1$ なので\alert{reserved category protection を破る}
+  \item \textbf{制約付き PE である}:
+        保護を守ると $o$ には 1 人しか入れず,$i_1,i_2$ のどちらかは落ちる.
+        すると $i_3$ は $t$ に入れず,誰も悪くせずに誰かを良くする方法はない
+\end{itemize}
+\end{frame}
+
+\begin{frame}{既存の二つのメカニズム}
+\begin{center}\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{L{4.0cm} C{2.9cm} C{2.2cm}}
+  \toprule
+  性質 & Reserved category protecting SSD & Flexible SSD \\
+  \midrule
+  Quota feasibility             & \checkmark & \checkmark \\
+  Score-feasibility             & \checkmark & \checkmark \\
+  公平性                        & \checkmark & \checkmark \\
+  \midrule
+  非浪費性                      & $\times$   & \checkmark \\
+  制約付き非浪費性($\dtop{}$)  & \checkmark & \checkmark \\
+  PE                            & $\times$   & \checkmark \\
+  制約付き PE($\dtop{}$)       & \checkmark & --- \\
+  \midrule
+  Reserved category protection  & \checkmark($\dtop{}$) & $\times$ \\
+  耐戦略性                      & $\times$   & \checkmark \\
+  \bottomrule
+\end{tabular}
+\end{center}
+{\footnotesize 非浪費性・PE の $\times$ は Theorem 2 から,Flexible SSD の制約付き非浪費性は非浪費性から従う.}
+
+\medskip
+\alert{耐戦略性が成り立たない原因は,保護水準 $d$ が申告に依存することにある}のではないか
+\end{frame}
+
+% =============================================================
+\begin{frame}{虚偽申告で得をする二つの例}
+\small
+\begin{block}{例 1:第一希望を偽る($\dtop{}$ の場合)}
+  本当は $o\succ t$ の学生が「$t$ が第一希望」と申告する.
+  $\dtop{t}$ が増えて $r_t$ が減り,$o$ の定員が減る.
+  高得点の学生が $o$ から落ちて $e_o$ が上がるが,自分は確保された $t$ に入れる.
+\end{block}
+\begin{block}{例 2:応募可能なカテゴリを隠す}
+  保護水準を「$c$ を $\emptyset$ より好む学生の人数」で定めたとする:
+  \[
+    \dacc{c} := \min\bigl\{\, q_c,\ |\{\, i \in I : c \succ_i \emptyset \,\}| \,\bigr\}
+  \]
+  本当は $o\succ t\succ\emptyset$ の学生が $t$ を受け入れないと申告すると,
+  $\dacc{t}$ が減って $o$ の定員が増え,自分がより好む $o$ に入れる.
+\end{block}
+\medskip
+どちらの例でも,\textbf{学生の申告によって保護水準 $d$ が変わる}ことが原因.
+よって保護水準を申告に依存しない情報で決めればよいのではないか.
+\end{frame}
+
+\begin{frame}{提案方式:eligibility-based reserved category protection}
+\small
+第一希望の人数ではなく\textbf{資格保有者の人数}で保護水準を定める.
+\[
+  \dV{c} := \min\bigl\{\, q_c,\ |\{\, i \in I : c \in V(i) \,\}| \,\bigr\}
+\]
+\begin{block}{Definition(Eligibility-based reserved category protection)}
+  \[
+    |Y_o| \;\leq\; q_o + \sum_{c \in T} \bigl( q_c - \max\{\, |Y_c|,\ \dV{c} \,\} \bigr)
+  \]
+\end{block}
+\begin{block}{Proposition(現行の reserved category protection より強い)}
+  $\topf_i = c \Rightarrow c \in V(i)$ より $\dV{c} \geq \dtop{c}$.
+  右辺は保護水準について非増加なので,
+  eligibility-based reserved category protection を満たすマッチングは,
+  reserved category protection も満たす.
+\end{block}
+資格 $V(i)$ は大学が確認でき,学生は資格を隠すことができない.\\
+つまり保護水準は選好にも申告にも依存せず,学生が変えることはできない.
+\end{frame}
+
+\begin{frame}{制約付き非浪費性($d^{V}$)と制約付き PE($d^{V}$)}
+\small
+reserved category protection を eligibility-based reserved category protection に置き換えて,
+同じ概念を定める.
+\begin{block}{Definition(制約付き非浪費性($d^{V}$))}
+  マッチング $Y$ において,学生 $i$ がカテゴリ $c$ を \textbf{strongly claim する}とは,
+  \[
+    c \in V(i), \qquad c \succ_i Y_i, \qquad
+    (Y \setminus Y_i) \cup \{(i,c)\} \text{ が}
+  \]
+  quota feasibility・score-feasibility・eligibility-based reserved category protection
+  を満たすこと.
+  \\ strongly claim する学生が存在しないとき,$Y$ は制約付き非浪費性($d^{V}$)を満たす.
+\end{block}
+\begin{block}{Definition(制約付き PE($d^{V}$))}
+  quota feasibility・score-feasibility・eligibility-based reserved category protection を満たす
+  マッチング $Y$ が \textbf{制約付き PE($d^{V}$)} $\iff$
+  これら三つを満たす他のマッチングに Pareto 支配されない.
+\end{block}
+\end{frame}
+
+\begin{frame}{固定カテゴリモデルへの帰着}
+\begin{block}{固定カテゴリモデルへの帰着}
+  柔軟カテゴリで quota feasibility と eligibility-based reserved category protection を満たす
+  $\iff$
+  $o$ の定員を
+  \[
+    q'_o := Q - \sum_{c \in T} \dV{c}
+  \]
+  各 $c \in T$ の定員を $q_c$ とした固定カテゴリモデルで quota feasibility を満たす
+\end{block}
+\begin{itemize}
+  \item $q'_o$ は資格の情報だけで決まる\textbf{定数}(マッチングにも選好にも依存しない)
+  \item \alert{Theorem 1(固定カテゴリでは SSD が全部満たす)が流用できる}
+\end{itemize}
+\end{frame}
+
+% \begin{frame}{Lemma の準備:$c$ に入れる人数には上限がある}
+% Eligibility-based reserved category protection は,
+% $o$ の定員を固定することと同じ意味を持つ(Lemma).
+% まず,留保カテゴリ $c$ に入れる人数 $|Y_c|$ には二つの上限がある.
+% \begin{enumerate}
+%   \item \textbf{定員}:$|Y_c| \leq q_c$
+%   \item \textbf{資格}:$(i,c) \in Y \Rightarrow c \in V(i)$ なので
+%         $|Y_c| \leq |\{\, i \in I : c \in V(i) \,\}|$
+% \end{enumerate}
+% 両方を合わせると
+% \[
+%   |Y_c| \;\leq\; \min\bigl\{\, q_c,\ |\{\, i : c \in V(i) \,\}| \,\bigr\} \;=\; \dV{c}
+% \]
+% \end{frame}
+
+% \begin{frame}{Lemma:固定カテゴリモデルへの帰着}
+% \small
+% \textbf{Step 1}\quad 前のスライドより $|Y_c| \leq \dV{c}$ なので,
+% \[
+%   \max\{ |Y_c|,\ \dV{c} \} = \dV{c} \qquad(\text{$Y$ によらず一定})
+% \]
+% \textbf{Step 2}\quad これを eligibility-based reserved category protection の式に代入し,
+% $Q = q_o + \sum_{c\in T} q_c$ を使うと
+% \[
+%   |Y_o| \;\leq\; q_o + \sum_{c \in T} \bigl( q_c - \dV{c} \bigr)
+%   \;=\; Q - \sum_{c \in T} \dV{c} \;=:\; q'_o
+% \]
+% $q'_o$ は資格の情報だけで決まる\textbf{定数}(マッチングにも選好にも依存しない).
+%
+% \textbf{Step 3}\quad 総定員 $Q$ の条件は自動的に満たされる:
+% \[
+%   |Y_o| + \sum_{c \in T} |Y_c| \;\leq\; q'_o + \sum_{c \in T} \dV{c} \;=\; Q
+% \]
+% \begin{block}{Lemma}
+%   柔軟カテゴリで quota feasibility と eligibility-based reserved category protection を満たす
+%   $\iff$
+%   定員 $(q'_o, (q_c)_{c\in T})$ の固定カテゴリモデルで quota feasibility を満たす\\
+%   $\Rightarrow$ \alert{Theorem 1(固定カテゴリでは SSD が全部満たす)がそのまま使える}
+% \end{block}
+% \end{frame}
+
+% \begin{frame}{Lemma の例}
+% $T = \{t_1, t_2\}$,$q_o = 2$,$q_{t_1} = 2$,$q_{t_2} = 1$($Q = 5$).
+% \begin{center}\small
+% \renewcommand{\arraystretch}{1.15}
+% \begin{tabular}{lccc}
+%   \toprule
+%   カテゴリ & 定員 $q_c$ & 資格保有者の人数 & $\dV{c}$ \\
+%   \midrule
+%   $t_1$ & 2 & 1 & $\min\{2, 1\} = 1$ \\
+%   $t_2$ & 1 & 3 & $\min\{1, 3\} = 1$ \\
+%   \bottomrule
+% \end{tabular}
+% \end{center}
+% \[
+%   q'_o = Q - (\dV{t_1} + \dV{t_2}) = 5 - 2 = 3
+% \]
+% \begin{itemize}
+%   \item $t_1$ の定員は 2 だが資格保有者は 1 人しかいない
+%         $\Rightarrow$ 1 人分は誰も使えないので,\textbf{最初から} $o$ の定員に回す
+%   \item $t_2$ は資格保有者が定員以上いるので,定員 1 をすべて $t_2$ に残す
+%   \item 結果として $o$ の定員は $2 \to 3$ となる
+% \end{itemize}
+% \end{frame}
+
+\begin{frame}{Eligibility-based SSD のアルゴリズム}
+\footnotesize
+\textbf{入力}:学生 $I$,点数 $\sigma$,資格 $V(i)$,選好 $\succ_i$,定員 $(q_c)_{c \in V}$,$\delta$
+\begin{enumerate}
+  \item \textbf{保護水準の計算}\quad
+        $\dV{c} = \min\{ q_c,\ |\{ i : c \in V(i) \}| \}\ \ (c \in T)$
+  \item \textbf{$o$ の定員の計算}\quad $q'_o = Q - \sum_{c \in T} \dV{c}$
+        \ (帰着より $o$ の定員として固定できる)
+  \item \textbf{初期化}\quad $Y = \emptyset$,$e_o = 0$
+  \item \textbf{点数の高い順に}学生 $i$ を一人ずつ処理する
+  \begin{enumerate}
+    \item 選べるカテゴリの集合を定める:
+    \[
+      A_i := \{\, c \in T \cap V(i) : |Y_c| < q_c,\ \sigma(i) \geq e_o - \delta \,\}
+    \]
+    \[
+      C_i := \{\emptyset\} \ \cup\ \{\, o : |Y_o| < q'_o \,\} \ \cup\ A_i
+    \]
+    \item $C_i$ の中で $\succ_i$ について最も好む $c^*$ を選び,$Y := Y \cup \{(i, c^*)\}$
+    \item $c^* = \emptyset$,$o \succ_i \emptyset$ で,
+          $i$ が最初の脱落者なら $e_o := \sigma(i)$
+  \end{enumerate}
+  \item $Y$ を出力する
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Eligibility-based SSD の動作例}
+\small
+$T = \{t\}$,$q_o = q_t = 1$($Q = 2$),$\delta = 10$.
+\begin{center}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{cccc}
+  \toprule
+  学生 & $\sigma$ & $V(i)$ & 選好 \\
+  \midrule
+  $i_1$ & 100 & $\{o\}$ & $o \succ \emptyset$ \\
+  $i_2$ & 90 & $\{o\}$ & $o \succ \emptyset$ \\
+  $i_3$ & 80 & $\{o, t\}$ & $o \succ t \succ \emptyset$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\textbf{Step 1--2}\quad $t$ の資格保有者は $i_3$ の 1 人なので $\dV{t} = 1$,$q'_o = 2 - 1 = 1$
+
+\textbf{Step 4}
+\begin{itemize}
+  \item $i_1$:$C_{i_1} = \{\emptyset, o\}$ $\Rightarrow$ $i_1 \to o$
+  \item $i_2$:$|Y_o| = q'_o$,$t \notin V(i_2)$ より $C_{i_2} = \{\emptyset\}$
+        $\Rightarrow$ $i_2 \to \emptyset$,$e_o = 90$
+  \item $i_3$:$80 \geq 90 - 10$ より $C_{i_3} = \{\emptyset, t\}$
+        $\Rightarrow$ $i_3 \to t$
+\end{itemize}
+\medskip
+\alert{$i_3$ が第一希望を $t$ と偽っても $q'_o$ は変わらないので,結果は同じ}
+(現行の reserved category protection では,正直に申告すると $\dtop{t} = 0$ で $i_3$ は不合格になる:Theorem 3 の例)
+\end{frame}
+
+\begin{frame}{Eligibility-based SSD の性質}
+\small
+\begin{block}{メカニズム}
+  $o$ の定員を $q'_o$,各 $c \in T$ の定員を $q_c$ とした固定カテゴリモデルで SSD を実行する.
+\end{block}
+\begin{block}{Theorem 5}
+  Eligibility-based SSD は,quota feasibility・score-feasibility・公平性・
+  eligibility-based reserved category protection・制約付き非浪費性($d^{V}$)・
+  \textbf{耐戦略性}を満たす.\\
+  さらに,\alert{制約付き PE($d^{V}$)}である.
+\end{block}
+\textbf{証明の概要}
+\begin{enumerate}
+  \item 帰着より,問題は定員 $(q'_o, (q_c)_{c\in T})$ の固定カテゴリモデルと同じ
+  \item Theorem 1 より,SSD は quota feasibility・score-feasibility・公平性・PE・耐戦略性を満たす
+  \item 帰着後のモデルで quota feasible なマッチングの集合は,
+        元のモデルで quota feasibility と eligibility-based reserved category protection を満たすマッチングの集合と一致する
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{三つのメカニズム}
+\begin{center}\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{L{2.9cm} C{2.3cm} C{1.7cm} C{2.1cm}}
+  \toprule
+  性質 & Reserved category protecting SSD & Flexible SSD & Eligibility-based SSD \\
+  \midrule
+  Reserved category protection & \checkmark($\dtop{}$) & $\times$ & \checkmark($d^{V}$) \\
+  耐戦略性                     & $\times$ & \checkmark & \alert{\checkmark} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\begin{block}{結果}
+  \begin{itemize}
+    \item 保護水準 $d$ が申告に依存すると,耐戦略性は成り立たない(例 1・例 2)
+    \item 資格保有者の人数 $d^{V}$ で保護水準を決めれば,
+          現行より強い保護と耐戦略性を両立できる(Theorem 5)
+  \end{itemize}
+\end{block}
+Reserved category protection と耐戦略性を両立させるには,
+保護水準を学生が変えられない確認済みの情報だけで決めればよい.
+\end{frame}
+
+% =============================================================
+\begin{frame}{三つのメカニズムの性質一覧}
+\begin{center}\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{L{3.8cm} C{2.3cm} C{1.6cm} C{2.1cm}}
+  \toprule
+  性質 & Reserved category protecting SSD & Flexible SSD & Eligibility-based SSD \\
+  \midrule
+  Quota feasibility                   & \checkmark & \checkmark & \checkmark \\
+  Score-feasibility                   & \checkmark & \checkmark & \checkmark \\
+  公平性                              & \checkmark & \checkmark & \checkmark \\
+  \midrule
+  非浪費性                            & $\times$   & \checkmark & $\times$ \\
+  制約付き非浪費性($\dtop{}$)        & \checkmark & \checkmark & $\times$ \\
+  制約付き非浪費性($d^{V}$)          & \checkmark & \checkmark & \checkmark \\
+  PE                                  & $\times$   & \checkmark & $\times$ \\
+  制約付き PE($\dtop{}$)             & \checkmark & ---        & $\times$ \\
+  制約付き PE($d^{V}$)               & ---        & ---        & \checkmark \\
+  \midrule
+  Reserved category protection        & \checkmark($\dtop{}$準拠) & $\times$ & \checkmark($d^{V}$準拠) \\
+  耐戦略性                            & $\times$   & \checkmark & \checkmark \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+% \begin{frame}{Eligibility-based SSD が満たさない性質}
+% \small
+% \begin{block}{概要}
+%   \begin{itemize}
+%     \item Eligibility-based SSD は制約付き非浪費性($d^{V}$)と制約付き PE($d^{V}$)を満たす
+%     \item しかし制約付き非浪費性($\dtop{}$)・制約付き PE($\dtop{}$)は満たさない
+%   \end{itemize}
+% \end{block}
+% \textbf{反例}\quad $q_o=q_t=1$,$\delta=10$
+% \begin{center}
+% \renewcommand{\arraystretch}{1.1}
+% \begin{tabular}{cccc}
+%   \toprule
+%   学生 & $\sigma$ & $V(i)$ & 選好 \\
+%   \midrule
+%   $i_1$ & 100 & $\{o\}$ & $o \succ \emptyset$ \\
+%   $i_2$ & 90 & $\{o\}$ & $o \succ \emptyset$ \\
+%   $i_3$ & 50 & $\{o, t\}$ & $o \succ t \succ \emptyset$ \\
+%   \bottomrule
+% \end{tabular}
+% \end{center}
+% \begin{itemize}
+%   \item Eligibility-based SSD:$\dV{t}=1$,$q'_o=1$ なので
+%         $i_1\to o$,$i_2\to\emptyset$($e_o=90$),$i_3\to\emptyset$($50<80$)
+%   \item $\dtop{t}=0$ より $r_t = 1$ なので,$i_1,i_2\to o$ も $\dtop{}$ 保護を満たす.
+%         $i_2$ だけが良くなり,\alert{Pareto 改善になる}
+%         (Reserved category protecting SSD はこちらを出力)
+% \end{itemize}
+% \end{frame}
+
+\begin{frame}{今後の方針}
+\small
+\textbf{シミュレーション}
+\begin{itemize}
+  \item 比較:flexible SSD・reserved category protecting SSD($\dtop{}$)・eligibility-based SSD($d^{V}$)
+  \item 指標:留保目標の充足率,未使用の定員数,虚偽申告による利得
+  \item $\delta$ や資格保有者の割合を変えて比較する
+\end{itemize}
+\end{frame}
+
+% 名氏は消す割り当てとかにしない
+% 定義とか定理は数式で書いた方がいい
+\end{document}

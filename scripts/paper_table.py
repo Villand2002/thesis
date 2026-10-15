@@ -1,8 +1,6 @@
-"""Regenerate the prototype table of the ICAART paper.
+"""Regenerate the prototype table of the PRIMA LNCS paper.
 
-Reproduces the three instance families of Section "Prototype" (seed 100) and
-reports every property the paper claims, including the across-category
-fairness notion introduced after the 2026-08-26 meeting.
+Reproduces Table "Prototype outcomes and running times" (seed 100).
 
     python3 scripts/paper_table.py
 """
@@ -21,50 +19,22 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from algorithms.admissions import (
-    OPEN_CATEGORY,
-    AdmissionProblem,
-    across_category_fairness,
-    adaptive_score_threshold_da,
-    effectively_score_feasible,
-    is_feasible,
-    no_justified_envy,
-    non_wasteful,
-    non_wasteful_plain,
+    idle_odr,
     pa_odr,
     realized_score_feasible,
     spse,
-    swap_stability,
-    threshold_adjusting_da,
-    within_category_fairness,
-    within_category_fairness_strong,
 )
 from scripts.benchmark_admissions import make_problem
 
 FAMILIES = (
     ("|I|=200, |T|=6", dict(students=200, reserved_categories=6, open_capacity=30, reserved_capacity=15)),
     ("|I|=500, |T|=8", dict(students=500, reserved_categories=8, open_capacity=70, reserved_capacity=35)),
-    ("|I|=60, |T|=6", dict(students=60, reserved_categories=6, open_capacity=30, reserved_capacity=15)),
 )
 
 MECHANISMS: Sequence[tuple[str, Callable]] = (
     ("SPSE", spse),
-    ("TA-DA", threshold_adjusting_da),
-    ("A-STDA", adaptive_score_threshold_da),
+    ("Idle-ODR", idle_odr),
     ("PA-ODR", pa_odr),
-)
-
-CHECKS = (
-    ("feas", lambda p, r: is_feasible(p, r, r.effective_capacities)),
-    ("sf", realized_score_feasible),
-    ("sf-eff", effectively_score_feasible),
-    ("nw", non_wasteful),
-    ("nw-plain", non_wasteful_plain),
-    ("within-unm", within_category_fairness),
-    ("within", within_category_fairness_strong),
-    ("across", across_category_fairness),
-    ("nje", no_justified_envy),
-    ("swap", lambda p, r: swap_stability(p, r, reserves_only=False)),
-    ("swap-res", lambda p, r: swap_stability(p, r, reserves_only=True)),
 )
 
 
@@ -85,7 +55,7 @@ def build_family(spec: Dict[str, int], *, delta: float, overlap: float, runs: in
 
 
 def run(delta: float = 8.0, overlap: float = 0.45, runs: int = 100, seed: int = 100) -> None:
-    header = ["family", "mechanism", "med_ms"] + [name for name, _ in CHECKS] + ["matched", "dereserved", "%res"]
+    header = ["family", "mechanism", "med_ms", "score_feasible", "matched", "dereserved", "%res"]
     print(",".join(header))
     for family_name, spec in FAMILIES:
         problems = build_family(spec, delta=delta, overlap=overlap, runs=runs, seed=seed)
@@ -94,13 +64,15 @@ def run(delta: float = 8.0, overlap: float = 0.45, runs: int = 100, seed: int = 
         )
         for mech_name, mechanism in MECHANISMS:
             timings: List[float] = []
-            counts = {name: 0 for name, _ in CHECKS}
+            score_feasible = 0
             matched: List[int] = []
             dereserved: List[int] = []
             for problem in problems:
                 start = time.perf_counter()
                 result = mechanism(problem)
                 timings.append((time.perf_counter() - start) * 1000)
+                if realized_score_feasible(problem, result):
+                    score_feasible += 1
                 matched.append(len(result.matched_students()))
                 dereserved.append(
                     sum(
@@ -108,15 +80,12 @@ def run(delta: float = 8.0, overlap: float = 0.45, runs: int = 100, seed: int = 
                         for c in problem.reserved_categories
                     )
                 )
-                for name, check in CHECKS:
-                    if check(problem, result):
-                        counts[name] += 1
             row = [
                 f"{family_name} (res={reserve_seats:.2f})",
                 mech_name,
                 f"{statistics.median(timings):.2f}",
+                f"{score_feasible}/{runs}",
             ]
-            row += [str(counts[name]) for name, _ in CHECKS]
             row += [
                 f"{statistics.mean(matched):.2f}",
                 f"{statistics.mean(dereserved):.2f}",

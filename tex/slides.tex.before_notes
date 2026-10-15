@@ -1,0 +1,383 @@
+\documentclass[dvipdfmx,11pt]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\R}{\mathbb{R}}
+
+\title{Fair Admissions with Overlapping Reserve Categories under Score Constraints}
+\subtitle{SPSE, PA-ODR, and the Cost of Score-Feasibility}
+\author{Tomohiro Shimamura \and Zhang Yao \and Zhaohong Sun}
+\institute{Kyushu University}
+\date{PRIMA 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Question}
+  We study admissions to one school with:
+  \begin{itemize}
+    \item one open category $o$,
+    \item several reserve categories $T$,
+    \item students who may be eligible for multiple reserve categories,
+    \item one-to-one counting: an admitted student fills at most one category,
+    \item a score constraint bounding the gap between open and reserve cutoffs.
+  \end{itemize}
+
+  \vspace{0.8em}
+  \begin{block}{Main issue}
+    With overlapping eligibility, deciding \emph{where} a student is counted is part of the allocation problem.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Model}
+  Each student $i$ has:
+  \begin{itemize}
+    \item raw score $\sigma(i)$,
+    \item reserve eligibility set $\T(i)\subseteq T$,
+    \item strict preference over admissible routes $V_i=\{o\}\cup\T(i)$.
+  \end{itemize}
+
+  \vspace{0.6em}
+  Reserve categories use a common bonus $k$:
+  \[
+    \sigma_o(i)=\sigma(i),\qquad
+    \sigma_t(i)=\sigma(i)+k \quad (t\in\T(i)).
+  \]
+
+  \vspace{0.6em}
+  A feasible matching $\mu$ is \textbf{score-feasible} if
+  \[
+    e_o(\mu)-e_t^+(\mu)\le \delta
+    \qquad \text{for every } t\in T.
+  \]
+  Empty reserve categories make the condition vacuous.
+\end{frame}
+
+\begin{frame}{Two Fairness Notions}
+  \begin{block}{Non-wastefulness}
+    No unmatched student can be added to an admissible category while preserving feasibility and score-feasibility.
+  \end{block}
+
+  \vspace{0.5em}
+  This is an additive notion: it keeps the existing assignment fixed.
+
+  \vspace{1em}
+  \begin{block}{Within-category fairness}
+    No unmatched student with higher adjusted score can replace a lower-scoring student in the same reserve category.
+  \end{block}
+
+  \vspace{0.5em}
+  This need not be weakened by the score constraint: replacing a reserve assignee by a higher-scoring eligible student only raises that reserve cutoff.
+\end{frame}
+
+\begin{frame}{Mechanism 1: SPSE}
+  \textbf{SPSE}: student-proposing deferred acceptance over categories.
+
+  \begin{itemize}
+    \item Students propose to admissible categories in preference order.
+    \item Open category ranks by raw score.
+    \item Reserve categories rank by adjusted score.
+    \item Each student is held by at most one category.
+  \end{itemize}
+
+  \vspace{1em}
+  \begin{center}
+  \begin{tabular}{lc}
+    \toprule
+    Property & SPSE \\
+    \midrule
+    Feasible & Yes \\
+    Non-wasteful & Yes \\
+    No justified envy & Yes \\
+    Strategy-proof & Yes \\
+    Score-feasible & Not guaranteed \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{SPSE Can Violate the Score Constraint}
+  \[
+    T=\{t_1,t_2\},\quad q^o=q^{t_1}=q^{t_2}=1,\quad k=5,\quad \delta=10.
+  \]
+
+  \begin{center}
+  \begin{tabular}{c|c|c|c}
+    \toprule
+    Student & Raw score & Eligible reserves & Preference \\
+    \midrule
+    $i_1$ & 100 & $\emptyset$ & $o$ \\
+    $i_2$ & 95 & $\{t_1,t_2\}$ & $t_1\succ t_2\succ o$ \\
+    $i_3$ & 82 & $\{t_2\}$ & $t_2\succ o$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  SPSE returns
+  \[
+    \mu_o=\{i_1\},\quad \mu_{t_1}=\{i_2\},\quad \mu_{t_2}=\{i_3\}.
+  \]
+  But
+  \[
+    e_o-e_{t_2}^+=100-(82+5)=13>10.
+  \]
+
+  The same candidates admit a score-feasible routing: count $i_2$ in $t_2$ and leave $t_1$ idle.
+\end{frame}
+
+\begin{frame}{What Overlap Adds}
+  Score-elevated policies can violate cutoff rules even without overlap: a reserve candidate may simply be too weak.
+
+  \vspace{0.8em}
+  Overlap adds a different cause:
+  \begin{itemize}
+    \item a student may be eligible for several reserve categories,
+    \item but can protect the cutoff in only one of them,
+    \item so the routing decision itself can determine score-feasibility.
+  \end{itemize}
+
+  \vspace{0.8em}
+  \begin{block}{Takeaway}
+    With one-to-one counting, overlapping eligibility is not bookkeeping; it is mechanism design.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Joint Feasibility Can Fail}
+  Individual reserve categories may each be fillable under the score rule, yet not jointly fillable.
+
+  \[
+    T=\{t_1,t_2\},\quad q^o=q^{t_1}=q^{t_2}=1,\quad k=5,\quad \delta=10.
+  \]
+  \[
+    i_1(100,\emptyset),\quad
+    i_2(95,\{t_1,t_2\}),\quad
+    i_3(80,\{t_1\}),\quad
+    i_4(78,\{t_2\}).
+  \]
+
+  Open-completeness forces $i_1$ into $o$, so reserve assignees need adjusted score at least $90$.
+
+  Only $i_2$ clears the bar, and she counts once: each category is fillable alone, but not both at once.
+
+
+  \begin{block}{Hall-type obstruction}
+    Quotas are jointly fillable $\iff |N(S)|\ge\sum_{t\in S}q^t$ for every set $S$ of categories, $N(S)$ = students admissible for some $t\in S$. Singletons pass; $\{t_1,t_2\}$ fails.
+  \end{block}
+  {\small Cutoff-induced: without the cutoff, $i_3,i_4$ fill both. Unlike Kurata et al.\ (2017), where a straightforward extension of the disjoint-type soft-bound model may admit no stable matching.}
+\end{frame}
+
+\begin{frame}{Mechanism 2: PA-ODR}
+  \textbf{PA-ODR}: Preference-Aware Overlapping De-Reservation.
+
+  \begin{enumerate}
+    \item Fill the open category first by raw merit.
+    \item Build a feasibility graph $G(e)$ at the induced open cutoff:
+    \[
+      (i,t)\in G(e)
+      \iff
+      t\in\T(i)\ \text{and}\ \sigma(i)+k\ge e-\delta.
+    \]
+    \item Assign reserve seats using a lexicographic reserve-side matching.
+    \item If a reserve category cannot be filled, de-reserve one unit of its capacity to the open category.
+    \item Repeat until all surviving reserve capacities are filled.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{What ``Preference-Aware'' Means}
+  Preferences do not determine everything.
+
+  \vspace{0.6em}
+  In PA-ODR:
+  \begin{itemize}
+    \item open seats are filled by raw score,
+    \item de-reservation follows a fixed category order,
+    \item preferences are used only on the reserve side.
+  \end{itemize}
+
+  \vspace{0.8em}
+  Reserve-side matching chooses, in order:
+  \begin{enumerate}
+    \item maximum number of reserve assignments,
+    \item lexicographically best adjusted-score profile,
+    \item lexicographically best preference-rank profile,
+    \item fixed tie-break.
+  \end{enumerate}
+
+  Criteria 1--2 determine \emph{who} is admitted; criteria 3--4 decide \emph{where}.
+\end{frame}
+
+\begin{frame}{Why De-Reserve?}
+  PA-ODR's institutional rationale is non-wastefulness.
+
+  \vspace{0.8em}
+  If a reserve seat cannot be used without violating the cutoff rule, PA-ODR does not leave that admission capacity idle while admissible students can still enter through the open category.
+
+  \vspace{0.8em}
+  \begin{center}
+  \begin{tabular}{lccc}
+    \toprule
+    Mechanism & Score-feasible & Keeps reserve capacity & Fills capacity \\
+    \midrule
+    SPSE & No & Yes & Yes \\
+    Idle variant & Yes & Yes & No \\
+    PA-ODR & Yes & No & Yes \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  PA-ODR buys score-feasibility and coverage by giving up some reserve capacity.
+
+  \vspace{0.5em}
+  {\small Intended for oversubscribed settings, $\sum_c q^c\le|I|$: otherwise it admits everyone through $o$ and retires every quota.}
+\end{frame}
+
+\begin{frame}{Properties of PA-ODR}
+  \begin{center}
+  \begin{tabular}{lc}
+    \toprule
+    Property & PA-ODR \\
+    \midrule
+    Terminates & Yes \\
+    Output computable in polynomial time & Yes \\
+    Feasible w.r.t. final capacities & Yes \\
+    Score-feasible & Yes \\
+    Non-wasteful w.r.t. final capacities & Yes \\
+    Within-category fair & Yes \\
+    \midrule
+    Strategy-proof & No \\
+    No justified envy & No \\
+    Minimal de-reservation & No \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  The output depends on the order in which underfilled reserve categories are processed.
+
+  {\small Eligibility is assumed verifiable: if self-declared, concealing it could pay.}
+\end{frame}
+
+\begin{frame}{Order Dependence}
+  \[
+    i_1(100,\emptyset),\quad i_2(84,\{t_1\}),\quad i_3(83,\{t_2\}),
+  \]
+  with $q^o=q^{t_1}=q^{t_2}=1$, $k=5$, $\delta=10$.
+
+  Initially the open cutoff is $100$, so neither reserve candidate clears the bar.
+
+  \vspace{0.8em}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{If $t_1\prec t_2$:}
+      \begin{itemize}
+        \item de-reserve $t_1$,
+        \item $i_2$ enters open,
+        \item $i_3$ can fill $t_2$,
+        \item one reserve seat is lost.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{If $t_2\prec t_1$:}
+      \begin{itemize}
+        \item de-reserve $t_2$,
+        \item $i_2$ enters open,
+        \item nobody remains for $t_1$,
+        \item two reserve seats are lost.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  Same instance, same score rule, different surviving reserve capacity.
+
+  {\small For \emph{any} fixed order, relabelling $t_1,t_2$ gives an instance where it is non-minimal. With few categories, minimum de-reservation can be solved directly (polynomial for bounded $|T|$).}
+\end{frame}
+
+\begin{frame}{Prototype Check}
+  Two randomized families, 100 instances each (seed 100, $\delta=8$, eligibility prob.\ $0.45$, common bonus).
+  Mean $\pm$ s.d.; de-reserved = reserve \emph{seats}.
+
+  \begin{center}
+  \small
+  \begin{tabular}{llccc}
+    \toprule
+    Family & Mechanism & Score-feasible & Matched & De-reserved seats \\
+    \midrule
+    $|I|=200, |T|=6$ & SPSE & 54/100 & $62.97\pm13.90$ & 0 \\
+     & Idle & 100/100 & $44.57\pm11.41$ & 0 \\
+     & PA-ODR & 100/100 & $62.97\pm13.90$ & $18.57/47.99$ (39\%) \\
+    \midrule
+    $|I|=500, |T|=8$ & SPSE & 52/100 & $187.33\pm31.17$ & 0 \\
+     & Idle & 100/100 & $114.10\pm30.41$ & 0 \\
+     & PA-ODR & 100/100 & $187.33\pm31.17$ & $73.24/149.82$ (49\%) \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \begin{itemize}
+    \item SPSE preserves capacity and coverage but may violate the score constraint.
+    \item Idle categories preserve capacity and score-feasibility but lose coverage.
+    \item PA-ODR preserves coverage and score-feasibility but de-reserves capacity.
+  \end{itemize}
+
+  {\small This is a sanity check, not an average-case claim.}
+\end{frame}
+
+\begin{frame}{Main Comparison}
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    Property & SPSE & PA-ODR \\
+    \midrule
+    Feasibility & Yes & Yes, final capacities \\
+    Non-wastefulness & Yes & Yes, final capacities \\
+    Within-category fairness & Yes & Yes \\
+    \midrule
+    Score-feasibility & No & Yes \\
+    No justified envy & Yes & No \\
+    Strategy-proofness & Yes & No \\
+    Reserve capacity & Fixed & De-reserved, not minimal \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.8em}
+  \begin{block}{Interpretation}
+    PA-ODR is not a replacement for DA when incentives are paramount. It is a fallback rule for institutions that treat the cutoff-gap constraint as hard and also want to avoid leaving usable admission capacity idle.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Takeaways}
+  \begin{enumerate}
+    \item Overlap makes category assignment substantive: a multiply eligible student can protect only one reserve cutoff.
+    \item Fixed reserve capacities may be incompatible with score-feasibility, even when every category is individually fillable.
+    \item SPSE inherits DA-style incentive and fairness properties, but may violate the score constraint.
+    \item PA-ODR enforces score-feasibility and non-wastefulness relative to final capacities, but loses strategy-proofness, no-envy, and reserve capacity.
+  \end{enumerate}
+
+  \vspace{1em}
+  \begin{block}{Open question}
+    Can one obtain score-feasibility and strategy-proofness together, and what reserve-capacity cost is unavoidable? Is minimum de-reservation hard for unbounded $|T|$?
+  \end{block}
+\end{frame}
+
+\begin{frame}{References}
+  \small
+  \begin{itemize}
+    \item Ayg\"un and Turhan. Dynamic reserves in matching markets. 2020.
+    \item Ayg\"un and Turhan. How to de-reserve reserves: Admissions to technical colleges in India. 2023.
+    \item Gale and Shapley. College admissions and the stability of marriage. 1962.
+    \item Kurata, Hamada, Iwasaki and Yokoo. Controlled school choice with soft bounds and overlapping types. JAIR, 2017.
+    \item S\"onmez and Yenmez. Affirmative action with overlapping reserves. 2020.
+    \item S\"onmez and Yenmez. Affirmative action in India via vertical, horizontal, and overlapping reservations. 2022.
+  \end{itemize}
+\end{frame}
+
+\end{document}

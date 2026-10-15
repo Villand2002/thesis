@@ -1,20 +1,55 @@
 # ICAART 2027 投稿 TODO
 
-対象: `main.tex`（Fair Admissions with Overlapping Reserve Categories under Score Constraints）
-最終更新: 2026-08-18
+対象: **`main_r2.tex`**（Fair Admissions with Overlapping Reserve Categories under Score Constraints）
+最終更新: 2026-09-08
+
+## 投稿ファイル（2026-09-08 に分岐）
+
+**第2ラウンド（2026-10-22）に Regular Paper として出す。指導教員の確認済み。**
+
+| ファイル | 位置づけ |
+|---|---|
+| **`main_r2.tex`** | **第2ラウンド提出版。今後の編集はこちらに入れる** |
+| `main.tex` | 第1ラウンド（09-15）想定で作った版。分岐時点で凍結・参照用 |
+
+分岐時点で両者の本文は同一。`main_r2.tex` は冒頭に第2ラウンドの締切・分量規定の
+ステータスブロックを持つ（旧ステータスブロックもその下に残してある）。
+
+実測（tectonic、2026-09-08）: **12 ページ**（Full Paper 規定ちょうど）/
+非空白文字数 約 45,000（上限 50,000）/ error 0 / Overfull 0 / 未定義参照・未定義引用 0。
+
+なお `references.bib` の `NgVo18a` が二重定義で BibTeX が
+"Repeated entry" エラーを出していたため、後方（2094 行目付近）の重複を無効化した
+（バックアップ `references.bib.before_dup_fix`）。出力される文献リストは不変（28 件）。
 
 ## 投稿先の規定
 
 | 項目 | 規定 |
 |---|---|
-| Regular Papers 締切 | **2026-09-30** |
-| Position Papers 締切 | 2026-11-13 |
+| Regular Papers 締切（第1ラウンド） | **2026-09-15**（通知 11-13 / camera-ready 11-27） |
+| Position Papers / **Regular Papers** 締切（第2ラウンド） | **2026-10-22**（通知 12-04 / camera-ready 12-18） |
+| 会議日程 | 2027-02-23〜26 |
 | 投稿時の分量 | **10,000〜50,000字（空白を除く）**。逸脱は査読に回らない |
 | Full Paper 採択時 | 12ページ（+4ページは有料） |
 | Short Paper 採択時 | 8ページ |
 | 査読 | double-blind（著者情報なし） |
 
 出典: <https://icaart.scitevents.org/Guidelines.aspx> / <https://icaart.scitevents.org/callforpapers.aspx>
+
+### 【重要】PRIMA 2026 との二重投稿回避（2026-09-07 確認）
+
+本稿は `prima/LNCS.TEX`（PRIMA 2026 投稿、締切 2026-08-03）と**同一タイトル・同一モデル・
+共通命題多数**であり、ICAART の規定「published elsewhere または simultaneously submitted to
+another conference with proceedings と substantially overlap する投稿は不可」に抵触する。
+
+- PRIMA 2026 採否通知: **2026-09-25** / camera-ready 10-09 / 会議 12-14〜17（LNAI 収録）
+- したがって **9-15 の第1ラウンドには出さない**（PRIMA 査読中＝同時投稿になる）
+- **9-25 の PRIMA 通知を待ち、不採択なら 10-22 の第2ラウンドに Regular Paper として出す**
+  （2026-09-08: 指導教員が第2ラウンドで問題ないと確認。提出ファイルは `main_r2.tex`）
+- PRIMA 採択の場合はこの原稿を ICAART に出せない。INSTICC の self-plagiarism 例外は
+  「ごく一部の再利用＋斜体明示＋原典引用」か「非アーカイブのテクニカルレポート」のみで、
+  LNAI 収録論文は該当しない。→ PRIMA 版のジャーナル拡張版に切り替える
+- 両会議とも査読中の preprint 公開を禁止（ICAART は初回投稿〜結果発表まで明記）。arXiv 投稿はしない
 
 ---
 
@@ -97,6 +132,228 @@
 
 4つの公平性の定義と入れ子補題、SPSE / A-STDA / PA-ODR の全命題と証明、
 不可能性定理、PA-ODR の反例2つ（|T|=1 と reserve 内のみ）、実験2ファミリ。
+
+---
+
+## 校正チェック（2026-09-06）
+
+バックアップ: `references.bib.before_exchange_cites`
+
+### 先行研究チェック（CLAUDE.md 必須項目・今回実施）
+
+- **引用漏れ1件を発見・追加**: across-category efficiency は**交換安定性 (exchange stability)** そのもの。
+  - Alcalde, J. (1995) *Exchange-proofness or divorce-proofness? Stability in one-sided matching markets*,
+    Review of Economic Design 1(1), 275--287. → `Alca95a`
+  - Cechlárová, K. and Manlove, D. F. (2005) *The exchange-stable marriage problem*,
+    Discrete Applied Mathematics 152(1--3), 109--122（存在判定が NP 完全）→ `CeMa05a`
+  - Def.~acrosseff の直後・Abstract・Contribution 1 に反映。「新しく導入する」という書き方を
+    「交換安定性を score-relative に適応させる」に修正した（novelty の過大主張を回避）。
+    本稿固有なのは条件 (iii)（score-feasibility 付き）と、交換対象が相手ではなく
+    「どのカテゴリに計上されるか」である点。
+- **引用の正確さを実物で確認**（食い違いなし）:
+  - `AyTu26a`(2602.09189) — abstract を取得。one-to-all、cutoff 制約なし、de-reservation なし。
+    本文の記述と一致。
+  - `Glit26a`(2602.10851) — abstract を取得。容量改変時の逸脱インセンティブ問題。本文の記述と一致。
+    なお「minimal modifications と minimal deviation incentives は両立」と述べており、
+    Conclusion の最小 de-reservation の open question に関連（要検討）。
+- 直近の関連研究は既に網羅されている（SoYe22a, AyTu23a/b, AyTu26a, PSUY24a, PRS23a, CsSu26a, Glit26a 等）。
+
+### 本文の誤り・不整合の修正（8件）
+
+1. **Prop.~tada-nw の「already with |T|=1」が偽**（新しい反例は |T|=2）→ 削除。
+2. **反例の記号が本文の慣例と衝突**: 学生名 `c` が汎用カテゴリ記号 `c` と衝突、カテゴリ `r,s` も独自。
+   → `i_1,i_2,i_3` / `t_1,t_2` に統一。数値・主張は不変（再検証済み）。
+3. **score clause の記述が誤り**: 「2つの fairness はどちらも score 節を持たない」と書いていたが、
+   Def.~acrosseff は条件 (iii) がまさに score 節。→ Def.~fair は意図的に持たない（正の結果が強くなる）、
+   Def.~acrosseff は明示的に持つ、と書き分け。
+   さらに「割当済みの主張を認めると open cutoff が動きうる」ことを追記（インスタンスで確認：
+   a(100),i(90,{t}),j(80,{t}),m(86,{u}), q^o=2, k=0, δ=12 で honour 後に gap 14 > 12）。
+4. Contribution 2 の「envy-free」— 削除した no-justified-envy の残骸 → 「fair on both counts」。
+5. Contribution 4 の「without the no-justified-envy property from which SPSE gets that」— 同上、削除。
+6. §paodr 冒頭の「incentive and envy guarantees」→ 「fairness guarantees」。
+7. Ex.~paodr-envy の「those notions were left unweakened」— 参照先が削除済み → Def.~fair を明示。
+8. Model の「(iv) follows from it」→ (i) と (ii) の両方から従う、に訂正。
+
+### 本文中の全インスタンスを機械検証（すべて一致）
+
+Prop.~spse-not-sf（SPSE 出力・gap 13・ν の4性質）、§spse の gap 15 の注記、
+Prop.~impossibility（同時達成不可＋individually completable を全列挙で確認）、
+Ex.~paodr-envy（出力・gap 5・within 違反・代替案が score-feasible・SPSE は代替案を返す）、
+Prop.~paodr-unfair の第2主張（出力・de-reservation なし・within 違反・acr-eff は成立）、
+Prop.~paodr-notsp（真の申告→t_2、虚偽申告→t_1）、
+Prop.~tada-nw / tada-notsp（改名後も再確認）。
+
+※ ν が「matched も動ける」強い NW 定義では wasteful になる点は、本文が直後に
+  「ν leaves t_1 vacant though i_2 ranks it first」と明記済みで矛盾なし。
+
+### 分量・体裁
+
+| | 値 |
+|---|---|
+| ページ数 | **12**（Full Paper 規定ちょうど） |
+| PDF 非空白文字数（柱込み） | **45,677**（柱を除く推定 44,590） |
+| Abstract 語数 | **193**（上限 200） |
+| コンパイル | error 0 / Overfull hbox 0 / 未定義参照 0 / 未定義引用 0 |
+
+軽微（未対応）: `\label{sec:impossibility}` が未参照。害はない。
+
+---
+
+## 完了済み（2026-09-06）— 進捗_0901_検証反映版 に合わせて性質セットを整理
+
+バックアップ: `main.tex.before_deck_verified`（この整理の直前）
+
+### 削除した性質（スライドに無く、著者が置いていないもの。strategy-proofness のみ残す指示）
+
+- **Fairness against unmatched claimants**（旧 Def.~fair-unm）と **Lemma fair-sf** — 削除。
+  PA-ODR の正の保証は Prop.~paodr-fair で「Def.~fair を未割当学生に制限したもの」として述べ直した
+  （＝ slide 29 の ×¹ 脚注そのもの）。独立した定義としては置かない。
+- **No justified envy**（旧 Def.~nje）— 削除。比較表の行・Prototype 表の列も削除。
+- **Effective cutoffs / effective score-feasibility**（旧 Def.~effcutoff）— 削除。
+  slide 8 の注記（μ_t = ∅ なら e_t^+ := +∞）は既存の Def.~scorefeas と一致しているのでそのまま。
+- **Non-wastefulness, plain**（score 節を落とした版）— 削除。
+- **Lemma hierarchy**（入れ子補題）— 削除。残る2つの公平性は独立なので入れ子にならない。
+  代わりに Desiderata 末尾で独立性を2つの証人で明示（片方は Prop.~paodr-unfair のインスタンス、
+  もう片方は i(80,{t})↦o, j(90,{t})↦t, k=0, δ=10 の feasible マッチング。計算機確認済み）。
+- **Ex.~tada-idle**（A-STDA が席を遊ばせる例）— 削除。役割の3つ（plain/score-relative の分離、
+  nje の strictness、実効カットオフの分離）が全て消えたうえ、A-STDA の無駄は Prop.~tada-nw が直接示す。
+
+**残したもの**: Prop.~impossibility（open-/reserve-completeness を使う不可能性）。
+これはスライドに無いが著者の既存成果で TODO の「維持」項目。不要なら一言で落とせる。
+
+### スライドから取り込んだもの
+
+- **A-STDA の反例を slide 24 のものに差し替え**（k=0, δ=5, q^o=2, q^r=q^s=1,
+  c(95,∅), x(88,{r}), y(86,{s})）。同一インスタンスから3つ全部が出る:
+  (1) non-wastefulness 違反、(2) **不動点が存在しない**（τ≤91→95, 91<τ≤93→86, τ>93→88 の3レジーム。
+  どの値も自分を生むレジームに入らない）、(3) **y が o≻s と虚偽申告して未割当→o に改善**。
+  → slide 24 の修復候補 (a)「e_o の不動点まで再反復」は**不可能**であることを本文に明記。
+  (b) の後処理案・(c) の条件付き弱化も本文に残した。
+- **帯 [e_o(μ)−δ, τ*−δ) が取り残される**という slide 24 の原因分析を本文に採用。
+- SPSE の公平性は slide 12・26 の DA 論法をそのまま直接証明に（across-fair 経由をやめた）。
+- 比較表を slide 29 の6行＋strategy-proofness に一致させた。
+
+### 検証（全探索 3,449,952 インスタンス、論文の定義から独立に再実装）
+
+| | feas | score-feas | non-waste | within | within(未割当のみ) | acr-eff |
+|---|---|---|---|---|---|---|
+| SPSE | ✓ | 反例あり | ✓ | ✓ | ✓ | ✓ |
+| A-STDA | ✓ | ✓ | **4,944件違反** | ✓ | ✓ | ✓ |
+| PA-ODR | ✓ | ✓ | ✓ | **393,768件違反** | ✓ | **200,880件違反** |
+
+**slide 29 の表（×¹ ×² の脚注を含む）と完全に一致**。
+
+### 分量（tectonic + pypdf 実測）
+
+| | 反映前 | **今回** |
+|---|---|---|
+| PDF 非空白文字数（柱込み） | 48,532 | **44,898** |
+| ページ数 | 13 | **12**（Full Paper 規定ぴったり、追加料金なし） |
+| Abstract 語数（上限200） | 195 | **198** |
+
+error 0 / Overfull hbox 0 / 未定義参照 0。
+
+### 要確認
+
+- **Non-wastefulness の主張者**: slide 9 は「未割当 **または** c を μ(i) より好む」の2択だが、
+  本稿は前回の指示どおり**未割当のみ**。slide 24 の反例は y が未割当なのでどちらでも成立する。
+  強化版に戻すなら Def.~nw に (i) の節を戻し、SPSE 証明・prop:tada-props・PA-ODR の NW 証明の
+  3か所を「移動」の語に直すだけ。
+- **A-STDA の初期値**: slide 20/22 は τ=0、slide 21 手順1は上位 q^o 人 cutoff で不一致（slide 21 も注記済み）。
+  本稿は τ=-∞。どちらでも Prop.~tada-nw / tada-notsp は成立（確認済み）。
+- **先行研究チェック未実施**（CLAUDE.md の arXiv チェック）。across-category efficiency は
+  exchange stability 系の既存概念に近く、引用要否の確認が必要。実在確認が取れていないので文献は足していない。
+
+---
+
+## 完了済み（2026-09-05）— 進捗_0901_フィードバック反映版 の反映と性質の検証
+
+バックアップ: `main.tex.before_0901_slides`
+
+### スライドから取り込んだもの
+
+1. **総定員 Q**（slide 6, 7）。`Q := Σ_c q^c` を Model に定義し、feasibility に (iv) `|M(μ)| ≤ Q` を追加。
+   (i)(ii) から従う冗長条件だが、de-reservation が保存するのは Q であることを明示するため残す。
+2. **Non-wastefulness は未割当学生のみ（従来どおり）で確定**。slide 9 の (a) は
+   「未割当 **または** c を μ(i) より好む」と割当済み学生の移動も許す形だが、
+   **第一項（未割当）だけを採る**方針とした（2026-09-05 著者判断）。
+   理由: 使われていない席が無駄であって、割当済み学生をどこに座らせるかは
+   fairness 側（Def.~fair / def:across / def:acrosseff）で扱う論点であるため。
+   Def.~fair-unm と主張者の範囲が揃い、定義の系統も整理される。
+   **強化版でも全探索の結果は完全に同一**（下記検証）なので、命題・比較表は一切変わらない。
+   強化版を採る場合の差分は `main.tex.before_0901_slides` からの再適用ではなく、
+   Def.~nw に「(i) c ≻_i μ(i)」節を戻し、SPSE 証明・prop:tada-props・PA-ODR の NW 証明の
+   3か所を「移動」の語に直すだけでよい。
+3. **Across-category efficiency**（slide 24）を Def.~acrosseff として新規追加し、
+   **across-category fairness（旧 Def.~across, envy 型）は削除**（2026-09-05 著者判断）。
+   スライドに載っているのは efficiency のみであり、2つを併置しないという方針。
+   バックアップ: `main.tex.before_drop_acrossfair`
+   - Def.~acrosseff: 交換ブロッキング（i, j が互いの枠を選好し、交換が feasible かつ score-feasible）。
+   - **Lemma~hierarchy を書き直し**。旧: nje ⇒ across-fair ⇒ within ⇒ unm、across-fair ⇒ acr-eff。
+     新: **nje ⇒ within ⇒ unm** と **nje ⇒ acr-eff**（共通加点 k を使う）の2分岐。3つとも strict。
+     2分岐は互いに独立（Prop.~paodr-unfair のインスタンスが acr-eff だが within でない）。
+   - **SPSE / A-STDA の acr-eff を直接証明に変更**（旧稿は across-fair 経由で導いていた）。
+     A-STDA は「c ≻_i μ(i) なら μ_c の全員が σ_c で i に勝つ」を補題化し、
+     within は c=t の場合、acr-eff は (i,μ(j)) と (j,μ(i)) に適用して共通加点で矛盾、という構成。
+   - 比較表・Prototype 表の across-fair 行/列を acr-eff に置換。
+     PA-ODR の Prototype 数値のみ 0/100 → **1/100**（第1ファミリ）に変わる。第2ファミリは 63/100 で不変。
+     within-category fairness は表から外し、キャプションに数値（100,100,0 / 100,100,63）を明記。
+   - PA-ODR の反例は Ex.~paodr-envy の i_2 の選好を o ≻ t_1 に変えるだけ（Prop.~paodr-unfair に追加）。
+
+### 新しく証明した否定的結果（スライドの「要補題」への回答）
+
+4. **Prop.~tada-nw: A-STDA は non-wasteful でない、かつ閾値に不動点が存在しない。**
+   反例 `T={t_1}, q^o=q^{t_1}=2, k=5, δ=10, i_1(100,∅), i_2(84,{t_1}), i_3(83,{t_1})`（両者 t_1 選好）。
+   出力 `μ_o={i_1,i_2}, μ_{t_1}=∅`、i_3 未割当だが t_1 に入れると score-feasible → 無駄。
+   さらに `e_o(DA(τ))` は τ≤98 で 100、98<τ≤99 で 83、τ>99 で 84 の3値しか取らず、
+   **どの τ も不動点にならない**（slide 27 の「要補題：τ* が不動点」は一般には偽）。
+   → 旧稿の「NW は open か否か（未解決）」は解決。比較表の行を「No」に更新。
+   → Prop.~tada-props を終了条件のみから証明していたのは正しかった（不動点は存在しないので仮定できない）。
+5. **Prop.~tada-notsp: A-STDA は耐戦略的でない。** 同じインスタンスで i_3 が `o ≻ t_1` と虚偽申告すると、
+   閾値が 100 まで上がらず（τ=83 で停止）未割当 → o に改善。
+   → 旧稿の最重要 open question（210,000 インスタンス探索で見つからなかった）を否定的に解決。
+   → **点数制約を課す2機構（A-STDA, PA-ODR）はいずれも耐戦略的でない**という結論に更新。
+   → slide 21 の「warm start（τ を上位 q^o 人のカットオフで初期化）」版でも 4・5 の反例は成立（確認済み）。
+
+### 検証（`/private/tmp/.../scratchpad/verify.py` ほか。論文の定義から独立に再実装）
+
+- 小インスタンス**全探索** 3,449,952 件（|I|=3, |T|≤2, q∈{0,1,2}, k∈{0,5}, δ∈{0,10}）で
+  feasibility / score-feasibility / 実効 score-feasibility / NW（強化版）/ NW-plain /
+  4つの公平性 / across-category efficiency を3機構すべてについて判定。
+  **比較表の ✓ はすべて反例ゼロ、✗ はすべて反例あり**（A-STDA の NW は 4,944 件で違反）。
+  NW を「未割当のみ」版と「割当済みの移動も許す」強化版の両方で回したが、
+  **10性質×3機構の判定は1件も変わらなかった**（A-STDA の違反 4,944 件も完全に一致）。
+- Lemma~hierarchy（書き直し後）の3つの含意 `nje⇒within`, `within⇒unm`, `nje⇒acr-eff` を
+  12,112,479 個の feasible マッチングで確認、違反ゼロ。strictness の証人3つも実物で確認：
+  Ex.~tada-idle は nje ✗ / within ✓ / acr-eff ✓、Ex.~paodr-envy は unm ✓ / within ✗、
+  Prop.~paodr-unfair のインスタンスは acr-eff ✓ / within ✗。
+- 耐戦略性を 470,448 インスタンスで全虚偽申告探索：SPSE 0 件、A-STDA 2,898 件、PA-ODR 1,168 件。
+- PA-ODR の「T 内では交換安定」を 5,174,928 件で確認、違反ゼロ（Sec.~paodr-limits の主張）。
+- 実験2ファミリ（論文の設定, seed 100）での across-category efficiency:
+  SPSE 100/100・100/100、A-STDA 100/100・100/100、PA-ODR 1/100・63/100、
+  T 内限定ならすべて 100/100 → 本文 Prototype 第3読みに反映。
+
+### 分量（tectonic + pypdf で実測）
+
+| | 反映前 | **反映後** |
+|---|---|---|
+| PDF 非空白文字数（本文＋参考文献＋表、柱を含む） | 48,532 | **49,491** |
+| うち柱（ヘッダ・フッタ）を除いた推定 | 47,4xx | **48,483** |
+| Abstract 語数（上限200） | 195 | **185** |
+| ページ数 | 13 | **13** |
+
+上限 50,000 に収めるため、**主張を一切落とさずに**散文を約 3,000 字圧縮した（節ごとに 5〜10%）。
+コンパイルは error 0 / Overfull hbox 0 / 未定義参照 0。
+
+### 要確認（著者判断）
+
+- **名称**: slide 24 はタイトルが "Across-category efficiency"、本文が "across category fair" と揺れている。
+  本稿はタイトル側（efficiency）を採用し、envy 型の across-category fairness は置かない。
+  残る公平性は unmatched claimants / within-category / no justified envy の3つ＋ acr-eff。
+- **A-STDA の初期値**: slide 20/22 は τ=0、slide 21 手順1は「上位 q^o 人のカットオフ」で不一致。
+  本稿は τ=-∞（slide 20/22 と同値）。上記のとおりどちらでも 4・5 の結果は変わらない。
+- **A-STDA の修正案は未検討**: 不動点が存在しない以上、閾値を下げる反復では直らない（循環する）。
+  無駄を最小化する score-feasible かつ定員固定の機構が存在するかは open。
 
 ---
 

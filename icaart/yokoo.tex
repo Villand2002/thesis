@@ -1,0 +1,570 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{algpseudocode}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{amssymb,amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{natbib,booktabs}
+\usepackage{comment}
+\usepackage{xcolor}
+\usepackage{url}
+% \date{1 August, 2024}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\title{Reserve with score feasibility}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Model}
+\subsection{Basic model (fixed quotas)}
+\begin{itemize}
+    \item a set of students $I$
+    \item There is a single college. 
+    The college has the standard category $o$ and 
+    a set of reserved categories $T$. Let $V:= T \cup \{o\}$.
+\item For each category $c \in V$, $q_c$ is the maximum quota
+of $c$. Let $Q=\sum_{c \in V} q_c$
+\item For each student $i$ let $V(i)$ denote 
+the set of categories that $i$ can apply. 
+We assume $o \in V(i)$ holds for each $i\in I$. 
+\item a set of contracts 
+$X = \{(i,c) \mid i\in I, c \in V(i)\cup\{\emptyset\}\}$.
+A contract $(i,c)$ means that student $i$ is accepted to the college under 
+category $c$. $(i,\emptyset)$ means $i$ is assigned to an outside option (not assigned to 
+any category). 
+\item For a set of contracts $Y\subseteq X$, 
+Let $Y_i$ denote $\{(i,c) \mid (i,c) \in Y\}$, 
+and $Y_c$ denote $\{(i,c) \mid (i,c) \in Y\}$.
+\item Each student $i$ has a strict preference $\succ_i$ 
+over $X_i$. For brevity, we sometimes write $c \succ_i c'$ 
+instead of $(i,c)\succ_i (i,c')$. We write $c \succeq_i c'$ 
+when $c \succ_i c'$ or $c=c'$ holds. 
+We also use a notation like $Y_i \succ_i c'$, which means
+$(i,c) \succ_i (i,c')$ where $Y_i=\{(i,c)\}$.
+
+\item Each student $i$ has her score $\sigma(i) \ge 0$. 
+We assume no two students have the same score; we have some tie-breaking rule. 
+\end{itemize}
+
+We say $Y\subseteq X$ is a (full) matching 
+if $|Y_i|=1$ holds for each student $i \in I$, and
+$Y_i \succeq_i \emptyset$ holds. 
+We say $Y\subseteq X$ is a partial matching 
+if $|Y_i|\le 1$ holds for each student $i \in I$, and
+if $Y_i=\{(i,c)\}$, $c \succeq_i \emptyset$ holds. 
+
+
+\begin{definition}[Feasibility]
+A matching $Y$ is feasible if 
+    $|Y_c| \leq q_c$ for each $c \in V$.
+\end{definition}
+For a matching $Y$, 
+let $R_o(Y)$ denote $\{i\in I \mid (i,\emptyset) \in Y, o\text{ is acceptable for }i\}$, 
+i.e., $R_o(Y)$ is the set of students who are assigned to the outside option although they prefer
+$o$ over the outside option. 
+Then, $e_o(Y)$ is defined as follows.
+$e_o(Y)=0$ if $|R_o(Y)|=0$. Otherwise, 
+$e_o(Y) = \max_{i \in R_o(Y)}\sigma(i)$.
+Intuitively, $e_o(Y)$ is the score of the top student who is rejected from the college 
+although she hopes to be assigned to the standard category. 
+
+For each category $t\in T$, its 
+acceptable margin $\delta_t \geq 0$ is given. 
+\begin{definition}[Score-feasibility]
+We say $Y$ is score-feasible if for each $i$ such that 
+$(i,t) \in Y, t \in T$, $\sigma(i) \ge e_o(Y) - \delta_t$ holds. 
+\end{definition}
+In words, score-feasibility guarantees the difference between 
+(i) the 
+highest score of the student who is rejected from the college (although 
+$o$ is acceptable for her),
+and (ii) the lowest score of the student who is accepted in 
+each category $t$, is at most $\delta_t$. 
+
+An alternative way to define score-feasibility is using the 
+\emph{lowest score of the accepted student} in category $o$, 
+rather than the \emph{highest score of the rejected student}.
+These two definitions look similar, and their difference becomes 
+small in practice when many borderline students exist. 
+We use the current definition since the following property holds. 
+
+\begin{proposition}
+    Assume matching $Y$ is feasible and score-feasible. 
+    Choose $i$ as $\arg\min_{(i,c)\in Y} \sigma(i)$.
+    Then, $Y \setminus \{(i,c)\}$ is also feasible and score-feasible. 
+\end{proposition}
+In words, if $Y$ is feasible and score-feasible, 
+the matching obtained by removing the lowest score student from $Y$ is also 
+feasible and score-feasible. This property is crucial in our proposed mechanisms. 
+
+This property does not hold if we use the lowest score of the accepted student.
+Assume $T=\{t\}$, three students $i_1$, where $V(i_1)=\{o\}$, $\sigma(i_1)=100$, 
+$i_2$, where $V(i_2)=\{o,t\}$, $\sigma(i_2)=80$, 
+and $i_3$, where $V(i_3)=\{o\}$, $\sigma(i_3)=60$. Let $\delta_t = 10$. 
+Assume $Y=\{(i_1, o), (i_2,t), (i_3, o)\}$. 
+This is feasible and score-feasible. 
+If we remove the lowest-score student, i.e., $i_3$, 
+we obtain $Y'=\{(i_1, o), (i_2,t)\}$. 
+This is feasible and score-feasible in our definition; 
+all accepted students have higher scores than the rejected student $i_3$. 
+If we require that the score difference between the lowest-score accepted student 
+in $o$ and the lowest-score accepted student in $t$ is at most $\delta_t$, 
+$Y$ is feasible and score-feasible, but $Y'$ is not score-feasible, since 
+the lowest score of the accepted student in $o$, i.e., $i_1$, is 100, 
+while the score of $i_2$ is 80.
+
+\begin{definition}[fairness]
+    Student $i$ has justified envy toward $j$ in matching $Y$
+if $Y_j=\{(j, c)\}, c \in V(i)$, 
+$c \succ_i Y_i$, and $\sigma(i)>\sigma(j)$ hold.
+Matching is fair if no student has justified envy.
+\end{definition}
+
+\begin{definition}[Non-wastefulness]
+In matching $Y$, student $i$ claims an empty seat of category $c$,
+if $c \in V(i)$, $i$ prefers $c$ over $Y_i$, 
+and moving $i$ to $c$ is feasible and score-feasible. 
+A matching is non-wasteful if no student claims an empty seat.
+\end{definition}
+
+\begin{definition}[Pareto efficiency]
+We say a feasible and score-feasible matching is Pareto efficient (PE), 
+if it is not Pareto dominated by another feasible and score-feasible matching.
+\end{definition}
+PE implies non-wastefulness. 
+
+\begin{definition}[SSD]
+Score-based Serial dictatorship mechanism (SSD) is defined 
+as follows:
+\begin{enumerate}
+    \item 
+Choose student $i$ one by one in decreasing order of score.
+\item Assign $i$ to her most favorite category (including the outside option $\emptyset$) 
+s.t. the resulting (partial)
+   matching is feasible and score-feasible. More specifically, 
+   we set $e_o(Y)=0$ until the first student $i$ is assigned 
+to the outside option while $i$ prefers $o$ over the outside option. 
+After that, $e_o(Y)=\sigma(i)$. 
+\end{enumerate}   
+\end{definition}
+
+\begin{theorem}
+SSD is feasible, score-feasible, fair, PE, and strategy-proof.     
+\end{theorem}
+\begin{proof}[Proof sketch:]
+Feasibility and score-feasibility are clear from construction. 
+Since it is a serial dictatorship mechanism, PE and strategy-proofness are also clear. 
+Also, since the selection order of students is based on the score, 
+fairness is also clear. 
+\end{proof}
+
+
+\subsection{Flexible quota model}
+Feasibility is modified as follows. 
+\begin{definition}[Feasibility]
+A matching $Y$ is feasible if 
+    $|Y_c| \leq q_c$ for each $c \in T$, 
+    and $\sum_{c \in V} |Y_c| \leq Q$ hold. 
+\end{definition}
+
+The definition of $e_o(Y)$ and score-feasibility are the same 
+as the fixed quota model. 
+
+\begin{definition}[Reserved category protection]
+For each student $i$, let $\text{top}_i$ denote her top category in $V(i) \cup \{\emptyset\}$.
+For each category $c\in T$, let $d_c$ denote $\min{\{q_c, |\{i \mid \text{top}_i =c\}|\}}$.
+We say matching $Y$ satisfies reserved category protection 
+if $|Y_o|\leq q_o + \sum_{c \in T} (q_c - \max\{|Y_c|, d_c\})$ holds. 
+\end{definition}
+
+\begin{theorem}
+There is a case where no matching 
+simultaneously satisfies feasibility, score-feasibility, non-wastefulness, and
+reserved category protection.
+\end{theorem}
+\begin{proof}
+Consider the case where $T=\{t\}$, $q_o=q_t=1$. 
+There are three students: $i_1$, where $\sigma(i_1)=100$, 
+$V(i_1)=\{o\}$, and $o\succ_{i_1} \emptyset$.
+$i_2$, where $\sigma(i_2)=90$, 
+$V(i_2)=\{o\}$, and $o\succ_{i_2} \emptyset$.
+$i_3$, where $\sigma(i_3)=60$, 
+$V(i_3)=\{o, t\}$, and 
+$t \succ_{i_3} o \succ_{i_3} \emptyset$. 
+$\delta_t=10$. 
+
+By reserved category protection, one seat must be reserved for category $t$. 
+Thus, at least one of $i_1$ or $i_2$ is assigned to the outside option. 
+In either case, 
+assigning $i_3$ to $t$ violates score-feasibility. 
+Thus, no student is assigned to $t$ and at most one student can be assigned to $o$. 
+However, either assigning no student to $o$, or assigning one student to $o$, violates
+non-wastefulness (since no student is assigned to the reserved category, moving one unassigned 
+student to $o$ will satisfy feasibility and score-feasibility). 
+\end{proof}
+
+Since non-wastefulness is too strong, let us introduce a weaker efficiency requirement.
+    \begin{definition}[Weak non-wastefulness]
+In matching $Y$, student $i$ strongly claims an empty seat of category $c$,
+if $c \in V(i)$, $i$ prefers $c$ over $Y_i$, 
+and moving $i$ to $c$ is feasible, score-feasible, and satisfies reserved category protection.
+A matching is weakly non-wasteful if no student strongly claims an empty seat.
+\end{definition}
+
+However, we still obtain an impossibility result if we additionally require fairness and 
+strategy-proofness. 
+
+\begin{theorem}
+No mechanism 
+simultaneously satisfies feasibility, score-feasibility, fairness, weak non-wastefulness, 
+reserved category protection, and strategy-proofness in general. 
+\end{theorem}
+\begin{proof}
+Consider the case where $T=\{t\}$, $q_o=q_t=1$. 
+There are three students: $i_1$, where $\sigma(i_1)=100$, 
+$V(i_1)=\{o\}$, and $o\succ_{i_1} \emptyset$.
+$i_2$, where $\sigma(i_2)=90$, 
+$V(i_2)=\{o\}$, and $o\succ_{i_2} \emptyset$.
+$i_3$, where $\sigma(i_3)=80$, 
+$V(i_3)=\{o, t\}$, and 
+$o \succ_{i_3} t \succ_{i_3} \emptyset$. 
+$\delta_t=10$. 
+Assume all students declare their true preferences. 
+Then, there is no need to protect reserved categories. By fairness and weak non-wastefulness, 
+$i_1$ and $i_2$ are assigned to $o$, while $i_3$ is assigned to the outside option. 
+
+Next, assume $i_3$ misreports her preference as 
+$t \succ'_{i_3} o \succ'_{i_3} \emptyset$. 
+Then, one seat must be protected to $t$. 
+The only assignment that satisfies the required conditions is assigning $i_1$ to $o$ and 
+$i_3$ to $t$. Thus, $i_3$ obtains a strictly better outcome by misreporting; strategy-proofness
+is violated. 
+\end{proof}
+
+\begin{definition}[Reserved category protecting SSD]
+Reserved category protecting SSD is defined as follows. 
+Run SSD, requiring feasibility, score-feasibility, and reserved category protection based on 
+$d_c$. More specifically, the number of students assigned to $o$ is at most
+$Q-\sum_{c\in T}\max{\{|Y_c|, d_c\}}$. Also, we set $e_o(Y)=0$ until the first student $i$ is assigned 
+to the outside option while $i$ prefers $o$ over the outside option. 
+After that, $e_o(Y)=\sigma(i)$. 
+\end{definition}
+
+\begin{theorem}
+Reserved category protecting SSD
+satisfies feasibility, score-feasibility, fairness, weak non-wastefulness, 
+and reserved category protection. Also, it is PE within all matchings satisfying 
+feasibility, score-feasibility, and reserved category protection. 
+\end{theorem}
+Note that Reserved category protecting SSD is not strategy-proof, 
+by the above impossibility theorem.
+
+\begin{definition}[flexible SSD]
+Flexible SSD is defined as follows. 
+Run SSD, requiring feasibility based on flexible quotas.
+More specifically, for the current partial matching $Y$, if 
+total number of students assigned is equal to $Q$
+(except for who are assigned to the outside option), a student can be assigned only to 
+the outside option. 
+Otherwise, she can be assigned to $o$. Also, if $|Y_c|<q_c$ for $c\in T$ and $c\in V(i)$, she can 
+be assigned to $c$.
+\end{definition}
+
+\begin{theorem}
+Flexible SSD
+satisfies feasibility, score-feasibility, fairness, PE, and strategy-proofness.
+\end{theorem}
+Note that flexible SSD does not satisfy reserved category protection in general.
+
+\begin{definition}[fixed quota SSD]
+Fixed quota SSD is defined as follows. 
+Set $q_o = Q - \sum_{c \in T} q_c$. 
+Run SSD with $q_o$ and $q_c$ for each $c \in T$.
+\end{definition}
+\begin{theorem}
+Fixed quota SSD satisfies feasibility, score-feasibility, fairness, reserved category protection, and strategy-proofness.      
+\end{theorem}
+Note that fixed quota SSD does not satisfy weak non-wastefulness, by the above impossibility theorem. 
+
+% shimamura added on 10/5 about eligibility based ssd
+
+\subsection{Eligibility-based reserved category protection}
+Reserved category protecting SSD is not strategy-proof.
+We think the reason is that the protection level $d_c$ depends on the reports of students.
+We show two examples. Below, we write $d^{\mathrm{top}}_c$ for $d_c$.
+
+\begin{example}[Misreporting the top choice]
+In the proof of Theorem 3, $d^{\mathrm{top}}_t$ changes from $0$ to $1$ when $i_3$
+reports $t$ as her top choice.
+Then $i_3$ is assigned to $t$ instead of the outside option.
+\end{example}
+
+\begin{example}[Hiding an eligible category]
+Assume the protection level is decided by the categories that each student declares.
+More specifically, student $i$ declares $\tilde{V}(i)\subseteq V(i)$, and we use
+$\tilde{d}_c=\min\{q_c, |\{i \mid c \in \tilde{V}(i)\}|\}$ in
+Reserved category protecting SSD.
+Consider the case where $T=\{t\}$, $q_o=q_t=1$.
+There are two students: $i_1$, where $\sigma(i_1)=100$, $V(i_1)=\{o\}$, and
+$o\succ_{i_1}\emptyset$.
+$i_2$, where $\sigma(i_2)=90$, $V(i_2)=\{o,t\}$, and
+$o\succ_{i_2} t\succ_{i_2}\emptyset$.
+
+Assume $i_2$ declares $\{o,t\}$. Then $\tilde{d}_t=1$, so only one student can be assigned to $o$.
+$i_1$ is assigned to $o$ and $i_2$ is assigned to $t$.
+
+Next, assume $i_2$ declares $\{o\}$. Then $\tilde{d}_t=0$, so two students can be assigned to $o$.
+$i_2$ is assigned to $o$.
+Thus, $i_2$ obtains a strictly better outcome by hiding $t$.
+\end{example}
+
+In both examples, the protection level changes by the report of a student.
+So we decide the protection level by using only $V(i)$.
+We assume $V(i)$ is checked by the college, and student $i$ cannot change it.
+Each student reports only her preference.
+
+\begin{definition}[Eligibility-based reserved category protection]
+For each category $c\in T$, let $d^V_c$ denote $\min\{q_c, |\{i \mid c\in V(i)\}|\}$.
+We say matching $Y$ satisfies eligibility-based reserved category protection
+if $|Y_o|\leq q_o+\sum_{c\in T}(q_c-\max\{|Y_c|, d^V_c\})$ holds.
+\end{definition}
+
+\begin{proposition}
+If matching $Y$ satisfies eligibility-based reserved category protection,
+then $Y$ satisfies reserved category protection.
+\end{proposition}
+\begin{proof}
+If $\text{top}_i=c$ and $c\in T$, then $c\in V(i)$ holds.
+Thus, $d^{\mathrm{top}}_c\le d^V_c$ holds for each $c\in T$.
+Then, $\max\{|Y_c|, d^{\mathrm{top}}_c\}\le\max\{|Y_c|, d^V_c\}$ holds, so
+\[
+|Y_o|\le q_o+\sum_{c\in T}(q_c-\max\{|Y_c|, d^V_c\})
+\le q_o+\sum_{c\in T}(q_c-\max\{|Y_c|, d^{\mathrm{top}}_c\}).
+\]
+\end{proof}
+
+Next, we show that this model can be reduced to the fixed quota model.
+Let $q'_o := q_o+\sum_{c\in T}(q_c-d^V_c)$.
+$q'_o$ is a constant that is decided only by the quotas and $V(i)$.
+
+\begin{lemma}\label{lem:reduction}
+Matching $Y$ satisfies feasibility (of the flexible quota model) and
+eligibility-based reserved category protection if and only if
+$|Y_o|\le q'_o$ and $|Y_c|\le q_c$ for each $c\in T$ hold.
+\end{lemma}
+\begin{proof}
+In both directions, $|Y_c|\le q_c$ holds for each $c\in T$.
+Also, if $(i,c)\in Y$, then $c\in V(i)$. So $|Y_c|\le |\{i \mid c\in V(i)\}|$ holds.
+Thus, $|Y_c|\le d^V_c$, i.e., $\max\{|Y_c|, d^V_c\}=d^V_c$.
+Then, eligibility-based reserved category protection is the same as $|Y_o|\le q'_o$.
+
+It remains to show $\sum_{c\in V}|Y_c|\le Q$ when $|Y_o|\le q'_o$ holds.
+This holds since
+$\sum_{c\in V}|Y_c|\le q'_o+\sum_{c\in T}d^V_c=q_o+\sum_{c\in T}q_c=Q$.
+\end{proof}
+
+We define the efficiency requirements based on $d^V_c$ in the same way.
+\begin{definition}[Weak non-wastefulness ($d^V$)]
+In matching $Y$, student $i$ strongly claims ($d^V$) an empty seat of category $c$,
+if $c\in V(i)$, $i$ prefers $c$ over $Y_i$, and moving $i$ to $c$ is feasible, score-feasible,
+and satisfies eligibility-based reserved category protection.
+A matching is weakly non-wasteful ($d^V$) if no student strongly claims ($d^V$) an empty seat.
+\end{definition}
+
+\begin{definition}[Constrained PE ($d^V$)]
+We say a matching that satisfies feasibility, score-feasibility, and eligibility-based
+reserved category protection is constrained PE ($d^V$),
+if it is not Pareto dominated by another matching that satisfies these three conditions.
+\end{definition}
+To distinguish, we call the requirements in Theorem 4 weak non-wastefulness
+($d^{\mathrm{top}}$) and constrained PE ($d^{\mathrm{top}}$).
+
+\begin{definition}[Eligibility-based SSD]
+Eligibility-based SSD is defined as follows.
+Run SSD of the fixed quota model, where the quota of $o$ is $q'_o$ and
+the quota of each $c\in T$ is $q_c$.
+\end{definition}
+
+\begin{theorem}
+Eligibility-based SSD satisfies feasibility, score-feasibility, fairness,
+eligibility-based reserved category protection, weak non-wastefulness ($d^V$),
+and strategy-proofness. Also, it is constrained PE ($d^V$).
+\end{theorem}
+\begin{proof}
+Let $Y$ be the obtained matching.
+Eligibility-based SSD is SSD of the fixed quota model with $q'_o$, so we can use Theorem 1.
+
+\textbf{Feasibility and eligibility-based reserved category protection.}
+By Theorem 1, $|Y_o|\le q'_o$ and $|Y_c|\le q_c$ for each $c\in T$ hold.
+Thus, by Lemma~\ref{lem:reduction}, $Y$ satisfies both.
+
+\textbf{Score-feasibility and fairness.}
+The definitions are the same as the fixed quota model, so they hold by Theorem 1.
+
+\textbf{Constrained PE ($d^V$).}
+Assume matching $Z$ satisfies feasibility, score-feasibility, and eligibility-based
+reserved category protection, and $Z$ Pareto dominates $Y$.
+By Lemma~\ref{lem:reduction}, $Z$ is feasible in the fixed quota model with $q'_o$.
+This contradicts the fact that SSD is PE (Theorem 1).
+
+\textbf{Weak non-wastefulness ($d^V$).}
+Assume student $i$ strongly claims ($d^V$) an empty seat of $c$.
+Let $Z$ be the matching obtained by moving $i$ to $c$.
+Then $Z$ satisfies the three conditions, $i$ prefers $Z$ over $Y$, and the other students
+are the same. Thus, $Z$ Pareto dominates $Y$.
+This contradicts constrained PE ($d^V$).
+
+\textbf{Strategy-proofness.}
+$q'_o$ is decided only by the quotas and $V(i)$, so it does not change by the reports of students.
+Thus, strategy-proofness holds by Theorem 1.
+\end{proof}
+
+\begin{example}
+Consider the case in the proof of Theorem 3. Since $d^V_t=1$, we have $q'_o=1$.
+First, $i_1$ is assigned to $o$.
+Next, $i_2$ is assigned to the outside option since $o$ is full, and $e_o(Y)=90$.
+Finally, $i_3$ is assigned to $t$ since $o$ is full and $80\ge 90-\delta$ holds.
+The outcome is the same when $i_3$ reports $t\succ'_{i_3}o\succ'_{i_3}\emptyset$.
+So $i_3$ cannot obtain a better outcome by misreporting.
+
+However, in this outcome, $i_3$ prefers $o$ over $t$.
+Since $d^{\mathrm{top}}_t=0$, moving $i_3$ to $o$ satisfies feasibility,
+score-feasibility, and reserved category protection.
+Thus, Eligibility-based SSD is not weakly non-wasteful ($d^{\mathrm{top}}$).
+It is also not non-wasteful, not PE, and not constrained PE ($d^{\mathrm{top}}$).
+\end{example}
+
+The properties of the three mechanisms are as follows.
+``---'' means that the mechanism does not satisfy the corresponding protection.
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & RCP SSD & Flexible SSD & Eligibility-based SSD\\
+\midrule
+Feasibility & \checkmark & \checkmark & \checkmark\\
+Score-feasibility & \checkmark & \checkmark & \checkmark\\
+Fairness & \checkmark & \checkmark & \checkmark\\
+Non-wastefulness & $\times$ & \checkmark & $\times$\\
+Weak non-wastefulness ($d^{\mathrm{top}}$) & \checkmark & \checkmark & $\times$\\
+Weak non-wastefulness ($d^V$) & \checkmark & \checkmark & \checkmark\\
+PE & $\times$ & \checkmark & $\times$\\
+Constrained PE ($d^{\mathrm{top}}$) & \checkmark & --- & $\times$\\
+Constrained PE ($d^V$) & --- & --- & \checkmark\\
+Reserved category protection & \checkmark ($d^{\mathrm{top}}$) & $\times$ & \checkmark ($d^V$)\\
+Strategy-proofness & $\times$ & \checkmark & \checkmark\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Proofs}
+\begin{proof}[Proof of Theorem 1]
+Let $Y$ be the matching obtained by SSD.
+For student $i$, let $Y^i$ denote the partial matching just before $i$ is chosen.
+
+First, we check $e_o(Y)$.
+Students are chosen in decreasing order of score.
+So the first student who is assigned to the outside option although $o$ is acceptable
+has the highest score in $R_o(Y)$.
+Thus, the value set in SSD is equal to $e_o(Y)$, and it does not change after it is set.
+
+\textbf{Feasibility.} Clear from the construction.
+
+\textbf{Score-feasibility.}
+Assume $(i,c)\in Y$ and $c\in T$.
+If $e_o(Y)$ is already set when $i$ is chosen, $\sigma(i)\ge e_o(Y)-\delta$ holds
+from the construction.
+Otherwise, all students in $R_o(Y)$ are chosen after $i$, so $e_o(Y)<\sigma(i)$ holds.
+
+\textbf{Fairness.}
+Assume $i$ has justified envy toward $j$, where $Y_j=\{(j,c)\}$.
+Since $\sigma(i)>\sigma(j)$, $i$ is chosen before $j$.
+Since $i$ prefers $c$ over $Y_i$, $i$ could not choose $c$. There are two cases.
+\begin{enumerate}
+\item $c$ is full when $i$ is chosen.
+Then $c$ is also full when $j$ is chosen, so $j$ cannot be assigned to $c$.
+\item $c\in T$ and $\sigma(i)<e_o(Y)-\delta$.
+Then $\sigma(j)<\sigma(i)<e_o(Y)-\delta$, so $j$ cannot be assigned to $c$.
+\end{enumerate}
+Both cases contradict $Y_j=\{(j,c)\}$.
+
+\textbf{PE.}
+Assume matching $Z$ is feasible and score-feasible, and $Z$ Pareto dominates $Y$.
+Let $i$ be the student with the highest score among students s.t. $Z_i\neq Y_i$.
+Then $i$ prefers $Z_i$ over $Y_i$. Let $Z_i=\{(i,c)\}$.
+$c\neq\emptyset$ holds, since $i$ can always choose the outside option in SSD.
+The students chosen before $i$ have the same assignment in $Y$ and $Z$,
+so $Y^i\cup\{(i,c)\}\subseteq Z$ holds.
+Since $Z$ is feasible, $c$ is not full when $i$ is chosen.
+Also, assume $c\in T$.
+The students in $R_o(Y)$ chosen before $i$ are also in $R_o(Z)$, so the value of $e_o$
+when $i$ is chosen is at most $e_o(Z)$.
+Since $Z$ is score-feasible, $\sigma(i)\ge e_o(Z)-\delta$ holds.
+Therefore, $i$ could choose $c$ in SSD.
+This contradicts the fact that $i$ is assigned to her most favorite category.
+
+\textbf{Strategy-proofness.}
+The categories that $i$ can choose are decided by $Y^i$ and the value of $e_o$ at that time.
+They depend only on the reports of students whose scores are higher than $\sigma(i)$.
+Thus, $i$ cannot change them by her report, and reporting truthfully is the best for $i$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem 5]
+The proof is almost the same as Theorem 1.
+The only difference is the condition that $i$ can choose $c$:
+the total number of assigned students is less than $Q$ (and $|Y_c|<q_c$ if $c\in T$).
+In the proof of fairness, if $i$ could not choose $c$ by this condition, $j$ cannot choose
+$c$ either, since the number of assigned students does not decrease.
+In the proof of PE, $Y^i\cup\{(i,c)\}\subseteq Z$ and $Z$ is feasible,
+so $i$ could choose $c$.
+The other parts are the same.
+\end{proof}
+
+\begin{proof}[Proof of Theorem 4]
+Since $Q=q_o+\sum_{c\in T}q_c$, reserved category protection is equivalent to
+\begin{equation}\label{eq:rcp}
+|Y_o|+\sum_{c\in T}\max\{|Y_c|, d_c\}\le Q.
+\end{equation}
+The left-hand side does not decrease when a student is assigned to a category.
+
+\textbf{Feasibility, score-feasibility, and reserved category protection.}
+The empty matching satisfies (\ref{eq:rcp}) since $\sum_{c\in T}d_c\le Q$.
+The mechanism keeps (\ref{eq:rcp}) and $|Y_c|\le q_c$ for $c\in T$, and
+(\ref{eq:rcp}) implies $\sum_{c\in V}|Y_c|\le Q$.
+Score-feasibility is the same as Theorem 1.
+
+\textbf{Fairness.}
+The proof is the same as Theorem 1, except for the following case:
+$i$ could not choose $c$ because (\ref{eq:rcp}) is violated.
+In this case, since the left-hand side of (\ref{eq:rcp}) does not decrease,
+$j$ cannot choose $c$ either.
+
+\textbf{PE within matchings satisfying the three conditions.}
+Assume matching $Z$ satisfies feasibility, score-feasibility, and reserved category protection,
+and $Z$ Pareto dominates $Y$.
+We choose $i$ and $c$ in the same way as Theorem 1.
+Since $Y^i\cup\{(i,c)\}\subseteq Z$ and $Z$ satisfies (\ref{eq:rcp}),
+$Y^i\cup\{(i,c)\}$ also satisfies (\ref{eq:rcp}).
+The other conditions are the same as Theorem 1, so $i$ could choose $c$, a contradiction.
+
+\textbf{Weak non-wastefulness.}
+Assume student $i$ strongly claims an empty seat of $c$.
+The matching obtained by moving $i$ to $c$ satisfies the three conditions and
+Pareto dominates $Y$. This contradicts the above.
+\end{proof}
+
+\end{document}
+

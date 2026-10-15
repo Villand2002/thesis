@@ -1,0 +1,952 @@
+\documentclass[a4paper,twoside]{article}
+
+\usepackage{epsfig}
+\usepackage{subcaption}
+\usepackage{calc}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{multicol}
+\usepackage{pslatex}
+\usepackage{apalike}
+\usepackage{algorithm2e}
+\usepackage[bottom]{footmisc}
+\usepackage{SCITEPRESS}     % Please add other packages that you may need BEFORE the SCITEPRESS.sty package.
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\newcommand{\dtop}{d^{\mathrm{top}}}
+\newcommand{\dV}{d^{V}}
+\newcommand{\topc}{\mathrm{top}}
+
+% ------------------------------------------------------------------
+% Disclosure of AI-generated text (required by the ICAART guidelines):
+% each section that uses AI-generated text cites the AI system.
+%   \aidraft : the section text was drafted by the AI tool
+%   \aiedit  : the section wording was edited by the AI tool from the authors' notes
+% Edit these two footnotes (and the Acknowledgements) so that they
+% describe exactly how AI was used.
+% ------------------------------------------------------------------
+\newcommand{\aidraft}{\footnote{The text of this section was drafted with a generative AI tool \cite{Anthropic26a} and checked by the authors; see the Acknowledgements.}}
+\newcommand{\aiedit}{\footnote{The wording of this section was edited with a generative AI tool \cite{Anthropic26a} based on the authors' technical notes; see the Acknowledgements.}}
+
+\begin{document}
+
+\title{Reserve Systems with Score Feasibility: Reserved Category Protection, De-Reservation, and Strategy-Proofness}
+
+% ------------------------------------------------------------------
+% Review version: anonymized for double-blind review.
+% For the camera-ready version, replace the block below with:
+%
+% \author{\authorname{First Author Name\sup{1}\orcidAuthor{0000-0000-0000-0000}, Second Author Name\sup{1}\orcidAuthor{0000-0000-0000-0000} and Third Author Name\sup{2}\orcidAuthor{0000-0000-0000-0000}}
+% \affiliation{\sup{1}Institute, University, Street, Town, Country}
+% \affiliation{\sup{2}Department, University, Town, Country}
+% \email{\{first\_author, second\_author\}@xxx.edu, third\_author@yyy.edu}
+% }
+% ------------------------------------------------------------------
+\author{\authorname{Anonymous Author(s)}
+\affiliation{Affiliation omitted for double-blind review}
+\email{anonymous@example.org}
+}
+
+\keywords{Matching, Market Design, Affirmative Action, Reserve System, Strategy-Proofness, Serial Dictatorship.}
+
+\abstract{Reserve systems are a standard tool for affirmative action in admissions: some seats are set aside for reserved categories, and the remaining seats are open to all students. We study a single-college model in which students are ranked by exam scores and matchings must be score-feasible: a student can be admitted through a reserved category only if her score is at most a given margin below the score of the best student who is rejected from the open category. This requirement is motivated by affirmative action in India, where the gap between the cutoff scores of the open category and a reserved category is recommended to be bounded. When quotas are fixed, a score-based serial dictatorship mechanism is fair, Pareto efficient, and strategy-proof. When unfilled reserved seats can be transferred to the open category, we introduce reserved category protection and show that it can be incompatible with non-wastefulness. Moreover, even under a weaker efficiency requirement, no fair mechanism that protects reserved categories is strategy-proof. Finally, we show that determining the protection level from verifiable eligibility, instead of reported preferences, reduces the problem to the fixed quota model and restores strategy-proofness.}
+
+\onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
+
+\section{\uppercase{Introduction}}
+\label{sec:introduction}
+
+Matching theory has been successfully applied to admission problems such as school
+choice and college admissions
+\cite{GaSh62a,RoSo90a,BaSo99a,AbSo03b}.\aidraft{}
+In many of these markets, the designer is required to implement affirmative action.
+A common instrument is a \emph{reserve system}: some seats are set aside for students
+who belong to protected groups, while the remaining seats are open to all students.
+Reserve systems are used, for example, in school choice programs in the United States
+\cite{DKPS18a,DPS20a}, in university admissions in Brazil \cite{AyBo21a}, and, on a
+very large scale, in admissions to public universities and in the allocation of
+government jobs in India \cite{BCC+19b,SoYe22a,AyTu23a}.
+
+When students are ranked by an entrance exam score, a reserve system inevitably
+creates a tension between meritocracy and diversity \cite{imamura2025meritocracy}.
+Two practical concerns arise.
+The first is that a student admitted through a reserved category can have a much lower
+score than a student who is rejected from the open category.
+The second is that reserved seats can remain unfilled while students who want open seats
+are rejected.
+Both concerns appear explicitly in Indian affirmative action.
+A 2008 judgment of the Supreme Court of India (Ashoka Kumar Thakur vs.\ Union of India)
+upheld a 27\% reservation for Other Backward Classes (OBC).
+According to this judgment, OBC seats that remain unfilled are to be given to
+general category applicants \cite{AyTu23a}, and the difference between the cutoff
+scores of the open category and the OBC category is recommended to be at most 10 points
+\cite{AyTu23b}.
+The judgment does not specify a procedure to implement these directives, and
+they are known to conflict with other legal requirements on reservation policy
+\cite{AyTu23b}.
+
+In this paper, we study these two requirements in a stylized model with a single
+college. The college has an open category and several reserved categories.
+Each student is eligible for the open category and possibly for some reserved
+categories, has an exam score, and has a strict preference over the categories for
+which she is eligible and an outside option; that is, as in models of matching with
+contracts \cite{HaMi05a,AyTu20a}, a student can care about the category under which she
+is admitted.
+We formalize the bounded-gap requirement as \emph{score-feasibility}: a student can be
+admitted under a reserved category only if her score is at least $e_o-\delta$, where
+$e_o$ is the highest score among the students who are rejected although the open
+category is acceptable for them, and $\delta\ge 0$ is a given margin.
+Thus, $e_o$ plays the role of the cutoff score of the open category.
+Our contributions are as follows.
+\begin{itemize}
+\item \emph{Fixed quotas.} When each category has a fixed quota, we show that the
+score-based serial dictatorship mechanism (SSD) is feasible, score-feasible, fair,
+Pareto efficient, and strategy-proof (Theorem~\ref{thm:ssd}).
+\item \emph{Flexible quotas and reserved category protection.} When unfilled reserved
+seats can be used for the open category, the designer needs to decide how many reserved
+seats must be protected. We introduce \emph{reserved category protection}, where the
+protection level is the number of students whose top choice is the reserved category.
+We show that there is a case where no matching satisfies feasibility, score-feasibility,
+non-wastefulness, and reserved category protection (Theorem~\ref{thm:imp1}).
+Moreover, even if non-wastefulness is weakened, no mechanism satisfies fairness,
+reserved category protection, and strategy-proofness simultaneously
+(Theorem~\ref{thm:imp2}).
+We present two mechanisms that give up one property each: reserved category protecting
+SSD, which is not strategy-proof (Theorem~\ref{thm:rcpssd}), and flexible SSD, which
+does not protect reserved categories (Theorem~\ref{thm:flexible}).
+\item \emph{Eligibility-based protection.} We observe that strategy-proofness fails
+because the protection level depends on the reports of students. If the protection
+level is determined by eligibility, which can be verified by the college, the model is
+reduced to the fixed quota model with a modified quota for the open category
+(Lemma~\ref{lem:reduction}). The resulting mechanism, eligibility-based SSD, is
+strategy-proof, fair, and protects reserved categories, while its efficiency guarantee
+is weaker (Theorem~\ref{thm:essd}).
+\end{itemize}
+
+The rest of this paper is organized as follows.
+Section~\ref{sec:related} discusses related work.
+Section~\ref{sec:model} introduces the model.
+Section~\ref{sec:fixed} analyzes the fixed quota model,
+Section~\ref{sec:flexible} analyzes the flexible quota model, and
+Section~\ref{sec:eligibility} introduces eligibility-based protection.
+Section~\ref{sec:comparison} compares the mechanisms, and
+Section~\ref{sec:conclusion} concludes.
+
+\section{\uppercase{Related Work}}
+\label{sec:related}
+
+\subsection{Affirmative Action in Matching}
+
+College admissions and school choice with affirmative action have been studied
+extensively \cite{Abdu05a,AbSo03b}.\aidraft{}
+Quota-based affirmative action can hurt the students it intends to help \cite{Koji12a},
+which motivated reserve-based approaches \cite{HYY13a} and the distinction between hard
+bounds and soft bounds \cite{EHYY14a}.
+Choice rules that balance priorities and diversity have been characterized axiomatically
+\cite{EcYe15a,imamura2025meritocracy}, and slot-specific priorities provide a general
+framework for reserve systems \cite{KoSo16a}.
+The order in which reserved seats and open seats are processed is known to have a
+significant effect on the outcome \cite{DKPS18a,DPS20a,PRS23a}.
+Reserve systems with overlapping categories have been studied in
+\cite{KHIY17a,SoYe22a,AzSu25a}, and reserve systems are also used in healthcare
+rationing \cite{PSUY24a,AzBr24a}.
+Rules that combine priorities with diversity policies have also been examined from the
+viewpoint of explainability \cite{arnosti2024explainable}.
+
+\subsection{Affirmative Action in India}
+
+India implements one of the most comprehensive reservation systems
+\cite{Gala84a}, and its admission procedures have been analyzed from the viewpoint of
+market design \cite{AyTu17a,BCC+19b,SoYe22a}.
+The transfer of unfilled reserved seats to other categories (de-reservation) has been
+formulated by choice rules with capacity transfers \cite{AyTu20a}, and a choice rule
+that jointly implements reservation and de-reservation of OBC seats has been proposed and
+characterized \cite{AyTu23a}.
+The directive on the difference between the cutoff scores of the open category and the
+OBC category has been shown to be inconsistent with other mandates and with a previously
+proposed reserve policy \cite{AyTu23b}.
+These works mainly design choice rules of colleges and combine them with the deferred
+acceptance mechanism.
+In contrast, we treat the bounded-gap requirement as a constraint on the matching
+itself, and we focus on how the protection level of reserved categories interacts with
+the incentives of students.
+
+\subsection{Matching with Constraints}
+
+Our model is also related to matching with distributional constraints
+\cite{KaKo15a,GKK+17a,KTY18a}; see \cite{ABY22a} for a survey.
+In these models, feasibility is usually defined by the number of students assigned to
+each school. Score-feasibility is different, since it depends on the scores and
+the preferences of the students who are rejected, so it does not directly fit these
+frameworks.
+Our mechanisms are variants of serial dictatorship \cite{AbSo98a}, where the order of
+students is given by scores.
+Impossibility results that involve strategy-proofness are also known for related matching
+problems \cite{Koji12a,CKM+22a}.
+
+\section{\uppercase{Model}}
+\label{sec:model}
+
+A market is given by the following components.\aiedit{}
+\begin{itemize}
+\item A finite set of students $I$.
+\item A single college, which has the \emph{open category} $o$ and a finite set of
+\emph{reserved categories} $T$. Let $V:=T\cup\{o\}$.
+\item For each category $c\in V$, a quota $q_c\in\mathbb{Z}_{\ge 0}$.
+Let $Q:=\sum_{c\in V}q_c$.
+\item For each student $i\in I$, the set of categories $V(i)\subseteq V$ for which $i$
+is eligible. We assume $o\in V(i)$ for each $i\in I$.
+\item The set of contracts
+$X:=\{(i,c)\mid i\in I,\ c\in V(i)\cup\{\emptyset\}\}$.
+Contract $(i,c)$ with $c\in V(i)$ means that student $i$ is admitted to the college under
+category $c$, and $(i,\emptyset)$ means that $i$ is assigned to the outside option,
+i.e., she is not admitted under any category.
+\item For each student $i$, a strict preference $\succ_i$ over
+$V(i)\cup\{\emptyset\}$. We write $c\succeq_i c'$ if $c\succ_i c'$ or $c=c'$.
+Category $c$ is \emph{acceptable} for $i$ if $c\succ_i\emptyset$.
+\item For each student $i$, a score $\sigma(i)\ge 0$. We assume that no two students
+have the same score, i.e., ties are broken by a fixed rule.
+\item An acceptable margin $\delta\ge 0$.
+\end{itemize}
+
+For a set of contracts $Y\subseteq X$, let $Y_i$ denote the set of contracts in $Y$ that
+involve student $i$, and let $Y_c$ denote the set of contracts in $Y$ that involve
+category $c\in V$.
+We say $Y\subseteq X$ is a \emph{matching} if, for each student $i\in I$, $|Y_i|=1$
+holds and the unique contract $(i,c)\in Y_i$ satisfies $c\succeq_i\emptyset$.
+We say $Y\subseteq X$ is a \emph{partial matching} if, for each student $i\in I$,
+$|Y_i|\le 1$ holds and $(i,c)\in Y_i$ implies $c\succeq_i\emptyset$.
+With a slight abuse of notation, when $Y_i=\{(i,c)\}$, we write $c'\succ_i Y_i$ for
+$c'\succ_i c$.
+
+\begin{definition}[Feasibility]
+\label{def:feasibility}
+A matching $Y$ is \emph{feasible} if $|Y_c|\le q_c$ holds for each $c\in V$.
+\end{definition}
+
+For a matching $Y$, let
+\begin{equation}
+\label{eq:Ro}
+R_o(Y):=\{i\in I\mid (i,\emptyset)\in Y,\ o\succ_i\emptyset\},
+\end{equation}
+i.e., $R_o(Y)$ is the set of students who are assigned to the outside option although
+the open category is acceptable for them.
+We define $e_o(Y):=\max_{i\in R_o(Y)}\sigma(i)$ if $R_o(Y)$ is not empty, and
+$e_o(Y):=0$ otherwise.
+Intuitively, $e_o(Y)$ is the score of the best student who is rejected from the college
+although she wishes to be admitted to the open category.
+
+\begin{definition}[Score-feasibility]
+\label{def:sf}
+A matching $Y$ is \emph{score-feasible} if $\sigma(i)\ge e_o(Y)-\delta$ holds for each
+$(i,c)\in Y$ with $c\in T$.
+\end{definition}
+
+Score-feasibility bounds the gap between the cutoff score of the open category and the
+scores of the students admitted through reserved categories.
+When $\delta$ is sufficiently large, the requirement is vacuous and the model is a
+standard reserve system.
+When $\delta=0$, a student can use a reserved category only if her score is higher than
+the score of every student in $R_o(Y)$.
+
+\begin{definition}[Fairness]
+\label{def:fair}
+Student $i$ has \emph{justified envy} toward student $j$ in matching $Y$ if
+$Y_j=\{(j,c)\}$, $c\in V(i)$, $c\succ_i Y_i$, and $\sigma(i)>\sigma(j)$ hold.
+A matching is \emph{fair} if no student has justified envy.
+\end{definition}
+
+\begin{definition}[Non-wastefulness]
+\label{def:nw}
+In matching $Y$, student $i$ \emph{claims an empty seat} of category $c$ if $c\in V(i)$,
+$c\succ_i Y_i$, and the matching $(Y\setminus Y_i)\cup\{(i,c)\}$ is feasible and
+score-feasible.
+A matching is \emph{non-wasteful} if no student claims an empty seat.
+\end{definition}
+
+For two matchings $Y$ and $Z$, we say $Z$ \emph{Pareto dominates} $Y$ if every student
+weakly prefers her contract in $Z$ to her contract in $Y$, and at least one student
+strictly prefers her contract in $Z$.
+
+\begin{definition}[Pareto efficiency]
+\label{def:pe}
+A feasible and score-feasible matching is \emph{Pareto efficient} (PE) if it is not
+Pareto dominated by another feasible and score-feasible matching.
+\end{definition}
+
+PE implies non-wastefulness: if student $i$ claims an empty seat of $c$ in $Y$, the
+matching $(Y\setminus Y_i)\cup\{(i,c)\}$ is feasible, score-feasible, and Pareto
+dominates $Y$.
+
+A \emph{mechanism} is a function that takes a profile of preferences reported by the
+students as an input and returns a matching.
+We say a mechanism satisfies a property of matchings (e.g., fairness) if it always
+returns a matching that satisfies the property with respect to the reported preferences.
+
+\begin{definition}[Strategy-proofness]
+\label{def:sp}
+A mechanism is \emph{strategy-proof} if no student can obtain a strictly better contract
+(with respect to her true preference) by misreporting her preference, regardless of the
+reports of the other students.
+\end{definition}
+
+\section{\uppercase{Fixed Quota Model}}
+\label{sec:fixed}
+
+We first consider the basic model, where the quota of each category is fixed
+(Definition~\ref{def:feasibility}).\aiedit{}
+
+\begin{definition}[SSD]
+\label{def:ssd}
+The \emph{score-based serial dictatorship} mechanism (SSD) works as follows.
+Initially, the partial matching $Y$ contains no contract and the threshold $e$ is $0$.
+Students are chosen one by one in decreasing order of score.
+When student $i$ is chosen, category $c\in V(i)$ is \emph{available} for $i$ if
+\begin{enumerate}
+\item $|Y_c|<q_c$ holds, and
+\item if $c\in T$, $\sigma(i)\ge e-\delta$ holds.
+\end{enumerate}
+The outside option is always available.
+Student $i$ is assigned to her most preferred available option according to her reported
+preference, and the corresponding contract is added to $Y$.
+If $i$ is the first student who is assigned to the outside option although $o$ is
+acceptable for her, we set $e:=\sigma(i)$.
+\end{definition}
+
+In other words, each student chooses her most preferred option such that the resulting
+partial matching is feasible and score-feasible.
+
+\begin{theorem}
+\label{thm:ssd}
+SSD is feasible, score-feasible, fair, Pareto efficient, and strategy-proof.
+\end{theorem}
+\begin{proof}
+Let $Y$ be the matching obtained by SSD.
+For student $i$, let $Y^i$ denote the partial matching just before $i$ is chosen.
+
+We first examine the threshold $e$.
+Since students are chosen in decreasing order of score, the first student who is
+assigned to the outside option although $o$ is acceptable for her has the highest score
+in $R_o(Y)$.
+Thus, once $e$ is set, it is equal to $e_o(Y)$ and it does not change afterwards.
+
+\textbf{Feasibility.} Clear from the construction.
+
+\textbf{Score-feasibility.}
+Assume $(i,c)\in Y$ and $c\in T$.
+If $e$ is already set when $i$ is chosen, $\sigma(i)\ge e-\delta=e_o(Y)-\delta$ holds
+from the construction.
+Otherwise, all students in $R_o(Y)$ are chosen after $i$, so $e_o(Y)<\sigma(i)$ holds.
+
+\textbf{Fairness.}
+Assume $i$ has justified envy toward $j$, where $Y_j=\{(j,c)\}$.
+Since $\sigma(i)>\sigma(j)$, $i$ is chosen before $j$.
+Since $c\succ_i Y_i$, category $c$ was not available for $i$.
+There are two cases.
+\begin{enumerate}
+\item $c$ is full when $i$ is chosen.
+Then $c$ is also full when $j$ is chosen, so $j$ cannot be assigned to $c$.
+\item $c\in T$ and $\sigma(i)<e-\delta$ holds when $i$ is chosen.
+Then $e$ is already set, so the threshold is the same when $j$ is chosen.
+Since $\sigma(j)<\sigma(i)<e-\delta$, $j$ cannot be assigned to $c$.
+\end{enumerate}
+Both cases contradict $Y_j=\{(j,c)\}$.
+
+\textbf{Pareto efficiency.}
+Assume matching $Z$ is feasible and score-feasible, and $Z$ Pareto dominates $Y$.
+Let $i$ be the student with the highest score among the students whose contracts are
+different in $Y$ and $Z$.
+Then $i$ strictly prefers her contract in $Z$. Let $Z_i=\{(i,c)\}$.
+Since the outside option is always available in SSD, $c\neq\emptyset$ holds.
+The students chosen before $i$ have the same contracts in $Y$ and $Z$, so
+$Y^i\cup\{(i,c)\}\subseteq Z$ holds.
+Since $Z$ is feasible, $|Y^i_c|<q_c$ holds.
+Next, assume $c\in T$.
+Each student in $R_o(Y)$ who is chosen before $i$ is also in $R_o(Z)$, so the value of
+$e$ when $i$ is chosen is at most $e_o(Z)$.
+Since $Z$ is score-feasible, $\sigma(i)\ge e_o(Z)-\delta\ge e-\delta$ holds.
+Therefore, $c$ was available for $i$ in SSD.
+This contradicts the fact that $i$ is assigned to her most preferred available option.
+
+\textbf{Strategy-proofness.}
+The set of options available for $i$ is determined by $Y^i$ and the value of $e$ when $i$
+is chosen.
+They depend only on the reports of the students whose scores are higher than $\sigma(i)$.
+Thus, $i$ cannot change the set of available options by her report, and reporting
+truthfully is optimal for $i$.
+\end{proof}
+
+\section{\uppercase{Flexible Quota Model}}
+\label{sec:flexible}
+
+In the fixed quota model, a reserved seat that is not filled is wasted even if students
+who want open seats are rejected.\aiedit{}
+We now consider the model where unfilled reserved seats can be used for the open
+category.
+Feasibility is modified as follows.
+
+\begin{definition}[Feasibility with flexible quotas]
+\label{def:flexfeasibility}
+A matching $Y$ is \emph{feasible} if $|Y_c|\le q_c$ holds for each $c\in T$ and
+$\sum_{c\in V}|Y_c|\le Q$ holds.
+\end{definition}
+
+In the rest of this paper, feasibility means Definition~\ref{def:flexfeasibility} unless
+we explicitly mention the fixed quota model.
+The definitions of $e_o(Y)$, score-feasibility, and fairness are unchanged.
+Non-wastefulness and Pareto efficiency are defined in the same way, based on
+Definition~\ref{def:flexfeasibility}.
+
+\subsection{Reserved Category Protection}
+
+With flexible quotas, all seats can be taken by students in the open category.
+To avoid this, we require that the reserved seats that are demanded by students are
+protected.
+
+\begin{definition}[Reserved category protection]
+\label{def:rcp}
+For each student $i$, let $\topc_i$ denote her most preferred element of
+$V(i)\cup\{\emptyset\}$.
+For each category $c\in T$, let
+$d_c:=\min\{q_c,\ |\{i\in I\mid\topc_i=c\}|\}$.
+A matching $Y$ satisfies \emph{reserved category protection} if
+\begin{equation}
+\label{eq:rcpdef}
+|Y_o|\le q_o+\sum_{c\in T}\bigl(q_c-\max\{|Y_c|,d_c\}\bigr)
+\end{equation}
+holds.
+\end{definition}
+
+Here, $d_c$ is the number of seats of category $c$ that are demanded as the top choice.
+Reserved category protection means that a seat of $c$ can be used for the open category
+only if it is neither used nor demanded in this sense.
+Since $Q=q_o+\sum_{c\in T}q_c$, inequality (\ref{eq:rcpdef}) is equivalent to
+\begin{equation}
+\label{eq:rcp}
+|Y_o|+\sum_{c\in T}\max\{|Y_c|,d_c\}\le Q.
+\end{equation}
+Note that (\ref{eq:rcp}) implies $\sum_{c\in V}|Y_c|\le Q$.
+
+\begin{theorem}
+\label{thm:imp1}
+There is a case where no matching simultaneously satisfies feasibility,
+score-feasibility, non-wastefulness, and reserved category protection.
+\end{theorem}
+\begin{proof}
+Consider the case where $T=\{t\}$, $q_o=q_t=1$, and $\delta=10$.
+There are three students:
+\begin{itemize}
+\item $i_1$: $\sigma(i_1)=100$, $V(i_1)=\{o\}$, $o\succ_{i_1}\emptyset$,
+\item $i_2$: $\sigma(i_2)=90$, $V(i_2)=\{o\}$, $o\succ_{i_2}\emptyset$,
+\item $i_3$: $\sigma(i_3)=60$, $V(i_3)=\{o,t\}$,
+$t\succ_{i_3}o\succ_{i_3}\emptyset$.
+\end{itemize}
+Assume matching $Y$ satisfies feasibility, score-feasibility, and reserved category
+protection.
+Since $d_t=1$, reserved category protection requires $|Y_o|\le 1$.
+Thus, at least one of $i_1$ and $i_2$ is assigned to the outside option, and
+$e_o(Y)\ge 90$ holds.
+Then, assigning $i_3$ to $t$ violates score-feasibility, since $60<90-\delta$.
+Therefore, no student is assigned to $t$ and at most one student is assigned to $o$.
+Then, at least one of $i_1$ and $i_2$ is assigned to the outside option, and
+moving her to $o$ satisfies feasibility (at most two students are assigned in total) and
+score-feasibility (no student is assigned to $t$).
+Thus, she claims an empty seat of $o$, and $Y$ is not non-wasteful.
+\end{proof}
+
+Since non-wastefulness is too strong, we introduce a weaker efficiency requirement.
+
+\begin{definition}[Weak non-wastefulness]
+\label{def:wnw}
+In matching $Y$, student $i$ \emph{strongly claims an empty seat} of category $c$ if
+$c\in V(i)$, $c\succ_i Y_i$, and the matching $(Y\setminus Y_i)\cup\{(i,c)\}$ satisfies
+feasibility, score-feasibility, and reserved category protection.
+A matching is \emph{weakly non-wasteful} if no student strongly claims an empty seat.
+\end{definition}
+
+\begin{definition}[Constrained Pareto efficiency]
+\label{def:cpe}
+A matching that satisfies feasibility, score-feasibility, and reserved category
+protection is \emph{constrained Pareto efficient} if it is not Pareto dominated by
+another matching that satisfies these three conditions.
+\end{definition}
+
+However, we still obtain an impossibility result if we additionally require fairness
+and strategy-proofness.
+
+\begin{theorem}
+\label{thm:imp2}
+No mechanism simultaneously satisfies feasibility, score-feasibility, fairness, weak
+non-wastefulness, reserved category protection, and strategy-proofness in general.
+\end{theorem}
+\begin{proof}
+Consider the case where $T=\{t\}$, $q_o=q_t=1$, and $\delta=10$.
+There are three students:
+\begin{itemize}
+\item $i_1$: $\sigma(i_1)=100$, $V(i_1)=\{o\}$, $o\succ_{i_1}\emptyset$,
+\item $i_2$: $\sigma(i_2)=90$, $V(i_2)=\{o\}$, $o\succ_{i_2}\emptyset$,
+\item $i_3$: $\sigma(i_3)=80$, $V(i_3)=\{o,t\}$,
+$o\succ_{i_3}t\succ_{i_3}\emptyset$.
+\end{itemize}
+Assume a mechanism satisfies all the properties except strategy-proofness, and let $Y$
+be the matching it returns.
+
+\textbf{Truthful reports.}
+Since $d_t=0$, reserved category protection is equivalent to $|Y_o|+|Y_t|\le 2$.
+If $i_3$ is assigned to $o$, at least one of $i_1$ and $i_2$ is assigned to the outside
+option, and she has justified envy toward $i_3$.
+If $i_3$ is assigned to $t$, score-feasibility requires $e_o(Y)\le 90$, so $i_1$ is
+assigned to $o$, and $i_2$ is assigned to the outside option by feasibility.
+Then, moving $i_3$ to $o$ satisfies feasibility, score-feasibility (no student is
+assigned to $t$), and reserved category protection.
+Thus, $i_3$ strongly claims an empty seat of $o$.
+Therefore, $i_3$ is assigned to the outside option.
+
+\textbf{Misreport.}
+Assume $i_3$ reports $t\succ'_{i_3}o\succ'_{i_3}\emptyset$.
+Since $d_t=1$, reserved category protection requires $|Y_o|\le 1$.
+If $i_2$ or $i_3$ is assigned to $o$, $i_1$ is assigned to the outside option and has
+justified envy.
+If no student is assigned to $o$, moving $i_1$ to $o$ satisfies feasibility and reserved
+category protection. It also satisfies score-feasibility: even if $i_3$ is assigned to
+$t$, the best rejected student is $i_2$ and $80\ge 90-\delta$ holds.
+Thus, $i_1$ strongly claims an empty seat of $o$.
+Therefore, $i_1$ is assigned to $o$, $i_2$ is assigned to the outside option, and
+$e_o(Y)=90$.
+If $i_3$ is assigned to the outside option, moving $i_3$ to $t$ satisfies feasibility,
+score-feasibility ($80\ge 90-\delta$), and reserved category protection, so $i_3$
+strongly claims an empty seat of $t$ with respect to the reported preference.
+Therefore, $i_3$ is assigned to $t$.
+
+Since $t\succ_{i_3}\emptyset$ holds in her true preference, $i_3$ obtains a strictly
+better contract by misreporting. Thus, strategy-proofness is violated.
+\end{proof}
+
+\subsection{Reserved Category Protecting SSD}
+
+We present two mechanisms. The first one keeps reserved category protection and gives up
+strategy-proofness.
+
+\begin{definition}[RCP-SSD]
+\label{def:rcpssd}
+The \emph{reserved category protecting SSD} mechanism (RCP-SSD) first computes $d_c$ for
+each $c\in T$ from the reported preferences.
+Then it runs SSD, where the availability of categories is modified as follows.
+When student $i$ is chosen at partial matching $Y$, category $c\in V(i)$ is available
+for $i$ if $Y':=Y\cup\{(i,c)\}$ satisfies
+\begin{enumerate}
+\item $|Y'_{c'}|\le q_{c'}$ for each $c'\in T$,
+\item inequality (\ref{eq:rcp}), and
+\item if $c\in T$, $\sigma(i)\ge e-\delta$.
+\end{enumerate}
+The threshold $e$ is maintained in the same way as SSD.
+\end{definition}
+
+In particular, the number of students assigned to $o$ is at most
+$Q-\sum_{c\in T}\max\{|Y_c|,d_c\}$.
+
+\begin{theorem}
+\label{thm:rcpssd}
+RCP-SSD satisfies feasibility, score-feasibility, fairness, weak non-wastefulness, and
+reserved category protection. Also, it is constrained Pareto efficient.
+\end{theorem}
+\begin{proof}
+Let $Y$ be the matching obtained by RCP-SSD, and let $Y^i$ denote the partial matching
+just before $i$ is chosen.
+Note that the left-hand side of (\ref{eq:rcp}) does not decrease when a student is
+assigned to a category.
+
+\textbf{Feasibility and reserved category protection.}
+The partial matching without contracts satisfies (\ref{eq:rcp}), since
+$\sum_{c\in T}d_c\le\sum_{c\in T}q_c\le Q$.
+The mechanism keeps (\ref{eq:rcp}) and $|Y_c|\le q_c$ for each $c\in T$, and
+(\ref{eq:rcp}) implies $\sum_{c\in V}|Y_c|\le Q$.
+
+\textbf{Score-feasibility.}
+The proof is the same as Theorem~\ref{thm:ssd}.
+
+\textbf{Fairness.}
+The proof is the same as Theorem~\ref{thm:ssd}, except for the case where $c$ is not
+available for $i$ because $Y^i\cup\{(i,c)\}$ violates (\ref{eq:rcp}) or the quota of
+$c\in T$.
+In this case, since the left-hand side of (\ref{eq:rcp}) and $|Y_c|$ do not decrease,
+$c$ is not available for $j$ either.
+
+\textbf{Constrained Pareto efficiency.}
+Assume matching $Z$ satisfies feasibility, score-feasibility, and reserved category
+protection, and $Z$ Pareto dominates $Y$.
+We choose $i$ and $c$ in the same way as the proof of Theorem~\ref{thm:ssd}.
+Since $Y^i\cup\{(i,c)\}\subseteq Z$ and $Z$ satisfies (\ref{eq:rcp}) and the quotas of
+the reserved categories, $Y^i\cup\{(i,c)\}$ also satisfies them.
+The condition on the score is shown in the same way as Theorem~\ref{thm:ssd}.
+Thus, $c$ was available for $i$, a contradiction.
+
+\textbf{Weak non-wastefulness.}
+Assume student $i$ strongly claims an empty seat of $c$.
+The matching obtained by moving $i$ to $c$ satisfies the three conditions and Pareto
+dominates $Y$. This contradicts constrained Pareto efficiency.
+\end{proof}
+
+By Theorem~\ref{thm:imp2}, RCP-SSD is not strategy-proof.
+Also, by Theorem~\ref{thm:imp1}, it is not non-wasteful and hence not Pareto efficient:
+in the case used in the proof of Theorem~\ref{thm:imp1}, RCP-SSD assigns only $i_1$
+to the college, and the seat protected for $t$ remains empty.
+
+\subsection{Flexible SSD}
+
+The second mechanism keeps strategy-proofness and gives up reserved category protection.
+
+\begin{definition}[Flexible SSD]
+\label{def:flexssd}
+The \emph{flexible SSD} mechanism runs SSD, where the availability of categories is
+modified as follows.
+When student $i$ is chosen at partial matching $Y$, category $c\in V(i)$ is available
+for $i$ if
+\begin{enumerate}
+\item $\sum_{c'\in V}|Y_{c'}|<Q$ holds, and
+\item if $c\in T$, $|Y_c|<q_c$ and $\sigma(i)\ge e-\delta$ hold.
+\end{enumerate}
+The threshold $e$ is maintained in the same way as SSD.
+\end{definition}
+
+\begin{theorem}
+\label{thm:flexible}
+Flexible SSD satisfies feasibility, score-feasibility, fairness, Pareto efficiency, and
+strategy-proofness.
+\end{theorem}
+\begin{proof}
+The proof is almost the same as Theorem~\ref{thm:ssd}.
+The only difference is the condition of availability.
+In the proof of fairness, if $c$ is not available for $i$ because the total number of
+assigned students is $Q$ or because $|Y_c|=q_c$, then $c$ is not available for $j$
+either, since these numbers do not decrease.
+In the proof of Pareto efficiency, $Y^i\cup\{(i,c)\}\subseteq Z$ holds and $Z$ is
+feasible, so the total number of assigned students in $Y^i$ is less than $Q$, and
+$|Y^i_c|<q_c$ holds if $c\in T$.
+The other parts are the same.
+\end{proof}
+
+Since Pareto efficiency implies non-wastefulness, flexible SSD is non-wasteful.
+However, it does not satisfy reserved category protection in general.
+In the case used in the proof of Theorem~\ref{thm:imp1}, flexible SSD assigns $i_1$ and
+$i_2$ to $o$, although $d_t=1$ requires $|Y_o|\le 1$.
+
+\section{\uppercase{Eligibility-Based Protection}}
+\label{sec:eligibility}
+
+RCP-SSD is not strategy-proof.\aiedit{} The reason is that the protection level $d_c$
+depends on the reports of students.
+We illustrate this by two examples.
+In this section, we write $\dtop_c$ for $d_c$ in Definition~\ref{def:rcp}.
+
+\begin{example}[Misreporting the top choice]
+\label{ex:top}
+Consider the case in the proof of Theorem~\ref{thm:imp2}.
+When all students report truthfully, $\dtop_t=0$ holds, and RCP-SSD assigns $i_1$ and
+$i_2$ to $o$ and $i_3$ to the outside option.
+When $i_3$ reports $t$ as her top choice, $\dtop_t$ changes from $0$ to $1$.
+Then only one student can be assigned to $o$, and $i_3$ is assigned to $t$ instead of
+the outside option.
+\end{example}
+
+\begin{example}[Hiding an eligible category]
+\label{ex:hide}
+One might consider deciding the protection level by the categories that each student
+declares. More specifically, assume student $i$ declares
+$\tilde{V}(i)\subseteq V(i)$, and RCP-SSD uses
+$\tilde{d}_c:=\min\{q_c,\ |\{i\in I\mid c\in\tilde{V}(i)\}|\}$ instead of $d_c$.
+Consider the case where $T=\{t\}$ and $q_o=q_t=1$.
+There are two students:
+\begin{itemize}
+\item $i_1$: $\sigma(i_1)=100$, $V(i_1)=\{o\}$, $o\succ_{i_1}\emptyset$,
+\item $i_2$: $\sigma(i_2)=90$, $V(i_2)=\{o,t\}$,
+$o\succ_{i_2}t\succ_{i_2}\emptyset$.
+\end{itemize}
+If $i_2$ declares $\{o,t\}$, then $\tilde{d}_t=1$ holds, so only one student can be
+assigned to $o$. Thus, $i_1$ is assigned to $o$ and $i_2$ is assigned to $t$.
+If $i_2$ declares $\{o\}$, then $\tilde{d}_t=0$ holds, so two students can be assigned
+to $o$, and $i_2$ is assigned to $o$.
+Thus, $i_2$ obtains a strictly better contract by hiding $t$.
+\end{example}
+
+In both examples, the protection level is changed by the report of a student.
+Therefore, we decide the protection level by using only $V(i)$.
+We assume that $V(i)$ is verified by the college, e.g., by an official certificate of
+category membership, so student $i$ cannot change it.
+Each student reports only her preference.
+
+\subsection{Reduction to the Fixed Quota Model}
+
+\begin{definition}[Eligibility-based reserved category protection]
+\label{def:ercp}
+For each category $c\in T$, let
+$\dV_c:=\min\{q_c,\ |\{i\in I\mid c\in V(i)\}|\}$.
+A matching $Y$ satisfies \emph{eligibility-based reserved category protection} if
+\begin{equation}
+\label{eq:ercp}
+|Y_o|\le q_o+\sum_{c\in T}\bigl(q_c-\max\{|Y_c|,\dV_c\}\bigr)
+\end{equation}
+holds.
+\end{definition}
+
+\begin{proposition}
+\label{prop:implies}
+If a matching $Y$ satisfies eligibility-based reserved category protection, then $Y$
+satisfies reserved category protection.
+\end{proposition}
+\begin{proof}
+If $\topc_i=c$ and $c\in T$, then $c\in V(i)$ holds.
+Thus, $\dtop_c\le\dV_c$ holds for each $c\in T$, and
+$\max\{|Y_c|,\dtop_c\}\le\max\{|Y_c|,\dV_c\}$ follows. Therefore,
+\begin{align}
+|Y_o| &\le q_o+\sum_{c\in T}\bigl(q_c-\max\{|Y_c|,\dV_c\}\bigr)\nonumber\\
+      &\le q_o+\sum_{c\in T}\bigl(q_c-\max\{|Y_c|,\dtop_c\}\bigr)
+\end{align}
+holds.
+\end{proof}
+
+Next, we show that this model can be reduced to the fixed quota model.
+Let
+\begin{equation}
+\label{eq:qprime}
+q'_o:=q_o+\sum_{c\in T}(q_c-\dV_c).
+\end{equation}
+Note that $q'_o$ is a constant that is determined only by the quotas and $V(i)$.
+
+\begin{lemma}
+\label{lem:reduction}
+A matching $Y$ satisfies feasibility (Definition~\ref{def:flexfeasibility}) and
+eligibility-based reserved category protection if and only if $|Y_o|\le q'_o$ holds and
+$|Y_c|\le q_c$ holds for each $c\in T$.
+\end{lemma}
+\begin{proof}
+In both directions, $|Y_c|\le q_c$ holds for each $c\in T$.
+Also, $(i,c)\in Y$ implies $c\in V(i)$, so $|Y_c|\le|\{i\in I\mid c\in V(i)\}|$ holds.
+Thus, $|Y_c|\le\dV_c$ holds, i.e., $\max\{|Y_c|,\dV_c\}=\dV_c$.
+Then, inequality (\ref{eq:ercp}) is equivalent to $|Y_o|\le q'_o$.
+
+It remains to show $\sum_{c\in V}|Y_c|\le Q$ when $|Y_o|\le q'_o$ holds.
+This follows from
+\begin{align}
+\sum_{c\in V}|Y_c| &\le q'_o+\sum_{c\in T}\dV_c\nonumber\\
+                   &= q_o+\sum_{c\in T}q_c=Q.
+\end{align}
+\end{proof}
+
+We define the efficiency requirements based on $\dV_c$ in the same way.
+
+\begin{definition}[Weak non-wastefulness ($\dV$)]
+\label{def:wnwV}
+In matching $Y$, student $i$ \emph{strongly claims ($\dV$) an empty seat} of category
+$c$ if $c\in V(i)$, $c\succ_i Y_i$, and the matching $(Y\setminus Y_i)\cup\{(i,c)\}$
+satisfies feasibility, score-feasibility, and eligibility-based reserved category
+protection.
+A matching is \emph{weakly non-wasteful ($\dV$)} if no student strongly claims ($\dV$)
+an empty seat.
+\end{definition}
+
+\begin{definition}[Constrained Pareto efficiency ($\dV$)]
+\label{def:cpeV}
+A matching that satisfies feasibility, score-feasibility, and eligibility-based reserved
+category protection is \emph{constrained Pareto efficient ($\dV$)} if it is not Pareto
+dominated by another matching that satisfies these three conditions.
+\end{definition}
+
+To distinguish them, we call the requirements in Definitions~\ref{def:wnw}
+and~\ref{def:cpe} weak non-wastefulness ($\dtop$) and constrained Pareto efficiency
+($\dtop$), respectively.
+
+\subsection{Eligibility-Based SSD}
+
+\begin{definition}[Eligibility-based SSD]
+\label{def:essd}
+The \emph{eligibility-based SSD} mechanism runs SSD of the fixed quota model
+(Definition~\ref{def:ssd}), where the quota of $o$ is $q'_o$ and the quota of each
+$c\in T$ is $q_c$.
+\end{definition}
+
+\begin{theorem}
+\label{thm:essd}
+Eligibility-based SSD satisfies feasibility, score-feasibility, fairness,
+eligibility-based reserved category protection, weak non-wastefulness ($\dV$), and
+strategy-proofness. Also, it is constrained Pareto efficient ($\dV$).
+\end{theorem}
+\begin{proof}
+Let $Y$ be the obtained matching.
+Eligibility-based SSD is SSD of the fixed quota model with $q'_o$, so we can use
+Theorem~\ref{thm:ssd}.
+
+\textbf{Feasibility and eligibility-based reserved category protection.}
+By Theorem~\ref{thm:ssd}, $|Y_o|\le q'_o$ holds and $|Y_c|\le q_c$ holds for each
+$c\in T$.
+Thus, by Lemma~\ref{lem:reduction}, $Y$ satisfies both.
+
+\textbf{Score-feasibility and fairness.}
+The definitions are the same as the fixed quota model, so they hold by
+Theorem~\ref{thm:ssd}.
+
+\textbf{Constrained Pareto efficiency ($\dV$).}
+Assume matching $Z$ satisfies feasibility, score-feasibility, and eligibility-based
+reserved category protection, and $Z$ Pareto dominates $Y$.
+By Lemma~\ref{lem:reduction}, $Z$ is feasible in the fixed quota model with $q'_o$.
+This contradicts the fact that SSD is Pareto efficient (Theorem~\ref{thm:ssd}).
+
+\textbf{Weak non-wastefulness ($\dV$).}
+Assume student $i$ strongly claims ($\dV$) an empty seat of $c$.
+Let $Z$ be the matching obtained by moving $i$ to $c$.
+Then $Z$ satisfies the three conditions, $i$ strictly prefers her contract in $Z$, and
+the contracts of the other students are the same.
+Thus, $Z$ Pareto dominates $Y$. This contradicts constrained Pareto efficiency ($\dV$).
+
+\textbf{Strategy-proofness.}
+Since $q'_o$ is determined only by the quotas and $V(i)$, it is not changed by the
+reports of students.
+Thus, strategy-proofness holds by Theorem~\ref{thm:ssd}.
+\end{proof}
+
+\begin{example}
+\label{ex:essd}
+Consider the case in the proof of Theorem~\ref{thm:imp2}.
+Since $\dV_t=1$, we have $q'_o=1$.
+First, $i_1$ is assigned to $o$.
+Next, $i_2$ is assigned to the outside option since $o$ is full, and $e=90$ is set.
+Finally, $i_3$ is assigned to $t$, since $o$ is full and $80\ge 90-\delta$ holds.
+The outcome is the same when $i_3$ reports $t\succ'_{i_3}o\succ'_{i_3}\emptyset$, so
+$i_3$ cannot obtain a better contract by misreporting.
+
+However, in this outcome, $i_3$ prefers $o$ to $t$.
+Since $\dtop_t=0$, moving $i_3$ to $o$ satisfies feasibility, score-feasibility, and
+reserved category protection.
+Thus, eligibility-based SSD is not weakly non-wasteful ($\dtop$).
+It is also not non-wasteful, not Pareto efficient, and not constrained Pareto efficient
+($\dtop$).
+\end{example}
+
+\section{\uppercase{Comparison of Mechanisms}}
+\label{sec:comparison}
+
+\begin{table*}[t]
+\caption{Properties of the three mechanisms in the flexible quota model. A dash means that the requirement is not defined for the mechanism, since the mechanism does not satisfy the corresponding protection.}\label{tab:comparison} \centering
+\begin{tabular}{|l|c|c|c|}
+  \hline
+   & RCP-SSD & Flexible SSD & Eligibility-based SSD \\
+  \hline
+  Feasibility & \checkmark & \checkmark & \checkmark \\
+  \hline
+  Score-feasibility & \checkmark & \checkmark & \checkmark \\
+  \hline
+  Fairness & \checkmark & \checkmark & \checkmark \\
+  \hline
+  Non-wastefulness & $\times$ & \checkmark & $\times$ \\
+  \hline
+  Weak non-wastefulness ($\dtop$) & \checkmark & \checkmark & $\times$ \\
+  \hline
+  Weak non-wastefulness ($\dV$) & \checkmark & \checkmark & \checkmark \\
+  \hline
+  Pareto efficiency & $\times$ & \checkmark & $\times$ \\
+  \hline
+  Constrained Pareto efficiency ($\dtop$) & \checkmark & --- & $\times$ \\
+  \hline
+  Constrained Pareto efficiency ($\dV$) & --- & --- & \checkmark \\
+  \hline
+  Reserved category protection & \checkmark\ ($\dtop$) & $\times$ & \checkmark\ ($\dV$) \\
+  \hline
+  Strategy-proofness & $\times$ & \checkmark & \checkmark \\
+  \hline
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:comparison} summarizes the properties of the three mechanisms for the
+flexible quota model.\aidraft{}
+Most entries follow from Theorems~\ref{thm:rcpssd}, \ref{thm:flexible},
+and~\ref{thm:essd} and Example~\ref{ex:essd}.
+The remaining entries are obtained as follows.
+First, non-wastefulness implies weak non-wastefulness ($\dtop$), since a student who
+strongly claims an empty seat also claims it.
+Second, weak non-wastefulness ($\dtop$) implies weak non-wastefulness ($\dV$):
+by Proposition~\ref{prop:implies}, a student who strongly claims ($\dV$) an empty seat
+also strongly claims it in the sense of Definition~\ref{def:wnw}.
+Third, RCP-SSD does not satisfy eligibility-based reserved category protection: in the
+case of Theorem~\ref{thm:imp2} with truthful reports, it assigns two students to $o$
+although $q'_o=1$.
+
+The table shows a clear trade-off.
+Flexible SSD is the most efficient mechanism and is strategy-proof, but it gives no
+guarantee to reserved categories.
+RCP-SSD protects exactly the reserved seats that are demanded as top choices and is
+efficient under this protection, but students can manipulate the protection level.
+Eligibility-based SSD is strategy-proof and gives the strongest protection, but the
+protection can be excessive.
+For example, modify the case in the proof of Theorem~\ref{thm:imp2} so that $t$ is
+unacceptable for $i_3$. Eligibility-based SSD still protects the seat of $t$, so only
+$i_1$ is admitted and $i_2$ is rejected although the seat of $t$ remains empty, while
+RCP-SSD admits both $i_1$ and $i_2$.
+
+The three mechanisms can be understood in a unified way through the protection level.
+If we use $q_c$ as the protection level of each $c\in T$, the protection condition
+becomes $|Y_o|\le q_o$, which is the fixed quota model.
+If we use $0$, the condition becomes $\sum_{c\in V}|Y_c|\le Q$, which is the flexible
+quota model without protection.
+Since $0\le\dtop_c\le\dV_c\le q_c$ holds, the two protection levels studied in this paper
+lie between these extremes.
+The level $\dV_c$ de-reserves only the seats that can never be filled because there
+are not enough eligible students.
+The level $\dtop_c$ de-reserves more seats, but it depends on the reports of students,
+which is the source of manipulation.
+
+\section{\uppercase{Conclusions}}
+\label{sec:conclusion}
+
+We studied a reserve system in which the scores of the students admitted through reserved
+categories cannot be too far below the cutoff score of the open category.\aidraft{}
+For fixed quotas, a score-based serial dictatorship mechanism satisfies all the desirable
+properties.
+For flexible quotas, where unfilled reserved seats can be used for the open category,
+protecting the reserved seats that are demanded by students is incompatible with
+non-wastefulness in some cases, and it is incompatible with strategy-proofness when
+fairness and weak non-wastefulness are also required.
+We showed that strategy-proofness can be recovered when the protection level is
+determined by verifiable eligibility, since the model is then reduced to the fixed quota
+model.
+
+There are several directions for future work.
+First, we considered a single college. Extending the model to many colleges, where a
+student has preferences over pairs of a college and a category, is an important next
+step; the difficulty is that score-feasibility depends on the students who are rejected.
+Second, we assumed that each student is assigned to at most one category and that
+categories are not nested. Handling overlapping reservations such as the vertical and
+horizontal reservations in India \cite{SoYe22a} is left for future work.
+Third, protection levels other than $\dtop_c$ and $\dV_c$ that are independent of
+the reports of students but less conservative than $\dV_c$, e.g., levels estimated from
+past data, are worth investigating.
+Finally, it would be interesting to quantify the efficiency loss of eligibility-based
+SSD by computer simulation with realistic data.
+
+
+\section*{\uppercase{Acknowledgements}}
+
+% Review version: the items that could reveal the authors' identity are commented out.
+% Restore and complete them for the camera-ready version.
+% The AI Tools item is a DRAFT: edit it so that it describes exactly how AI was used.
+\begin{itemize}
+  % \item \textbf{Conflicts of Interest:} The authors have no conflicts of interest or competing interests to declare in the context of this paper.
+  % \item \textbf{Financial and other Support:} TODO.
+  % \item \textbf{Author Contributions:} TODO.
+  % \item \textbf{Data Sharing:} No dataset was generated or analyzed during the current study.
+  \item \textbf{AI Tools:} A generative AI tool, Claude \cite{Anthropic26a}, was used to write the text of this paper from the authors' technical notes. Specifically, it drafted the abstract and Sections~\ref{sec:introduction}, \ref{sec:related}, \ref{sec:comparison}, and~\ref{sec:conclusion}; it restructured and edited the wording of Sections~\ref{sec:model}--\ref{sec:eligibility}; it elaborated the case analysis in the proof of Theorem~\ref{thm:imp2}; and it suggested the additional examples after Theorems~\ref{thm:rcpssd} and~\ref{thm:flexible} and in Section~\ref{sec:comparison}. The model, the mechanisms, and the theorems are due to the authors, who checked all the content and the cited references.
+\end{itemize}
+
+
+\bibliographystyle{apalike}
+{\small
+\bibliography{references}}
+
+\end{document}

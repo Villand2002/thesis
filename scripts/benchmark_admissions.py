@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
 from algorithms import (
     AdmissionProblem,
     Student,
+    idle_odr,
     is_feasible,
     is_score_feasible,
     pa_odr,
@@ -262,6 +263,7 @@ def main() -> None:
 
     rows = [
         summarize("spse", spse, problems),
+        summarize("idle_odr", idle_odr, problems),
         summarize("pa_odr", pa_odr, problems),
         summarize("threshold_adjusting_da", threshold_adjusting_da, problems),
     ]
