@@ -8,3 +8,4 @@ latexmkrc
 .DS_Store
 
 *.pptx
+!icaart/references.bib
