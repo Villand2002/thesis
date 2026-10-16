@@ -10,6 +10,7 @@
 \usepackage{multicol}
 \usepackage{pslatex}
 \usepackage{apalike}
+\usepackage{color}
 \usepackage{algorithm2e}
 \usepackage[bottom]{footmisc}
 \usepackage{CJKutf8}        
@@ -23,6 +24,8 @@
 \newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
 
+\newcommand{\zh}[1]{\textcolor{red}{\textbf{Zhaohong says:} #1}}
+\newcommand{\zhnew}[1]{\textcolor{red}{#1}}
 \newcommand{\topc}{\mathrm{top}}
 
 \newenvironment{jproof}{\begin{proof}\begin{CJK}{UTF8}{min}}{\end{CJK}\end{proof}}
@@ -41,7 +44,7 @@
 
 \keywords{Matching, Market Design, Affirmative Action, Reserve System, Strategy-Proofness, Serial Dictatorship.}
 
-\abstract{Reserve systems are a standard tool for affirmative action in admissions: some seats are set aside for reserved categories, and the remaining seats are open to all students. We study a single-college model in which students are ranked by exam scores and matchings must be score-feasible: a student can be admitted through a reserved category only if her score is at most a category-specific margin below that of the highest-scoring student rejected from the open category. This requirement is motivated by affirmative action in India, where it is recommended that the gap between the cutoff scores of the open category and a reserved category be bounded. When quotas are fixed, a score-based serial dictatorship mechanism (SSD) is fair, Pareto efficient, and strategy-proof. When unfilled reserved seats can be transferred to the open category, we introduce reserved category protection and show that, together with feasibility, score-feasibility, and fairness, strategy-proofness, reserved category protection, and weak non-wastefulness cannot be satisfied simultaneously. In contrast, each pair of these three properties is achieved by a variant of SSD. Thus, we obtain a tight boundary between possibility and impossibility.}
+\abstract{Reserve systems are a standard tool for affirmative action in admissions: some seats are set aside for reserved categories, and the remaining seats are open to all students. We study a single-college model in which students are ranked by exam scores, and matchings must be score-feasible: a student can be admitted through a reserved category only if her score is at most a category-specific margin below that of the highest-scoring student rejected from the open category. This requirement is motivated by affirmative action in India, where it is recommended that the gap between the cutoff scores of the open category and a reserved category be bounded. When quotas are fixed, a score-based serial dictatorship mechanism (SSD) is feasible, score-feasible, fair, Pareto efficient, and strategy-proof. When unfilled reserved seats can be transferred to the open category, we introduce reserved category protection and show that strategy-proofness, reserved category protection, and weak non-wastefulness cannot be satisfied simultaneously together with feasibility, score-feasibility, and fairness. In contrast, each pair of these three properties is achieved by a variant of SSD. Thus, we obtain a tight boundary between possibility and impossibility.}
 
 \onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
 
@@ -50,7 +53,7 @@
 
 Matching theory has been successfully applied to admission problems such as school
 choice and college admissions
-\cite{GaSh62a,RoSo90a,BaSo99a,AbSo03b}.\aidraft{}
+\cite{GaSh62a,RoSo90a,BaSo99a,AbSo03b}.
 In many of these markets, the designer must implement affirmative action.
 A common instrument is a \emph{reserve system}: some seats are set aside for students
 who belong to protected groups, while the remaining seats are open to all students.
@@ -87,9 +90,12 @@ We formalize the bounded-gap requirement as \emph{score-feasibility}: a student 
 admitted under a reserved category $t$ only if her score is at least $e_o-\delta_t$, where
 $e_o$ is the highest score among rejected students who find the open category
 acceptable, and $\delta_t\ge 0$ is a margin given for each reserved category
-(e.g., the margins for a women's quota and a regional quota can differ).
+(i.e., different categories can have different margins). 
 Thus, $e_o$ plays the role of the cutoff score of the open category.
 Our contributions are as follows.
+\begin{comment}
+    
+
 \begin{itemize}
 \item \emph{Fixed quotas.} When each category has a fixed quota, we show that the
 score-based serial dictatorship mechanism (SSD) is feasible, score-feasible, fair,
@@ -112,6 +118,49 @@ $q_o=Q-\sum_{t\in T}q_t$, satisfies SP and RCP (Theorem~\ref{thm:fqssd}).
 Together with Theorem~\ref{thm:imp2}, these results give a tight boundary between
 possibility and impossibility (Corollary~\ref{cor:boundary}).
 \end{itemize}
+\end{comment}
+
+\begin{itemize}
+\item \emph{Score-feasibility and fixed quotas.}
+We formulate score-feasibility using the highest score among
+rejected students who find the open category acceptable, rather
+than the lowest score among admitted open-category students.
+We establish a key structural property: removing the lowest-scoring
+admitted student preserves score-feasibility.
+Building on this property, we show that when each category has
+a fixed quota, the score-based serial dictatorship mechanism (SSD)
+is feasible, score-feasible, fair, Pareto efficient, and
+strategy-proof (Theorem~\ref{thm:ssd}).
+\item \emph{Flexible quotas and an impossibility.}
+When unfilled reserved seats can be transferred to the open
+category, the designer must decide how much reserve capacity
+to protect.
+We introduce \emph{reserved category protection} (RCP),
+which protects reserve capacity according to students'
+reported first-choice demand.
+We show that no matching may simultaneously
+satisfy feasibility, score-feasibility, non-wastefulness,
+and RCP (Theorem~\ref{thm:imp1}).
+Moreover, even if non-wastefulness is weakened to
+\emph{weak non-wastefulness} (WNW), no fair mechanism
+can simultaneously satisfy strategy-proofness (SP),
+RCP, and WNW (Theorem~\ref{thm:imp2}).
+\item \emph{A tight boundary through different protection levels.}
+We analyze three variants of SSD corresponding to different
+levels of reserve protection: no protection, demand-based
+protection, and full quota protection.
+We show that each pair of SP, RCP, and WNW is achievable
+together with feasibility, score-feasibility, and fairness.
+Reserved category protecting SSD satisfies RCP and WNW
+(Theorem~\ref{thm:rcpssd}),
+flexible SSD satisfies SP and non-wastefulness
+(Theorem~\ref{thm:flexible}), and
+fixed quota SSD, which runs SSD with
+$q_o=Q-\sum_{t\in T}q_t$, satisfies SP and RCP
+(Theorem~\ref{thm:fqssd}).
+Together with Theorem~\ref{thm:imp2}, these results establish
+a tight boundary between possibility and impossibility.
+\end{itemize}
 
 The rest of this paper is organized as follows.
 Section~\ref{sec:related} discusses related work.
@@ -129,23 +178,23 @@ Section~\ref{sec:conclusion} concludes.
 \subsection{Affirmative Action in Matching}
 
 College admissions and school choice with affirmative action have been studied
-extensively \cite{Abdu05a,AbSo03b}.\aidraft{}
-Quota-based affirmative action can hurt the students it is meant to help \cite{Koji12a},
-which motivated reserve-based approaches \cite{HYY13a} and the distinction between hard
+extensively \cite{Abdu05a,AbSo03b}.
+It is shown that quota-based affirmative action can hurt students, even though it is intended to help them \cite{Koji12a}.
+This result motivated reserve-based approaches \cite{HYY13a} and the distinction between hard
 bounds and soft bounds \cite{EHYY14a}.
 Choice rules that balance priorities and diversity have been characterized axiomatically
 \cite{EcYe15a,imamura2025meritocracy}, and slot-specific priorities provide a general
 framework for reserve systems \cite{KoSo16a}.
 The order in which reserved seats and open seats are processed is known to
 significantly affect the outcome \cite{DKPS18a,DPS20a,PRS23a}.
+
 Reserve systems with overlapping categories have been studied in
 \cite{SoYe22a,AzSu25a}, and reserve systems are also used in healthcare
 rationing \cite{PSUY24a,AzBr24a}.
-% ===== 【追加ここから】 =====
 In these rationing applications, the designer decides the category through which each
 agent is served, whereas in our model, as in college admissions with affirmative action
 \cite{AyTu20a,AyBo21a}, students have preferences over the categories.
-% ===== 【追加ここまで】 =====
+
 Closest to our model in terms of students' preferences is controlled school choice with
 soft bounds and overlapping types \cite{KHIY17a}.
 There, each student can belong to several types, has preferences over types as well as
@@ -158,7 +207,7 @@ explainability \cite{arnosti2024explainable}.
 
 \subsection{Affirmative Action in India}
 
-India implements one of the most comprehensive reservation systems
+India implements one of the most comprehensive reserve systems
 \cite{Gala84a,SoYe22a}, and its admission and recruitment procedures have been analyzed from a
 market design perspective \cite{AyTu17a,BCC+19b,SoYe22a}.
 The transfer of unfilled reserved seats to other categories (de-reservation) has been
@@ -179,9 +228,22 @@ Our model is also related to matching with distributional constraints
 In these models, feasibility is usually defined by the number of students assigned to
 each school. Score-feasibility, in contrast, depends on the scores and preferences of
 rejected students, so it does not fit directly into these frameworks.
-Our mechanisms are variants of serial dictatorship \cite{Sven99a,AbSo98a}, where the order of
+Our mechanisms are variants of serial dictatorship \cite{Sven99a,AbSo98a,goto:17}, where the order of
 students is given by scores.
 
+A recent work \cite{SZZ26} studies the interaction between overlapping eligibility, one-to-one category counting, and score-feasibility.  
+It compares a score-elevated deferred acceptance mechanism (SPSE)
+with a de-reservation mechanism (PA-ODR), focusing on the
+feasibility of filling overlapping reserve quotas.
+The present paper addresses a different question:
+how much reserve capacity should be protected when
+de-reservation is permitted.
+We introduce a rejection-based open cutoff, rather than the
+lowest score of admitted open-category students, and allow
+category-specific score margins.
+We then study reserved category protection (RCP) and establish
+trade-offs among strategy-proofness, RCP, and weak
+non-wastefulness through several serial dictatorship mechanisms.
 
 \section{\uppercase{Model}}
 \label{sec:model}
@@ -193,7 +255,7 @@ A market consists of the following components.
 \emph{reserved categories} $T$. Let $V:=T\cup\{o\}$.
 \item $q=(q_c)_{c\in T}$, where each $q_c\in\mathbb{Z}_{\ge 0}$ is the maximum quota of 
 category $c$. 
-\item The college's (total) maximum quota $Q$. We assume $Q > \sum_{c \in T} q_c$. 
+\item The college's (total) maximum quota $Q \in\mathbb{Z}_{> 0}$. We assume $Q > \sum_{c \in T} q_c$. 
 \item For each student $i\in I$, let 
 $V(i)\subseteq V$ denote the categories that $i$ is eligible. 
 We assume $o\in V(i)$ for each $i\in I$.
@@ -235,12 +297,12 @@ definitions.
 
 \begin{definition}[Feasibility (fixed quota)]
 \label{def:feasibility}
-Let $q_o= Q - \sum_{c \in T} q_c$. 
+Let $q_o= Q - \sum_{t \in T} q_t$. 
 A matching $Y$ is \emph{feasible} (in the fixed quota model) 
 if $|Y_c|\le q_c$ holds for each $c\in V$.
 \end{definition}
 Here, we assume the maximum quota of the open category is fixed to $q_o$, which 
-is equal to $Q - \sum_{c\in T} q_c$. 
+is equal to $Q - \sum_{t\in T} q_t$. 
 
 Alternatively, we can assume the open category does not have a fixed quota; more students 
 can be assigned to the open category as long as the total maximum quota $Q$ is satisfied. 
@@ -295,11 +357,15 @@ score-feasible.
 \end{proposition}
 \begin{proof}
 Let $Y':=(Y\setminus\{(j,c)\})$.
-Since $R_o(Y') = R_o(Y) \cup \{j\}$, either (i) $e_o(Y')=e_o(Y)$ or (ii) $e_o(Y')=\sigma(j)$ holds. 
+When $o \succ_j \emptyset$, $R_o(Y') = R_o(Y) \cup \{j\}$. Otherwise, $R_o(Y') = R_o(Y)$. 
+In both cases, either (i) $e_o(Y')=e_o(Y)$ or (ii) $e_o(Y')=\sigma(j)$ holds. 
 In case (i), since $Y$ is score-feasible, for each $(i, t) \in Y'$, where $t\in T$, 
 $\sigma(i) \ge e_o(Y) - \delta_t = e_o(Y') - \delta_t$ holds. Thus, $Y'$ is score-feasible. 
-In case (ii), since $\sigma(j) < \sigma(i)$, 
-$\sigma(i) > \sigma(j) \geq \sigma(j) - \delta_c$ holds. 
+In case (ii), since $\sigma(j) < \sigma(i)$ for each $(i, t) \in Y'$, where
+$t \in T$, 
+$\sigma(i) > \sigma(j) \geq e_o(Y') - \delta_t$ 
+% \zh{Here when c is the open category, $\delta_c$ is not defined.}
+holds. 
 Thus, $Y'$ is score-feasible. 
 \end{proof}
 If $Y$ is feasible and $Y' \subset Y$, $Y'$ is also feasible in both 
@@ -307,13 +373,13 @@ fixed quota and flexible quota models.
 Thus, removing the lowest-score admitted student from a feasible and score-feasible
 matching keeps both properties.
 This property does not hold under the alternative definition.
-Let $T=\{t\}$ and $\delta_t=10$, and consider three students with
+Let $T=\{t\}$ and $\delta_t=10$, $q_t=1$, $Q=3$, and consider three students with
 $\sigma(i_1)=100$, $V(i_1)=\{o\}$; $\sigma(i_2)=80$, $V(i_2)=\{o,t\}$; and
 $\sigma(i_3)=60$, $V(i_3)=\{o\}$.
 The matching $Y=\{(i_1,o),(i_2,t),(i_3,o)\}$ is feasible and score-feasible under both
 definitions.
-Removing the lowest-score student $i_3$ yields $Y'=\{(i_1,o),(i_2,t)\}$. 
-% Here, we assume $i_3$ is assigned to the outside option. 
+Removing the lowest-score student $i_3$ yields $Y'=\{(i_1,o),(i_2,t)\}$, where
+we assume $i_3$ is assigned to the outside option. 
 $Y'$ is score-feasible under our definition, since every admitted student has a higher
 score than $i_3$.
 Under the alternative definition, however, $Y'$ is not score-feasible: the lowest score in
@@ -387,7 +453,7 @@ preference, and the corresponding contract is added to $Y$.
 If $i$ is the first student who is assigned to the outside option although $o$ is
 acceptable for her, we set $e:=\sigma(i)$.
 \end{definition}
-This mechanism is an instance of the serial dictatorship mechanism~\cite{AS98,goto:17}, 
+This mechanism is an instance of the serial dictatorship mechanism~\cite{Sven99a,AS98,goto:17}, 
 where each student chooses her most preferred option among those that keep
 the partial matching feasible and score-feasible.
 
@@ -408,11 +474,11 @@ Thus, once $e$ is set, it equals $e_o(Y)$ and does not change afterward.
 \textbf{Feasibility.} Clear from the construction.
 
 \textbf{Score-feasibility.}
-Assume $(i,c)\in Y$ and $c\in T$.
-If $e$ is already set when $i$ is chosen, $\sigma(i)\ge e-\delta_c=e_o(Y)-\delta_c$ holds
+Assume $(i,t)\in Y$ for $t\in T$.
+If $e$ is already set when $i$ is chosen, $\sigma(i)\ge e-\delta_t=e_o(Y)-\delta_t$ holds
 by construction.
 Otherwise, all students in $R_o(Y)$ are chosen after $i$, so
-$e_o(Y)<\sigma(i)\le\sigma(i)+\delta_c$ holds.
+$e_o(Y)\leq \sigma(i)\le\sigma(i)+\delta_t$ holds.
 
 \textbf{Fairness.}
 Assume $i$ has justified envy toward $j$, where $Y_j=\{(j,c)\}$.
@@ -467,10 +533,15 @@ By using Definition~\ref{def:flexfeasibility}, the college can fully utilize
 its available seats, since the college can transfer seats from a reserved category to the open category. However, there is a chance that most of the reserved category seats are transferred to the open category and very few students are accepted to 
 open categories.
 
-To avoid such a situation, we set a safeguard that restricts the number of 
-transferred seats from each reserved category to the open category, 
-which we call \emph{reserved category protection}. 
+In summary, de-reservation improves seat utilization but may undermine the
+purpose of reserve quotas: a reserved seat may be transferred to
+the open category even when students explicitly rank that reserve
+category as their first choice.
+Conversely, protecting all reserved seats regardless of demand
+may result in unnecessary vacancies.
 
+To balance these concerns, we introduce
+\emph{reserved category protection} (RCP) as follows. 
 \begin{definition}[Reserved category protection]
 \label{def:rcp}
 For each student $i$, let $\topc_i$ denote her most preferred element of
@@ -484,11 +555,25 @@ A matching $Y$ satisfies \emph{reserved category protection} (RCP) if
 \end{equation}
 holds.
 \end{definition}
+Intuitively, we protect $d_t$ seats for each reserved category $t$, corresponding to the reported first-choice demand.
+A reserved seat may be transferred to the open category only if
+it is neither occupied nor protected by such demand.
+Note that RCP protects capacity rather than guaranteeing admission:
+some protected seats may remain unfilled because of
+score-feasibility constraints.
+
+\begin{comment}
+To avoid such a situation, we set a safeguard that restricts the number of 
+transferred seats from each reserved category to the open category, 
+which we call \emph{reserved category protection}. 
+
+% \zh{It only checks the number of students who rank $t$ as top category, but not whether it violates score-feasibility when matched.}
 
 Here, $d_t$ is the number of seats of category $t$ that are demanded as the top choice.
 RCP means that a seat of $t$ can be transferred to the open category
 only if it is neither used nor demanded in this sense.
 % Note that (\ref{eq:rcpdef}) implies $\sum_{c\in V}|Y_c|\le Q$.
+\end{comment}
 
 RCP is a rather weak requirement; it only considers the top category of each student. 
 However, it turns out that this weak requirement becomes incompatible 
@@ -567,15 +652,20 @@ Assume a mechanism satisfies all the properties except SP, and let $Y$
 be the matching it returns.
 
 \textbf{Truthful reports.}
-Since $d_t=0$, RCP is equivalent to $|Y_o|+|Y_t|\le 2$.
-If $i_3$ is assigned to $o$, at least one of $i_1$ and $i_2$ is assigned to the outside
-option, and she has justified envy toward $i_3$.
-If $i_3$ is assigned to $t$, score-feasibility requires $e_o(Y)\le 90$, so $i_1$ is
-assigned to $o$, and $i_2$ is assigned to the outside option by feasibility.
+Since $d_t=0$, no seat for $t$ is protected. 
+At most two students can be assigned in total. 
+If $i_3$ is assigned to $o$, 
+at least one of $i_1$ and $i_2$ is assigned to the outside option,
+and she has justified envy toward $i_3$.
+Similarly, if $i_3$ is assigned to $t$, 
+score-feasibility requires $e_o(Y)\le 90$, so $i_1$ is
+assigned to $o$, and $i_2$ is assigned to the outside option.
 Then, moving $i_3$ to $o$ satisfies feasibility, score-feasibility (no student is
 assigned to $t$), and RCP.
 Thus, $i_3$ strongly claims an empty seat of $o$.
 Therefore, $i_3$ is assigned to the outside option.
+The only matching satisfying the required properties is to 
+assign both $i_1$ and $i_2$ to $o$. 
 
 \textbf{Misreport.}
 Assume $i_3$ reports $t\succ'_{i_3}o\succ'_{i_3}\emptyset$.
@@ -606,6 +696,56 @@ In this section, we show that sacrificing any one of them is enough;
 we present a mechanism that satisfies any pair of these properties. 
 
 \subsection{Reserved Category Protecting SSD: Sacrificing SP}
+\begin{comment}
+\zh{When assigning a student to a reserved category $t$,
+the RCP-SSD algorithm checks
+\[
+|Y_t|<q_t,\qquad
+\sum_{c\in V}|Y_c|<Q,\qquad
+\sigma(i)\ge e-\delta_t.
+\]
+However, these conditions do not guarantee that the
+resulting assignment preserves RCP.
+\\
+Consider an instance with
+\[
+T=\{a,b\},\quad Q=3,\quad
+q_a=q_b=1,\quad
+\delta_a=\delta_b=10.
+\]
+There are four students with distinct scores:
+\[
+\sigma(i_1)=100,\quad
+\sigma(i_2)=90,\quad
+\sigma(i_3)=80,\quad
+\sigma(i_4)=70.
+\]
+Their preferences are
+\[
+\begin{aligned}
+&i_1,i_2:\quad o\succ\varnothing,\\
+&i_3:\quad o\succ b\succ\varnothing,\\
+&i_4:\quad a\succ o\succ\varnothing.
+\end{aligned}
+\]
+Thus, $d_a=1$ and $d_b=0$.
+The algorithm first assigns $i_1$ and $i_2$ to $o$.
+When considering $i_3$, the open category is unavailable
+because the remaining seat is protected for $a$.
+However, category $b$ is available under the current
+definition, since its quota is unfilled, the total number
+of admitted students is less than $Q$, and the score
+condition is satisfied.
+Hence, $i_3$ is assigned to $b$.
+The resulting partial matching violates RCP:
+\[
+|Y_o|+\max\{|Y_a|,d_a\}
++\max\{|Y_b|,d_b\}
+=2+1+1=4>Q.
+\]
+Therefore, the current availability conditions do not
+maintain RCP, contrary to the argument in Theorem~4.}
+\end{comment}
 
 \begin{definition}[Reserved Category Protecting (RCP)-SSD]
 \label{def:rcpssd}
@@ -614,14 +754,44 @@ Then it runs SSD, where the availability is modified as follows.
 When student $i$ is chosen at partial matching $Y$, 
 \begin{itemize}
     \item $c\in V(i)\setminus \{o\}$ is available 
-if $|Y_c|< q_c$, $\sum_{t \in V}|Y_t|<Q$, 
+if $|Y_c|< q_c$, $|Y_o| + \max\{d_c, |Y_c|+1\} + \sum_{t \in T\setminus\{c\}}\max\{d_t, |Y_t|\}\leq Q$, 
 and $\sigma(i)\ge e-\delta_c$. 
 \item $o$ is available 
-if $|Y_o| < Q - \sum_{t\in T}\bigl(\max\{|Y_t|,d_t\}\bigr)$.
+if $|Y_o|+1 + \sum_{t \in T}\max\{d_t, |Y_t|\}\leq Q$.
 \end{itemize}
 The threshold $e$ is maintained in the same way as SSD.
 \end{definition}
+In words, student $i$ can be assigned to category $c$ as long as feasibility, score-feasibility, and RCP are satisfied. 
 
+\begin{comment}
+\zh{I suggest the following modification:
+\\
+For a reserved category $t\in T$, the category is
+available to student $i$ if
+\[
+|Y_t|<q_t,
+\qquad
+\sigma(i)\ge e-\delta_t,
+\]
+and
+\[
+|Y_o|
++\max\{|Y_t|+1,d_t\}
++\sum_{s\in T\setminus\{t\}}
+\max\{|Y_s|,d_s\}
+\le Q.
+\]
+The open category is available if
+\[
+|Y_o|+1+
+\sum_{t\in T}\max\{|Y_t|,d_t\}
+\le Q.
+\]
+In particular, a student assigned to a reserved category
+may use an already protected seat, but cannot consume
+capacity protected for another category.
+}
+\end{comment}
 \begin{theorem}
 \label{thm:rcpssd}
 RCP-SSD satisfies feasibility, score-feasibility, fairness, RCP, and 
@@ -646,7 +816,7 @@ The proof is the same as Theorem~\ref{thm:ssd}.
 \textbf{Fairness.}
 Assume $c$ is not available for $i$. Since $e$ weakly monotonically increases, and the number of assigned students
 to each category weakly monotonically increases, 
-$c$ is not available for the students assigned after $i$. 
+$c$ is not available for the students assigned after $i$, whose score is lower than $\sigma(i)$.
 
 \textbf{Constrained Pareto efficiency.}
 Assume a matching $Z$ satisfies feasibility, score-feasibility, and RCP, and $Z$ Pareto
@@ -678,6 +848,9 @@ Also, by Theorem~\ref{thm:imp1}, RCP-SSD violates
 non-wasteful, and hence it is not Pareto
 efficient: in the case used in the proof of Theorem~\ref{thm:imp1}, it assigns only $i_1$
 to the college, and the seat protected for $t$ remains empty.
+
+
+
 
 \subsection{Flexible SSD: Sacrificing RCP}
 
@@ -860,14 +1033,14 @@ and this dependence is the source of manipulation.
 \section{\uppercase{Conclusions}}
 \label{sec:conclusion}
 
-We studied a reserve system in which the scores of the students admitted through reserved
+We studied reserved systems in which the scores of the students admitted through reserved
 categories cannot be too far below the cutoff score of the open category, where the
-allowed gap can differ across reserved categories.\aidraft{}
+allowed gap can differ across reserved categories.
 For fixed quotas, a score-based serial dictatorship mechanism satisfies all the desirable
 properties.
 For flexible quotas, where unfilled reserved seats can be used for the open category,
 protecting the reserved seats demanded by students is incompatible with
-non-wastefulness in some cases.
+non-wastefulness. 
 Moreover, when feasibility, score-feasibility, and fairness are required,
 strategy-proofness, reserved category protection, and weak non-wastefulness cannot be
 satisfied simultaneously, while each pair of them is achieved by RCP-SSD, flexible SSD,
@@ -878,8 +1051,10 @@ There are several directions for future work.
 First, we considered a single college. Extending the model to many colleges, where a
 student has preferences over college--category pairs, is an important next step.
 The difficulty is that score-feasibility depends on which students are rejected.
-Second, we assumed that each student is assigned to at most one category and that
-categories are not nested. Handling overlapping reservations such as the vertical and
+Second, we assumed that each student is assigned to at most one category.
+% and that categories are not nested. 
+%%% MY. We have no assumption on categories, so it is possible that categories can be nested; it does not matter since a student is counted at most one category. 
+Handling overlapping reservations such as the vertical and
 horizontal reservations in India \cite{SoYe22a} is left for future work.
 Third, protection levels between $d_t$ and $q_t$ that are independent of students'
 reports, such as levels estimated from past data, are worth investigating.
@@ -887,7 +1062,7 @@ Finally, it would be interesting to quantify the efficiency loss of fixed quota 
 the incentive to manipulate RCP-SSD through simulations with realistic data.
 
 
-\section*{\uppercase{Acknowledgements}}
+\section*{\uppercase{Acknowledgments}}
 
 \begin{itemize}
   \item \textbf{AI Tools:} 
