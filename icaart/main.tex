@@ -444,11 +444,12 @@ In this model, we can use the following mechanism.
 The \emph{score-based serial dictatorship} mechanism (SSD) works as follows.
 Initially, the partial matching $Y$ contains no contract and the threshold $e$ is $0$.
 Students are chosen one by one in decreasing order of score.
-When student $i$ is chosen, category $c\in V(i)$ is \emph{available} for $i$ if:
-\begin{enumerate}
-\item $|Y_c|<q_c$ holds, and
-\item if $c\in T$, $\sigma(i)\ge e-\delta_c$ holds.
-\end{enumerate}
+When student $i$ is chosen at partial matching $Y$,
+\begin{itemize}
+\item $t\in V(i)\cap T$ is \emph{available} for $i$ if $|Y_t|<q_t$ and
+$\sigma(i)\ge e-\delta_t$.
+\item $o$ is \emph{available} for $i$ if $|Y_o|<q_o$.
+\end{itemize}
 The outside option is always available.
 Student $i$ is assigned to her most preferred available option according to her reported
 preference, and the corresponding contract is added to $Y$.
@@ -490,9 +491,9 @@ There are two cases.
 \begin{enumerate}
 \item $c$ is full when $i$ is chosen.
 Then $c$ is also full when $j$ is chosen, so $j$ cannot be assigned to $c$.
-\item $c\in T$ and $\sigma(i)<e-\delta_c$ holds when $i$ is chosen.
+\item $c=t$ for some $t\in T$, and $\sigma(i)<e-\delta_t$ holds when $i$ is chosen.
 Then $e$ is already set, so the threshold is the same when $j$ is chosen.
-Since $\sigma(j)<\sigma(i)<e-\delta_c$, $j$ cannot be assigned to $c$.
+Since $\sigma(j)<\sigma(i)<e-\delta_t$, $j$ cannot be assigned to $t$.
 \end{enumerate}
 Both cases contradict $Y_j=\{(j,c)\}$.
 
